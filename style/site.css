@@ -47,6 +47,11 @@ h1 {
     text-decoration:none;
     color:#888;
     outline:none;
+    -webkit-transition: color 0.2s ease;
+    -moz-transition: color 0.2s ease;
+    -ms-transition: color 0.2s ease;
+    -o-transition: color 0.2s ease;
+    transition: color 0.2s ease;
 }
 
 .boxes a:hover,
