@@ -1,0 +1,23 @@
+{% block content %}
+
+<div id="entries-search">
+    <input class="search-box" type="search" placeholder="Filter&hellip;" />
+    <ul class="list">
+    {% for entry in env.entrylist %}
+        <li>
+            <span class="date">{{ entry.date.strftime("%G %B %e") }}</span>
+            &mdash;
+            <a class="title" href="{{ env.path + entry.permalink }}">{{ entry.title | e }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+<script>
+    window.addEventListener("load", function() {
+        new List('entries-search', { 
+            valueNames: ['title'],
+            searchClass: 'search-box'
+        });
+    }, false);
+</script>
+{% endblock %}

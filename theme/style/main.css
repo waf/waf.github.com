@@ -1,0 +1,130 @@
+html {
+    overflow-y: scroll;
+}
+body {
+    background-color: white;
+    margin: 0 auto;
+    padding:0;
+    width: 800px;
+    font-family:Droid Sans, sans-serif;
+    font-size:12pt;
+    color:#111;
+}
+header {
+    margin: 20px 0;
+    text-decoration: none;
+    text-align: center;
+    font-family: Reenie Beanie, sans-serif;
+    font-size:26pt;
+    font-weight:bold;
+}
+header a {
+    text-decoration:none;
+    background-color:#fff;
+    display:inline-block;
+    padding:0px 12px 0 10px;
+    transition:padding 0.2s ease;
+}
+header a:hover {
+    padding:0px 52px 0 50px;
+}
+header::after {
+    content:"";
+    display:block;
+    border-bottom:1px solid #888;
+    position:relative;
+    top:-20px;
+    z-index:-1;
+}
+a {
+    color:#F56017;
+    text-decoration:none;
+    transition:color 0.2s ease;
+}
+a:hover {
+    color:#D15214;
+}
+.first-name {
+    color:#555;
+}
+.last-name {
+    color:#F56017;
+}
+article {
+    text-align: justify;
+    line-height:1.5em;
+}
+article h1 {
+    margin:0 0 32px 0;
+    color:#F56017;
+}
+article time {
+    float:right;
+    color:#888;
+}
+footer {
+    clear:both;
+    text-align: center;
+    margin-bottom:50px;
+}
+footer a {
+    color:#888;
+    display:inline-block;
+    padding: 5px 10px;
+    text-align:center;
+    font-size:10pt;
+}
+footer a:hover {
+    color:#666;
+}
+.highlight pre {
+    font-family: Inconsolata, monospace;
+    line-height:1.2em;
+
+}
+.highlight {
+    border: 1px solid #cccccc;
+    padding-left: 1em;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    background: none repeat scroll 0 0 #f0f0f0;
+    overflow: auto;
+}
+.tags {
+    margin-top: 20px;
+    text-align: center;
+}
+.pager {
+    overflow:auto;
+    margin: 20px 0;
+}
+.prev { float: right }
+.next { float: left }
+.search-box {
+    display:block;
+    margin: 20px auto 28px auto;
+    width:220px;
+    padding:5px;
+    border: 1px solid #999;
+    transition: box-shadow 0.25s;
+    border-radius:0;
+}
+.search-box:focus {
+    box-shadow: 0 0 5px #999999;
+    outline:none;
+}
+
+@media (max-width:800px) {
+    body {
+        width:98%;
+        padding:0 1%;
+    }
+    article h1 {
+        width:100%;
+        text-align:center;
+    }
+    article time {
+        width:100%;
+        text-align:center;
+    }
+}
