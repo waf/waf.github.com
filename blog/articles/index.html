@@ -1,0 +1,22 @@
+
+
+<div id="entries-search">
+    <input class="search-box" type="search" placeholder="Filter&hellip;" />
+    <ul class="list">
+    
+        <li>
+            <span class="date">2013 July 24</span>
+            &mdash;
+            <a class="title" href="/blog/2013/new-technology-blog/">New Technology Blog</a>
+        </li>
+    
+    </ul>
+</div>
+<script>
+    window.addEventListener("load", function() {
+        new List('entries-search', { 
+            valueNames: ['title'],
+            searchClass: 'search-box'
+        });
+    }, false);
+</script>
