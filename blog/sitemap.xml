@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://fuqua.io/blog/blog/</loc>
-    <lastmod>2013-07-24</lastmod>
+    <lastmod>2013-07-25</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/tag/blog/</loc>
-    <lastmod>2013-07-24</lastmod>
+    <lastmod>2013-07-25</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/tag/acrylamid/</loc>
-    <lastmod>2013-07-24</lastmod>
+    <lastmod>2013-07-25</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/articles/</loc>
-    <lastmod>2013-07-24</lastmod>
+    <lastmod>2013-07-25</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/rss/</loc>
-    <lastmod>2013-07-24</lastmod>
+    <lastmod>2013-07-25</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/tag/python/</loc>
-    <lastmod>2013-07-24</lastmod>
+    <lastmod>2013-07-25</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/atom/</loc>
-    <lastmod>2013-07-24</lastmod>
+    <lastmod>2013-07-25</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/2013/new-technology-blog/</loc>
-    <lastmod>2013-07-24</lastmod>
+    <lastmod>2013-07-25</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>

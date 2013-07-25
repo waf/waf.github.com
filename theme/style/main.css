@@ -12,29 +12,53 @@ body {
 }
 header {
     margin: 20px 0;
+    position:relative;
     text-decoration: none;
     text-align: center;
     font-family: Reenie Beanie, sans-serif;
     font-size:26pt;
     font-weight:bold;
 }
-header a {
+header::after { /* the horizontal line in the header */
+    content:"";
+    display:block;
+    border-bottom:1px solid #888;
+    position:absolute;
+    top:50%;
+    width:100%;
+    z-index:-1;
+}
+header a { 
     text-decoration:none;
     background-color:#fff;
     display:inline-block;
     padding:0px 12px 0 10px;
-    transition:padding 0.2s ease;
+    position:relative;
 }
-header a:hover {
-    padding:0px 52px 0 50px;
-}
-header::after {
+/* the animation that pulls back the horizontal header line
+ * do this via absolute psuedoelements instead of padding animation
+ * because the padding change / text-align:center was causing text jitter
+ */
+header a::after,
+header a::before {
     content:"";
     display:block;
-    border-bottom:1px solid #888;
-    position:relative;
-    top:-20px;
-    z-index:-1;
+    background-color:#FFF;
+    width:0px;
+    height:50%;
+    position:absolute;
+    top:25%;
+    transition: width 0.2s ease;
+}
+header a:hover::after,
+header a:hover::before {
+    width:20px;
+}
+header a::after {
+    left:100%;
+}
+header a::before {
+    right:100%;
 }
 a {
     color:#F56017;
