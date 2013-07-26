@@ -18,8 +18,8 @@
 .highlight .gr { color: #ffffff; background-color: #ff0000 } /* Generic.Error */
 .highlight .gh { color: #1014AD; font-weight: bold} /* Generic.Heading */
 .highlight .gi { color: #000000} /* Generic.Inserted */
-.highlight .go { color: #4000ff; font-weight: bold; background-color: #EFEFF7 } /* Generic.Output */
-.highlight .gp { color: #000000} /* Generic.Prompt */
+.highlight .go { color: #888; background-color: #EFEFF7 } /* Generic.Output */
+.highlight .gp { color: #F56017} /* Generic.Prompt */
 .highlight .gs { color: #000000} /* Generic.Strong */
 .highlight .gu { color: #1014AD; font-weight: bold} /* Generic.Subheading */
 .highlight .gt { color: #EB1513; font-weight: bold} /* Generic.Traceback */

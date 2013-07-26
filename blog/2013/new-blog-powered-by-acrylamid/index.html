@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Blog - Will Fuqua</title>
+        <title>New Blog — Powered by Acrylamid</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
@@ -23,6 +23,8 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
+    <meta name="description" content="Every two years or so, I decide that I should prob..." />
+    <meta name="keywords" content="acrylamid, blog, python" />
     </head>
     <body>
         <header>
@@ -34,7 +36,21 @@
     <h1>New Blog — Powered by Acrylamid</h1>
     <p>Every two years or so, I decide that I should probably have a tech blog, even if it's just a place for me to post notes on languages and systems I'm ex&shy;per&shy;i&shy;ment&shy;ing with.
 That time has rolled around again, so I spent some time playing with <a class="reference external" href="http://posativ.org/acrylamid/">Acrylamid</a>, a <em>static blog generator</em>.</p>
-<p>Typically, a blog is hosted on a webserver that runs a server-side language such as Ruby or PHP. That language is used to read a blog post from a database and generate the HTML that is sent to the browser. However, a <em>static blog generator</em> gets rid of the need for <span>&#8230;<a href="/blog/2013/new-blog-powered-by-acrylamid/" class="continue">continue</a>.</span></p>
+<p>Typically, a blog is hosted on a webserver that runs a server-side language such as Ruby or PHP. That language is used to read a blog post from a database and generate the HTML that is sent to the browser. However, a <em>static blog generator</em> gets rid of the need for a server-side language entirely; the blog author writes a post on his or her computer, the static blog generator creates HTML from that post, and then the HTML is uploaded to the webserver. This allows the webserver to be very simple and fast, thus making free hosting options such as <a class="reference external" href="http://pages.github.com/">GitHub Pages</a> available.</p>
+<p>It's incredibly easy to get up and running with Acrylamid. It's written in Python 2 (with a Python 3 version in the works), and leverages existing, popular, and time-tested Python libraries.</p>
+<p>To get started, let's create a <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">python virtual en&shy;vi&shy;ron&shy;ment</a>, into which we'll install Acrylamid:</p>
+<div class="highlight"><pre><span class="gp">&gt;</span> virtualenv2 my-sample-blog
+<span class="go">New python executable in my-sample-blog/bin/python2</span>
+<span class="go">Also creating executable in my-sample-blog/bin/python</span>
+<span class="go">Installing setuptools............done.</span>
+<span class="go">Installing pip...............done.</span>
+<span class="gp">&gt;</span> <span class="nb">cd </span>blog
+<span class="gp">&gt;</span> <span class="nb">source </span>bin/activate
+</pre></div>
+<div class="highlight"><pre><span class="gp">&gt;</span> pip install acrylamid
+<span class="gp">&gt;</span> acrylamid
+</pre></div>
+
     <div class="tags">
         
         

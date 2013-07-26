@@ -14,9 +14,9 @@
     <updated>2013-07-24T04:00:00Z</updated>
     <generator uri="https://github.com/posativ/acrylamid/" version="0.7.7">acrylamid</generator>
         <entry>
-        <title>New Technology Blog</title>
-        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2013/new-technology-blog/" />
-        <id>tag:fuqua.io/blog,2013-07-24:/2013/new-technology-blog</id>
+        <title>New Blog — Powered by Acrylamid</title>
+        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2013/new-blog-powered-by-acrylamid/" />
+        <id>tag:fuqua.io/blog,2013-07-24:/2013/new-blog-powered-by-acrylamid</id>
         <updated>2013-07-24T04:00:00Z</updated>
         <category term="acrylamid" />
         <category term="blog" />
@@ -28,9 +28,20 @@
             <email>info@example.com</email>
         </author>
         <content type="html">&lt;p&gt;Every two years or so, I decide that I should probably have a tech blog, even if it&#39;s just a place for me to post notes on languages and systems I&#39;m experimenting with.
-I spent a weekend playing around with a couple of static site generators, and finally settled on &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/&#34;&gt;Acrylamid&lt;/a&gt;. Here are my notes on the blog systems I tried out.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;lineno&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;c&#34;&gt;#!/usr/bin/env python&lt;/span&gt;
-&lt;span class=&#34;lineno&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;print&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Hello World!&amp;quot;&lt;/span&gt;
+That time has rolled around again, so I spent some time playing with &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/&#34;&gt;Acrylamid&lt;/a&gt;, a &lt;em&gt;static blog generator&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Typically, a blog is hosted on a webserver that runs a server-side language such as Ruby or PHP. That language is used to read a blog post from a database and generate the HTML that is sent to the browser. However, a &lt;em&gt;static blog generator&lt;/em&gt; gets rid of the need for a server-side language entirely; the blog author writes a post on his or her computer, the static blog generator creates HTML from that post, and then the HTML is uploaded to the webserver. This allows the webserver to be very simple and fast, thus making free hosting options such as &lt;a class=&#34;reference external&#34; href=&#34;http://pages.github.com/&#34;&gt;GitHub Pages&lt;/a&gt; available.&lt;/p&gt;
+&lt;p&gt;It&#39;s incredibly easy to get up and running with Acrylamid. It&#39;s written in Python 2 (with a Python 3 version in the works), and leverages existing, popular, and time-tested Python libraries.&lt;/p&gt;
+&lt;p&gt;To get started, let&#39;s create a &lt;a class=&#34;reference external&#34; href=&#34;https://pypi.python.org/pypi/virtualenv&#34;&gt;python virtual environment&lt;/a&gt;, into which we&#39;ll install Acrylamid:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; virtualenv2 my-sample-blog
+&lt;span class=&#34;go&#34;&gt;New python executable in my-sample-blog/bin/python2&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;Also creating executable in my-sample-blog/bin/python&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;Installing setuptools............done.&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;Installing pip...............done.&lt;/span&gt;
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd &lt;/span&gt;blog
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;source &lt;/span&gt;bin/activate
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install acrylamid
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; acrylamid
 &lt;/pre&gt;&lt;/div&gt;
 </content>
     </entry>
