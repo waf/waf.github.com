@@ -6,7 +6,7 @@ SITENAME = 'Blog - Will Fuqua'
 WWW_ROOT = 'http://fuqua.io/blog/'
 OUTPUT_DIR = '.'
 
-FILTERS = ['reStructuredText', 'hyphenate', 'h1']
+FILTERS = ['reStructuredText', 'hyphenate', 'typography', 'h1']
 VIEWS = {
     '/': {'filters': 'summarize', 'view': 'index',
           'pagination': '/page/:num/'},

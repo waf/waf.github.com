@@ -34,22 +34,51 @@
         <article>
     <time datetime="2013-07-24">July 24 2013</time>
     <h1>New Blog — Powered by Acrylamid</h1>
-    <p>Every two years or so, I decide that I should probably have a tech blog, even if it's just a place for me to post notes on languages and systems I'm ex&shy;per&shy;i&shy;ment&shy;ing with.
-That time has rolled around again, so I spent some time playing with <a class="reference external" href="http://posativ.org/acrylamid/">Acrylamid</a>, a <em>static blog generator</em>.</p>
-<p>Typically, a blog is hosted on a webserver that runs a server-side language such as Ruby or PHP. That language is used to read a blog post from a database and generate the HTML that is sent to the browser. However, a <em>static blog generator</em> gets rid of the need for a server-side language entirely; the blog author writes a post on his or her computer, the static blog generator creates HTML from that post, and then the HTML is uploaded to the webserver. This allows the webserver to be very simple and fast, thus making free hosting options such as <a class="reference external" href="http://pages.github.com/">GitHub Pages</a> available.</p>
-<p>It's incredibly easy to get up and running with Acrylamid. It's written in Python 2 (with a Python 3 version in the works), and leverages existing, popular, and time-tested Python libraries.</p>
-<p>To get started, let's create a <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">python virtual en&shy;vi&shy;ron&shy;ment</a>, into which we'll install Acrylamid:</p>
-<div class="highlight"><pre><span class="gp">&gt;</span> virtualenv2 my-sample-blog
-<span class="go">New python executable in my-sample-blog/bin/python2</span>
-<span class="go">Also creating executable in my-sample-blog/bin/python</span>
+    <p>Every two years or so, I decide that I should probably have a tech blog, even if it&#8217;s just a place for me to post notes on languages and systems I&#8217;m ex&shy;per&shy;i&shy;ment&shy;ing with.
+That time has rolled around again, so I spent some time playing with <a class="reference external" href="http://posativ.org/acrylamid/">Acrylamid</a>, a <em>static blog generator</em>, written in&nbsp;Python.</p>
+<p>As of August 2013, the Acrylamid website recommends using the older easy_in&shy;stall in&shy;stal&shy;la&shy;tion method, but I prefer to use a virtualenv/pip based install. I&#8217;ve detailed the&nbsp;in&shy;stal&shy;la&shy;tion.</p>
+<div class="section" id="what-s-a-static-blog-generator">
+<h2>What&#8217;s a Static Blog&nbsp;Generator?</h2>
+<p>Typically, a blog is hosted on a webserver that runs a server-side language such as Ruby or <span class="caps">PHP</span>. That language is used to read a blog post from a database and generate the <span class="caps">HTML</span> that is sent to the browser. However, a <em>static blog generator</em> gets rid of the need for a server-side language entirely; the blog author writes a post on his or her computer, the static blog generator creates <span class="caps">HTML</span> from that post, and then the <span class="caps">HTML</span> is uploaded to the webserver. This allows the webserver to be very simple and fast, thus making free hosting options such as <a class="reference external" href="http://pages.github.com/">GitHub Pages</a>&nbsp;available.</p>
+</div>
+<div class="section" id="up-and-running">
+<h2>Up and&nbsp;Running</h2>
+<p>To get started, let&#8217;s create our empty <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">python virtual en&shy;vi&shy;ron&shy;ment</a>:</p>
+<div class="highlight"><pre><span class="gp">&gt;</span> virtualenv2 blog-project
+<span class="go">New python executable in blog-project/bin/python2</span>
+<span class="go">Also creating executable in blog-project/bin/python</span>
 <span class="go">Installing setuptools............done.</span>
 <span class="go">Installing pip...............done.</span>
-<span class="gp">&gt;</span> <span class="nb">cd </span>blog
+<span class="gp">&gt;</span> <span class="nb">cd </span>blog-project
 <span class="gp">&gt;</span> <span class="nb">source </span>bin/activate
 </pre></div>
+<p>If you&#8217;re not familiar with python virtual en&shy;vi&shy;ron&shy;ments, all we&#8217;re doing here is creating a directory (called <tt class="docutils literal"><span class="pre">blog-project</span></tt>) that has a self-contained set of python packages. This way, when we install Acrylamid, we&#8217;re only installing it into this directory, and not system-wide. You can find the virtualenv command in your <span class="caps">OS</span>&#8217;s repos&shy;i&shy;to&shy;ries. Make sure you get the python2 version, as Acrylamid is a python2&nbsp;ap&shy;pli&shy;ca&shy;tion.</p>
+<p>Now, let&#8217;s install Acrylamid into our virtual en&shy;vi&shy;ron&shy;ment and create a new blog, imag&shy;i&shy;na&shy;tive&shy;ly named&nbsp;&#8216;blog&#8217;:</p>
 <div class="highlight"><pre><span class="gp">&gt;</span> pip install acrylamid
-<span class="gp">&gt;</span> acrylamid
+<span class="gp">&gt;</span> acrylamid init blog
+<span class="go">create  blog/content/sample-entry.txt</span>
+<span class="go">create  blog/theme/base.html</span>
+<span class="go">create  blog/theme/main.html</span>
+<span class="go">create  blog/theme/entry.html</span>
+<span class="go">create  blog/theme/articles.html</span>
+<span class="go">create  blog/theme/atom.xml</span>
+<span class="go">create  blog/theme/rss.xml</span>
+<span class="go">create  blog/theme/style.css</span>
+<span class="go">create  blog/conf.py</span>
+<span class="go">Created your fresh new blog at &#39;blog&#39;. Enjoy!</span>
 </pre></div>
+<p>Acrylamid created three things for&nbsp;us:</p>
+<ul class="simple">
+<li>conf.py &#8212; the con&shy;fig&shy;u&shy;ra&shy;tion file for&nbsp;Acrylamid.</li>
+<li>the content directory &#8212; this is where we&#8217;ll place blog posts, one post per file. By default we write in the <a class="reference external" href="http://en.wikipedia.org/wiki/Markdown">Markdown</a>&nbsp;format.</li>
+<li>the theme directory &#8212; this holds our template files used to generate the <span class="caps">HTML</span>. By default this uses <a class="reference external" href="http://jinja.pocoo.org/docs/">Jinja2</a>&nbsp;templating.</li>
+</ul>
+<p>There&#8217;s one last step: we have all the source files for our blog, we just need to generate the actual <span class="caps">HTML</span>! We can generate the <span class="caps">HTML</span> and fire up a de&shy;vel&shy;op&shy;ment web server by running the&nbsp;command:</p>
+<div class="highlight"><pre><span class="gp">&gt;</span> acrylamid autocompile
+</pre></div>
+<p>This will serve up our files on port 8000, and regenerate the <span class="caps">HTML</span> whenever the source files&nbsp;change.</p>
+<p>At this point we have a fully-func&shy;tion&shy;ing static blog! The generated <span class="caps">HTML</span> files are in the newly-created <tt class="docutils literal">output</tt> directory, and these <span class="caps">HTML</span> files can be published wherever we want. Now would be a good time to explore the conf.py file, where we can change the blog title and author, as well as quite a few other <a class="reference external" href="http://posativ.org/acrylamid/conf.py.html">in&shy;ter&shy;est&shy;ing cus&shy;tomiza&shy;tions</a>.</p>
+</div>
 
     <div class="tags">
         
