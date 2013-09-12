@@ -9,14 +9,14 @@ That time has rolled around again, so I spent some time playing with Acrylamid_,
 
     With Acrylamid you can write your weblog entries with your editor of choice in Markdown, reStructuredText or textile. With several content filters you can pimp your HTML (typography, math, hyphenation). Acrylamid provides a very sophisticated CLI and integrates perfectly with any DVCes. It generates completely static HTML you can host everywhere.
 
-As of September 2013, the Acrylamid website recommends using the older easy_install installation method, but I much prefer to use a standard virtualenv/pip based setup. I've detailed the installation and configuration steps below.
+As of September 2013, the Acrylamid website recommends using the older easy_install installation method, but I much prefer to use a standard virtualenv/pip-based setup. I've detailed the installation and configuration steps below.
 
 Up and Running
 ==============
 
 The first thing we need to do is install virtualenv_. You can find the virtualenv command in your OS's repositories. Make sure you get the Python2 version, as Acrylamid is a Python2 application.
 
-After we have it installed, let's use it to create our empty Python virtual environment: 
+After we have virtualenv installed, let's use it to create our empty Python virtual environment: 
 
 .. code-block:: console
 
@@ -28,7 +28,7 @@ After we have it installed, let's use it to create our empty Python virtual envi
     > cd blog-project
     > source bin/activate
 
-If you're not familiar with Python virtual environments, all we're doing here is creating a directory (called ``blog-project``) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are placed into ``blog-project``, and not system-wide. When we source the ``bin/activate`` script it modifies the ``$PATH`` variable to point to the ``blog-project`` Python libraries. This ``$PATH`` modification only lasts for the duration of your terminal session.
+If you're not familiar with Python virtual environments, all we're doing here is creating a directory (called ``blog-project``) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are installed into the ``blog-project`` directory, and not system-wide. When we source the ``bin/activate`` script it modifies the ``$PATH`` variable to point to the ``blog-project`` Python libraries. This ``$PATH`` modification only lasts for the duration of your terminal session.
 
 Now, let's install Acrylamid and create our blog. For more information on what's going on here, check out Acrylamid's `getting started guide`_.
 
@@ -80,7 +80,7 @@ We can add code syntax highlighting to our blog by installing `Pygments`_:
     
     > pip install pygments
 
-Next, designate a block of your code as a code-block. Pygments will parse our code-blocks and add CSS classes to individual tokens. For reStructuredText use the syntax:
+Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add CSS classes to individual tokens. For reStructuredText, use the syntax:
 
 .. code-block:: reStructuredText
 
@@ -100,7 +100,7 @@ All we have to do is install the smartypants module, and add the filter to our `
 
 .. code-block:: console
     
-    > pip install smartpants
+    > pip install smartypants
 
 .. code-block:: python
 

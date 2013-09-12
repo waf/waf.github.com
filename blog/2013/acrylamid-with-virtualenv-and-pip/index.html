@@ -38,11 +38,11 @@
 That time has rolled around again, so I spent some time playing with <a class="reference external" href="http://posativ.org/acrylamid/">Acrylamid</a>, a <em>static blog generator</em>, written in Python. From Acrylamid&#8217;s&nbsp;website:</p>
 <blockquote>
 With Acrylamid you can write your weblog entries with your editor of choice in Markdown, re&shy;Struc&shy;tured&shy;Text or textile. With several content filters you can pimp your <span class="caps">HTML</span> (typography, math, hy&shy;phen&shy;ation). Acrylamid provides a very so&shy;phis&shy;ti&shy;cat&shy;ed <span class="caps">CLI</span> and integrates perfectly with any DVCes. It generates completely static <span class="caps">HTML</span> you can host everywhere.</blockquote>
-<p>As of September 2013, the Acrylamid website recommends using the older easy_in&shy;stall in&shy;stal&shy;la&shy;tion method, but I much prefer to use a standard virtualenv/pip based setup. I&#8217;ve detailed the in&shy;stal&shy;la&shy;tion and con&shy;fig&shy;u&shy;ra&shy;tion steps&nbsp;below.</p>
+<p>As of September 2013, the Acrylamid website recommends using the older easy_in&shy;stall in&shy;stal&shy;la&shy;tion method, but I much prefer to use a standard virtualenv/pip-based setup. I&#8217;ve detailed the in&shy;stal&shy;la&shy;tion and con&shy;fig&shy;u&shy;ra&shy;tion steps&nbsp;below.</p>
 <div class="section" id="up-and-running">
 <h2>Up and&nbsp;Running</h2>
 <p>The first thing we need to do is install <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">virtualenv</a>. You can find the virtualenv command in your <span class="caps">OS</span>&#8217;s repos&shy;i&shy;to&shy;ries. Make sure you get the Python2 version, as Acrylamid is a Python2&nbsp;ap&shy;pli&shy;ca&shy;tion.</p>
-<p>After we have it installed, let&#8217;s use it to create our empty Python virtual&nbsp;en&shy;vi&shy;ron&shy;ment:</p>
+<p>After we have virtualenv installed, let&#8217;s use it to create our empty Python virtual&nbsp;en&shy;vi&shy;ron&shy;ment:</p>
 <div class="highlight"><pre><span class="gp">&gt;</span> virtualenv2 blog-project
 <span class="go">New python executable in blog-project/bin/python2</span>
 <span class="go">Also creating executable in blog-project/bin/python</span>
@@ -51,7 +51,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <span class="gp">&gt;</span> <span class="nb">cd </span>blog-project
 <span class="gp">&gt;</span> <span class="nb">source </span>bin/activate
 </pre></div>
-<p>If you&#8217;re not familiar with Python virtual en&shy;vi&shy;ron&shy;ments, all we&#8217;re doing here is creating a directory (called <tt class="docutils literal"><span class="pre">blog-project</span></tt>) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are placed into <tt class="docutils literal"><span class="pre">blog-project</span></tt>, and not system-wide. When we source the <tt class="docutils literal">bin/activate</tt> script it modifies the <tt class="docutils literal">$<span class="caps">PATH</span></tt> variable to point to the <tt class="docutils literal"><span class="pre">blog-project</span></tt> Python libraries. This <tt class="docutils literal">$<span class="caps">PATH</span></tt> mod&shy;i&shy;fi&shy;ca&shy;tion only lasts for the duration of your terminal&nbsp;session.</p>
+<p>If you&#8217;re not familiar with Python virtual en&shy;vi&shy;ron&shy;ments, all we&#8217;re doing here is creating a directory (called <tt class="docutils literal"><span class="pre">blog-project</span></tt>) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are installed into the <tt class="docutils literal"><span class="pre">blog-project</span></tt> directory, and not system-wide. When we source the <tt class="docutils literal">bin/activate</tt> script it modifies the <tt class="docutils literal">$<span class="caps">PATH</span></tt> variable to point to the <tt class="docutils literal"><span class="pre">blog-project</span></tt> Python libraries. This <tt class="docutils literal">$<span class="caps">PATH</span></tt> mod&shy;i&shy;fi&shy;ca&shy;tion only lasts for the duration of your terminal&nbsp;session.</p>
 <p>Now, let&#8217;s install Acrylamid and create our blog. For more in&shy;for&shy;ma&shy;tion on what&#8217;s going on here, check out Acrylamid&#8217;s <a class="reference external" href="http://posativ.org/acrylamid/usage.html">getting started guide</a>.</p>
 <div class="highlight"><pre><span class="gp">&gt;</span> pip install acrylamid
 <span class="gp">&gt;</span> acrylamid init myblog
@@ -87,7 +87,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <p>We can add code syntax high&shy;light&shy;ing to our blog by installing <a class="reference external" href="http://pygments.org/">Pygments</a>:</p>
 <div class="highlight"><pre><span class="gp">&gt;</span> pip install pygments
 </pre></div>
-<p>Next, designate a block of your code as a code-block. Pygments will parse our code-blocks and add <span class="caps">CSS</span> classes to individual tokens. For re&shy;Struc&shy;tured&shy;Text use the&nbsp;syntax:</p>
+<p>Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add <span class="caps">CSS</span> classes to individual tokens. For re&shy;Struc&shy;tured&shy;Text, use the&nbsp;syntax:</p>
 <div class="highlight"><pre>.. code-block:: python
 
 def foo():
@@ -99,7 +99,7 @@ def foo():
 <h3>Advanced&nbsp;Typography</h3>
 <p>Since we&#8217;re authoring our blog in a text editor, it can be chal&shy;leng&shy;ing to include proper punc&shy;tu&shy;a&shy;tion like em/en dashes and ellipses. To fix this we can enable the &#8216;typography&#8217; filter, which will add these ty&shy;po&shy;graph&shy;i&shy;cal flares to our text. For example, it replaces three periods with an ellipsis, and replaces two hyphens with an en&nbsp;dash.</p>
 <p>All we have to do is install the smar&shy;ty&shy;pants module, and add the filter to our <tt class="docutils literal">conf.py</tt>.</p>
-<div class="highlight"><pre><span class="gp">&gt;</span> pip install smartpants
+<div class="highlight"><pre><span class="gp">&gt;</span> pip install smartypants
 </pre></div>
 <div class="highlight"><pre><span class="n"><span class="caps">FILTERS</span></span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s">&#39;typography&#39;</span><span class="p">,</span> <span class="s">&#39;h1&#39;</span><span class="p">]</span>
 </pre></div>

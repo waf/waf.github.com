@@ -31,11 +31,11 @@
 That time has rolled around again, so I spent some time playing with &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/&#34;&gt;Acrylamid&lt;/a&gt;, a &lt;em&gt;static blog generator&lt;/em&gt;, written in Python. From Acrylamid&amp;#8217;s&amp;nbsp;website:&lt;/p&gt;
 &lt;blockquote&gt;
 With Acrylamid you can write your weblog entries with your editor of choice in Markdown, reStructuredText or textile. With several content filters you can pimp your &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; (typography, math, hyphenation). Acrylamid provides a very sophisticated &lt;span class=&#34;caps&#34;&gt;CLI&lt;/span&gt; and integrates perfectly with any DVCes. It generates completely static &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; you can host everywhere.&lt;/blockquote&gt;
-&lt;p&gt;As of September 2013, the Acrylamid website recommends using the older easy_install installation method, but I much prefer to use a standard virtualenv/pip based setup. I&amp;#8217;ve detailed the installation and configuration steps&amp;nbsp;below.&lt;/p&gt;
+&lt;p&gt;As of September 2013, the Acrylamid website recommends using the older easy_install installation method, but I much prefer to use a standard virtualenv/pip-based setup. I&amp;#8217;ve detailed the installation and configuration steps&amp;nbsp;below.&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;up-and-running&#34;&gt;
 &lt;h3&gt;Up and&amp;nbsp;Running&lt;/h3&gt;
 &lt;p&gt;The first thing we need to do is install &lt;a class=&#34;reference external&#34; href=&#34;https://pypi.python.org/pypi/virtualenv&#34;&gt;virtualenv&lt;/a&gt;. You can find the virtualenv command in your &lt;span class=&#34;caps&#34;&gt;OS&lt;/span&gt;&amp;#8217;s repositories. Make sure you get the Python2 version, as Acrylamid is a Python2&amp;nbsp;application.&lt;/p&gt;
-&lt;p&gt;After we have it installed, let&amp;#8217;s use it to create our empty Python virtual&amp;nbsp;environment:&lt;/p&gt;
+&lt;p&gt;After we have virtualenv installed, let&amp;#8217;s use it to create our empty Python virtual&amp;nbsp;environment:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; virtualenv2 blog-project
 &lt;span class=&#34;go&#34;&gt;New python executable in blog-project/bin/python2&lt;/span&gt;
 &lt;span class=&#34;go&#34;&gt;Also creating executable in blog-project/bin/python&lt;/span&gt;
@@ -44,7 +44,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd &lt;/span&gt;blog-project
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;source &lt;/span&gt;bin/activate
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If you&amp;#8217;re not familiar with Python virtual environments, all we&amp;#8217;re doing here is creating a directory (called &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt;) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are placed into &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt;, and not system-wide. When we source the &lt;tt class=&#34;docutils literal&#34;&gt;bin/activate&lt;/tt&gt; script it modifies the &lt;tt class=&#34;docutils literal&#34;&gt;$&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;&lt;/tt&gt; variable to point to the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt; Python libraries. This &lt;tt class=&#34;docutils literal&#34;&gt;$&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;&lt;/tt&gt; modification only lasts for the duration of your terminal&amp;nbsp;session.&lt;/p&gt;
+&lt;p&gt;If you&amp;#8217;re not familiar with Python virtual environments, all we&amp;#8217;re doing here is creating a directory (called &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt;) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are installed into the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt; directory, and not system-wide. When we source the &lt;tt class=&#34;docutils literal&#34;&gt;bin/activate&lt;/tt&gt; script it modifies the &lt;tt class=&#34;docutils literal&#34;&gt;$&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;&lt;/tt&gt; variable to point to the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt; Python libraries. This &lt;tt class=&#34;docutils literal&#34;&gt;$&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;&lt;/tt&gt; modification only lasts for the duration of your terminal&amp;nbsp;session.&lt;/p&gt;
 &lt;p&gt;Now, let&amp;#8217;s install Acrylamid and create our blog. For more information on what&amp;#8217;s going on here, check out Acrylamid&amp;#8217;s &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/usage.html&#34;&gt;getting started guide&lt;/a&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install acrylamid
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; acrylamid init myblog
@@ -80,7 +80,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 &lt;p&gt;We can add code syntax highlighting to our blog by installing &lt;a class=&#34;reference external&#34; href=&#34;http://pygments.org/&#34;&gt;Pygments&lt;/a&gt;:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install pygments
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Next, designate a block of your code as a code-block. Pygments will parse our code-blocks and add &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; classes to individual tokens. For reStructuredText use the&amp;nbsp;syntax:&lt;/p&gt;
+&lt;p&gt;Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; classes to individual tokens. For reStructuredText, use the&amp;nbsp;syntax:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;.. code-block:: python
 
 def foo():
@@ -92,7 +92,7 @@ def foo():
 &lt;h4&gt;Advanced&amp;nbsp;Typography&lt;/h4&gt;
 &lt;p&gt;Since we&amp;#8217;re authoring our blog in a text editor, it can be challenging to include proper punctuation like em/en dashes and ellipses. To fix this we can enable the &amp;#8216;typography&amp;#8217; filter, which will add these typographical flares to our text. For example, it replaces three periods with an ellipsis, and replaces two hyphens with an en&amp;nbsp;dash.&lt;/p&gt;
 &lt;p&gt;All we have to do is install the smartypants module, and add the filter to our &lt;tt class=&#34;docutils literal&#34;&gt;conf.py&lt;/tt&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install smartpants
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install smartypants
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;n&#34;&gt;&lt;span class=&#34;caps&#34;&gt;FILTERS&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#39;reStructuredText&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;hyphenate&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;typography&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
