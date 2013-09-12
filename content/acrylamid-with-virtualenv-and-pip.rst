@@ -59,7 +59,7 @@ Acrylamid has great, in-depth `configuration documentation`_. There are a couple
 reStructuredText
 ----------------
 
-Acrylamid uses Markdown by default for the authoring of blog posts. However, the `reStructuredText`_ filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to reStructureText by installing the docutils package:
+Acrylamid uses Markdown by default for the authoring of blog posts. However, the `reStructuredText`_ filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to reStructuredText by installing the docutils package:
 
 .. code-block:: console
     
@@ -80,14 +80,14 @@ We can add code syntax highlighting to our blog by installing `Pygments`_:
     
     > pip install pygments
 
-Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add CSS classes to individual tokens. For reStructuredText, use the syntax:
+Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add CSS classes to individual tokens. To designate a code-block in reStructuredText, use the syntax:
 
 .. code-block:: reStructuredText
 
     .. code-block:: python
 
-    def foo():
-        return "foo"
+        def foo():
+            return "foo"
 
 We'll want to grab a Pygments theme, which is just a CSS file. Phil Tysoe has a good `list of themes`_ on his blog, though we need to rename the wrapper class from ``codehilite`` to the class that Acrylamid uses, ``highlight``. Include the CSS file in your Acrylamid theme.
 
