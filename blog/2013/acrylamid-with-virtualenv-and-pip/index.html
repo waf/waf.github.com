@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>Acrylamid with virtualenv and pip</title>
+        <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
+        <link media="all" href="/blog/style/main.css" rel="stylesheet" />
+        <link href="/favicon.ico" rel="shortcut icon" />
+        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans" />
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Inconsolata" />
+        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
+        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-38553935-1']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    <meta name="description" content="Every two years or so, I decide that I should prob..." />
+    <meta name="keywords" content="acrylamid, blog, python" />
+    </head>
+    <body>
+        <header>
+            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        </header>
+        
+        <article>
+    <time datetime="2013-09-10">September 10 2013</time>
+    <h1>Acrylamid with virtualenv and pip</h1>
+    <p>Every two years or so, I decide that I should probably have a tech blog, even if it&#8217;s just a place for me to post notes on languages and systems I&#8217;m ex&shy;per&shy;i&shy;ment&shy;ing with.
+That time has rolled around again, so I spent some time playing with <a class="reference external" href="http://posativ.org/acrylamid/">Acrylamid</a>, a <em>static blog generator</em>, written in Python. From Acrylamid&#8217;s&nbsp;website:</p>
+<blockquote>
+With Acrylamid you can write your weblog entries with your editor of choice in Markdown, re&shy;Struc&shy;tured&shy;Text or textile. With several content filters you can pimp your <span class="caps">HTML</span> (typography, math, hy&shy;phen&shy;ation). Acrylamid provides a very so&shy;phis&shy;ti&shy;cat&shy;ed <span class="caps">CLI</span> and integrates perfectly with any DVCes. It generates completely static <span class="caps">HTML</span> you can host everywhere.</blockquote>
+<p>As of September 2013, the Acrylamid website recommends using the older easy_in&shy;stall in&shy;stal&shy;la&shy;tion method, but I much prefer to use a standard virtualenv/pip based setup. I&#8217;ve detailed the in&shy;stal&shy;la&shy;tion and con&shy;fig&shy;u&shy;ra&shy;tion steps&nbsp;below.</p>
+<div class="section" id="up-and-running">
+<h2>Up and&nbsp;Running</h2>
+<p>The first thing we need to do is install <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">virtualenv</a>. You can find the virtualenv command in your <span class="caps">OS</span>&#8217;s repos&shy;i&shy;to&shy;ries. Make sure you get the Python2 version, as Acrylamid is a Python2&nbsp;ap&shy;pli&shy;ca&shy;tion.</p>
+<p>After we have it installed, let&#8217;s use it to create our empty Python virtual&nbsp;en&shy;vi&shy;ron&shy;ment:</p>
+<div class="highlight"><pre><span class="gp">&gt;</span> virtualenv2 blog-project
+<span class="go">New python executable in blog-project/bin/python2</span>
+<span class="go">Also creating executable in blog-project/bin/python</span>
+<span class="go">Installing setuptools............done.</span>
+<span class="go">Installing pip...............done.</span>
+<span class="gp">&gt;</span> <span class="nb">cd </span>blog-project
+<span class="gp">&gt;</span> <span class="nb">source </span>bin/activate
+</pre></div>
+<p>If you&#8217;re not familiar with Python virtual en&shy;vi&shy;ron&shy;ments, all we&#8217;re doing here is creating a directory (called <tt class="docutils literal"><span class="pre">blog-project</span></tt>) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are placed into <tt class="docutils literal"><span class="pre">blog-project</span></tt>, and not system-wide. When we source the <tt class="docutils literal">bin/activate</tt> script it modifies the <tt class="docutils literal">$<span class="caps">PATH</span></tt> variable to point to the <tt class="docutils literal"><span class="pre">blog-project</span></tt> Python libraries. This <tt class="docutils literal">$<span class="caps">PATH</span></tt> mod&shy;i&shy;fi&shy;ca&shy;tion only lasts for the duration of your terminal&nbsp;session.</p>
+<p>Now, let&#8217;s install Acrylamid and create our blog. For more in&shy;for&shy;ma&shy;tion on what&#8217;s going on here, check out Acrylamid&#8217;s <a class="reference external" href="http://posativ.org/acrylamid/usage.html">getting started guide</a>.</p>
+<div class="highlight"><pre><span class="gp">&gt;</span> pip install acrylamid
+<span class="gp">&gt;</span> acrylamid init myblog
+<span class="go">create  myblog/content/sample-entry.txt</span>
+<span class="go">create  myblog/theme/base.html</span>
+<span class="go">create  myblog/theme/main.html</span>
+<span class="go">create  myblog/theme/entry.html</span>
+<span class="go">create  myblog/theme/articles.html</span>
+<span class="go">create  myblog/theme/atom.xml</span>
+<span class="go">create  myblog/theme/rss.xml</span>
+<span class="go">create  myblog/theme/style.css</span>
+<span class="go">create  myblog/conf.py</span>
+<span class="go">Created your fresh new blog at &#39;myblog&#39;. Enjoy!</span>
+<span class="gp">&gt;</span> acrylamid autocompile
+<span class="go">* Running on http://127.0.0.1:8000/</span>
+</pre></div>
+<p>At this point we have a fully-func&shy;tion&shy;ing static blog served up on port 8000! Next step?&nbsp;Con&shy;fig&shy;u&shy;ra&shy;tion!</p>
+</div>
+<div class="section" id="adding-some-flare">
+<h2>Adding some&nbsp;Flare</h2>
+<p>Acrylamid has great, in-depth <a class="reference external" href="http://posativ.org/acrylamid/conf.py.html">con&shy;fig&shy;u&shy;ra&shy;tion doc&shy;u&shy;men&shy;ta&shy;tion</a>. There are a couple of filters and modules we can install via pip into our virtualenv&nbsp;en&shy;vi&shy;ron&shy;ment:</p>
+<div class="section" id="restructuredtext">
+<h3>re&shy;Struc&shy;tured&shy;Text</h3>
+<p>Acrylamid uses Markdown by default for the authoring of blog posts. However, the <a class="reference external" href="http://en.wikipedia.org/wiki/Markdown">re&shy;Struc&shy;tured&shy;Text</a> filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to re&shy;Struc&shy;ture&shy;Text by installing the docutils&nbsp;package:</p>
+<div class="highlight"><pre><span class="gp">&gt;</span> pip install docutils
+</pre></div>
+<p>Now, find the filters list in <tt class="docutils literal">conf.py</tt> and replace Markdown with&nbsp;re&shy;Struc&shy;tured&shy;Text:</p>
+<div class="highlight"><pre><span class="n"><span class="caps">FILTERS</span></span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s">&#39;h1&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="syntax-highlighting">
+<h3>Syntax&nbsp;High&shy;light&shy;ing</h3>
+<p>We can add code syntax high&shy;light&shy;ing to our blog by installing <a class="reference external" href="http://pygments.org/">Pygments</a>:</p>
+<div class="highlight"><pre><span class="gp">&gt;</span> pip install pygments
+</pre></div>
+<p>Next, designate a block of your code as a code-block. Pygments will parse our code-blocks and add <span class="caps">CSS</span> classes to individual tokens. For re&shy;Struc&shy;tured&shy;Text use the&nbsp;syntax:</p>
+<div class="highlight"><pre>.. code-block:: python
+
+def foo():
+    return &quot;foo&quot;
+</pre></div>
+<p>We&#8217;ll want to grab a Pygments theme, which is just a <span class="caps">CSS</span> file. Phil Tysoe has a good <a class="reference external" href="http://igniteflow.com/pygments/themes/">list of themes</a> on his blog, though we need to rename the wrapper class from <tt class="docutils literal">codehilite</tt> to the class that Acrylamid uses, <tt class="docutils literal">highlight</tt>. Include the <span class="caps">CSS</span> file in your Acrylamid&nbsp;theme.</p>
+</div>
+<div class="section" id="advanced-typography">
+<h3>Advanced&nbsp;Typography</h3>
+<p>Since we&#8217;re authoring our blog in a text editor, it can be chal&shy;leng&shy;ing to include proper punc&shy;tu&shy;a&shy;tion like em/en dashes and ellipses. To fix this we can enable the &#8216;typography&#8217; filter, which will add these ty&shy;po&shy;graph&shy;i&shy;cal flares to our text. For example, it replaces three periods with an ellipsis, and replaces two hyphens with an en&nbsp;dash.</p>
+<p>All we have to do is install the smar&shy;ty&shy;pants module, and add the filter to our <tt class="docutils literal">conf.py</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;</span> pip install smartpants
+</pre></div>
+<div class="highlight"><pre><span class="n"><span class="caps">FILTERS</span></span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s">&#39;typography&#39;</span><span class="p">,</span> <span class="s">&#39;h1&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="what-s-next">
+<h2>What&#8217;s&nbsp;next?</h2>
+<p>I&#8217;ve covered a few of the more in&shy;ter&shy;est&shy;ing Acrylamid cus&shy;tomiza&shy;tion options and Python modules, but there are many, many more. Take a look at the <a class="reference external" href="http://posativ.org/acrylamid/filters.html">Acrylamid filter doc&shy;u&shy;men&shy;ta&shy;tion</a> for an exhaustive&nbsp;list!</p>
+</div>
+
+    <div class="tags">
+        
+        
+            tagged as
+                <a href="/blog/tag/acrylamid/" rel="tag">acrylamid</a>,
+                <a href="/blog/tag/blog/" rel="tag">blog</a>
+                    and
+                    
+                <a href="/blog/tag/python/" rel="tag">python</a>
+                
+        
+    </div>
+    <div class="comments"></div>
+</article><div class="pager">
+    
+    
+    </div>
+<footer>
+    <a href="/blog/atom/" rel="alternate">blog feed</a>
+            <a href="https://twitter.com/wafuqua" rel="me">twitter</a>
+            <a href="https://github.com/waf" rel="me">github</a>
+            <a href="http://www.linkedin.com/in/wafuqua" rel="me">linkedin</a>
+    
+</footer>
+        <script src="/blog/script/list.min.js"></script>
+    </body>
+</html>

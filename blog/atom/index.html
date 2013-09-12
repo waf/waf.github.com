@@ -11,13 +11,13 @@
     <link rel="self" type="application/atom+xml" href="http://fuqua.io/blog/atom/" />
     <icon>http://fuqua.io/blog/favicon.ico</icon>
     <logo>http://fuqua.io/blog/feed-logo.png</logo>
-    <updated>2013-07-24T04:00:00Z</updated>
+    <updated>2013-09-10T04:00:00Z</updated>
     <generator uri="https://github.com/posativ/acrylamid/" version="0.7.7">acrylamid</generator>
         <entry>
-        <title>New Blog — Powered by Acrylamid</title>
-        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2013/new-blog-powered-by-acrylamid/" />
-        <id>tag:fuqua.io/blog,2013-07-24:/2013/new-blog-powered-by-acrylamid</id>
-        <updated>2013-07-24T04:00:00Z</updated>
+        <title>Acrylamid with virtualenv and pip</title>
+        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2013/acrylamid-with-virtualenv-and-pip/" />
+        <id>tag:fuqua.io/blog,2013-09-10:/2013/acrylamid-with-virtualenv-and-pip</id>
+        <updated>2013-09-10T04:00:00Z</updated>
         <category term="acrylamid" />
         <category term="blog" />
         <category term="python" />
@@ -28,15 +28,14 @@
             <email>info@example.com</email>
         </author>
         <content type="html">&lt;p&gt;Every two years or so, I decide that I should probably have a tech blog, even if it&amp;#8217;s just a place for me to post notes on languages and systems I&amp;#8217;m experimenting with.
-That time has rolled around again, so I spent some time playing with &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/&#34;&gt;Acrylamid&lt;/a&gt;, a &lt;em&gt;static blog generator&lt;/em&gt;, written in&amp;nbsp;Python.&lt;/p&gt;
-&lt;p&gt;As of August 2013, the Acrylamid website recommends using the older easy_install installation method, but I prefer to use a virtualenv/pip based install. I&amp;#8217;ve detailed the&amp;nbsp;installation.&lt;/p&gt;
-&lt;div class=&#34;section&#34; id=&#34;what-s-a-static-blog-generator&#34;&gt;
-&lt;h3&gt;What&amp;#8217;s a Static Blog&amp;nbsp;Generator?&lt;/h3&gt;
-&lt;p&gt;Typically, a blog is hosted on a webserver that runs a server-side language such as Ruby or &lt;span class=&#34;caps&#34;&gt;PHP&lt;/span&gt;. That language is used to read a blog post from a database and generate the &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; that is sent to the browser. However, a &lt;em&gt;static blog generator&lt;/em&gt; gets rid of the need for a server-side language entirely; the blog author writes a post on his or her computer, the static blog generator creates &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; from that post, and then the &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; is uploaded to the webserver. This allows the webserver to be very simple and fast, thus making free hosting options such as &lt;a class=&#34;reference external&#34; href=&#34;http://pages.github.com/&#34;&gt;GitHub Pages&lt;/a&gt;&amp;nbsp;available.&lt;/p&gt;
-&lt;/div&gt;
+That time has rolled around again, so I spent some time playing with &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/&#34;&gt;Acrylamid&lt;/a&gt;, a &lt;em&gt;static blog generator&lt;/em&gt;, written in Python. From Acrylamid&amp;#8217;s&amp;nbsp;website:&lt;/p&gt;
+&lt;blockquote&gt;
+With Acrylamid you can write your weblog entries with your editor of choice in Markdown, reStructuredText or textile. With several content filters you can pimp your &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; (typography, math, hyphenation). Acrylamid provides a very sophisticated &lt;span class=&#34;caps&#34;&gt;CLI&lt;/span&gt; and integrates perfectly with any DVCes. It generates completely static &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; you can host everywhere.&lt;/blockquote&gt;
+&lt;p&gt;As of September 2013, the Acrylamid website recommends using the older easy_install installation method, but I much prefer to use a standard virtualenv/pip based setup. I&amp;#8217;ve detailed the installation and configuration steps&amp;nbsp;below.&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;up-and-running&#34;&gt;
 &lt;h3&gt;Up and&amp;nbsp;Running&lt;/h3&gt;
-&lt;p&gt;To get started, let&amp;#8217;s create our empty &lt;a class=&#34;reference external&#34; href=&#34;https://pypi.python.org/pypi/virtualenv&#34;&gt;python virtual environment&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;The first thing we need to do is install &lt;a class=&#34;reference external&#34; href=&#34;https://pypi.python.org/pypi/virtualenv&#34;&gt;virtualenv&lt;/a&gt;. You can find the virtualenv command in your &lt;span class=&#34;caps&#34;&gt;OS&lt;/span&gt;&amp;#8217;s repositories. Make sure you get the Python2 version, as Acrylamid is a Python2&amp;nbsp;application.&lt;/p&gt;
+&lt;p&gt;After we have it installed, let&amp;#8217;s use it to create our empty Python virtual&amp;nbsp;environment:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; virtualenv2 blog-project
 &lt;span class=&#34;go&#34;&gt;New python executable in blog-project/bin/python2&lt;/span&gt;
 &lt;span class=&#34;go&#34;&gt;Also creating executable in blog-project/bin/python&lt;/span&gt;
@@ -45,32 +44,63 @@ That time has rolled around again, so I spent some time playing with &lt;a class
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd &lt;/span&gt;blog-project
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;source &lt;/span&gt;bin/activate
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If you&amp;#8217;re not familiar with python virtual environments, all we&amp;#8217;re doing here is creating a directory (called &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt;) that has a self-contained set of python packages. This way, when we install Acrylamid, we&amp;#8217;re only installing it into this directory, and not system-wide. You can find the virtualenv command in your &lt;span class=&#34;caps&#34;&gt;OS&lt;/span&gt;&amp;#8217;s repositories. Make sure you get the python2 version, as Acrylamid is a python2&amp;nbsp;application.&lt;/p&gt;
-&lt;p&gt;Now, let&amp;#8217;s install Acrylamid into our virtual environment and create a new blog, imaginatively named&amp;nbsp;&amp;#8216;blog&amp;#8217;:&lt;/p&gt;
+&lt;p&gt;If you&amp;#8217;re not familiar with Python virtual environments, all we&amp;#8217;re doing here is creating a directory (called &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt;) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are placed into &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt;, and not system-wide. When we source the &lt;tt class=&#34;docutils literal&#34;&gt;bin/activate&lt;/tt&gt; script it modifies the &lt;tt class=&#34;docutils literal&#34;&gt;$&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;&lt;/tt&gt; variable to point to the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt; Python libraries. This &lt;tt class=&#34;docutils literal&#34;&gt;$&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;&lt;/tt&gt; modification only lasts for the duration of your terminal&amp;nbsp;session.&lt;/p&gt;
+&lt;p&gt;Now, let&amp;#8217;s install Acrylamid and create our blog. For more information on what&amp;#8217;s going on here, check out Acrylamid&amp;#8217;s &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/usage.html&#34;&gt;getting started guide&lt;/a&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install acrylamid
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; acrylamid init blog
-&lt;span class=&#34;go&#34;&gt;create  blog/content/sample-entry.txt&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  blog/theme/base.html&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  blog/theme/main.html&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  blog/theme/entry.html&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  blog/theme/articles.html&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  blog/theme/atom.xml&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  blog/theme/rss.xml&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  blog/theme/style.css&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  blog/conf.py&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;Created your fresh new blog at &amp;#39;blog&amp;#39;. Enjoy!&lt;/span&gt;
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; acrylamid init myblog
+&lt;span class=&#34;go&#34;&gt;create  myblog/content/sample-entry.txt&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;create  myblog/theme/base.html&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;create  myblog/theme/main.html&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;create  myblog/theme/entry.html&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;create  myblog/theme/articles.html&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;create  myblog/theme/atom.xml&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;create  myblog/theme/rss.xml&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;create  myblog/theme/style.css&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;create  myblog/conf.py&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;Created your fresh new blog at &amp;#39;myblog&amp;#39;. Enjoy!&lt;/span&gt;
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; acrylamid autocompile
+&lt;span class=&#34;go&#34;&gt;* Running on http://127.0.0.1:8000/&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Acrylamid created three things for&amp;nbsp;us:&lt;/p&gt;
-&lt;ul class=&#34;simple&#34;&gt;
-&lt;li&gt;conf.py &amp;#8212; the configuration file for&amp;nbsp;Acrylamid.&lt;/li&gt;
-&lt;li&gt;the content directory &amp;#8212; this is where we&amp;#8217;ll place blog posts, one post per file. By default we write in the &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Markdown&#34;&gt;Markdown&lt;/a&gt;&amp;nbsp;format.&lt;/li&gt;
-&lt;li&gt;the theme directory &amp;#8212; this holds our template files used to generate the &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;. By default this uses &lt;a class=&#34;reference external&#34; href=&#34;http://jinja.pocoo.org/docs/&#34;&gt;Jinja2&lt;/a&gt;&amp;nbsp;templating.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;There&amp;#8217;s one last step: we have all the source files for our blog, we just need to generate the actual &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;! We can generate the &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; and fire up a development web server by running the&amp;nbsp;command:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; acrylamid autocompile
+&lt;p&gt;At this point we have a fully-functioning static blog served up on port 8000! Next step?&amp;nbsp;Configuration!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;adding-some-flare&#34;&gt;
+&lt;h3&gt;Adding some&amp;nbsp;Flare&lt;/h3&gt;
+&lt;p&gt;Acrylamid has great, in-depth &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/conf.py.html&#34;&gt;configuration documentation&lt;/a&gt;. There are a couple of filters and modules we can install via pip into our virtualenv&amp;nbsp;environment:&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;restructuredtext&#34;&gt;
+&lt;h4&gt;reStructuredText&lt;/h4&gt;
+&lt;p&gt;Acrylamid uses Markdown by default for the authoring of blog posts. However, the &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Markdown&#34;&gt;reStructuredText&lt;/a&gt; filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to reStructureText by installing the docutils&amp;nbsp;package:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install docutils
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This will serve up our files on port 8000, and regenerate the &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; whenever the source files&amp;nbsp;change.&lt;/p&gt;
-&lt;p&gt;At this point we have a fully-functioning static blog! The generated &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; files are in the newly-created &lt;tt class=&#34;docutils literal&#34;&gt;output&lt;/tt&gt; directory, and these &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; files can be published wherever we want. Now would be a good time to explore the conf.py file, where we can change the blog title and author, as well as quite a few other &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/conf.py.html&#34;&gt;interesting customizations&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Now, find the filters list in &lt;tt class=&#34;docutils literal&#34;&gt;conf.py&lt;/tt&gt; and replace Markdown with&amp;nbsp;reStructuredText:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;n&#34;&gt;&lt;span class=&#34;caps&#34;&gt;FILTERS&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#39;reStructuredText&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;hyphenate&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;syntax-highlighting&#34;&gt;
+&lt;h4&gt;Syntax&amp;nbsp;Highlighting&lt;/h4&gt;
+&lt;p&gt;We can add code syntax highlighting to our blog by installing &lt;a class=&#34;reference external&#34; href=&#34;http://pygments.org/&#34;&gt;Pygments&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install pygments
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Next, designate a block of your code as a code-block. Pygments will parse our code-blocks and add &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; classes to individual tokens. For reStructuredText use the&amp;nbsp;syntax:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;.. code-block:: python
+
+def foo():
+    return &amp;quot;foo&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We&amp;#8217;ll want to grab a Pygments theme, which is just a &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; file. Phil Tysoe has a good &lt;a class=&#34;reference external&#34; href=&#34;http://igniteflow.com/pygments/themes/&#34;&gt;list of themes&lt;/a&gt; on his blog, though we need to rename the wrapper class from &lt;tt class=&#34;docutils literal&#34;&gt;codehilite&lt;/tt&gt; to the class that Acrylamid uses, &lt;tt class=&#34;docutils literal&#34;&gt;highlight&lt;/tt&gt;. Include the &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; file in your Acrylamid&amp;nbsp;theme.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;advanced-typography&#34;&gt;
+&lt;h4&gt;Advanced&amp;nbsp;Typography&lt;/h4&gt;
+&lt;p&gt;Since we&amp;#8217;re authoring our blog in a text editor, it can be challenging to include proper punctuation like em/en dashes and ellipses. To fix this we can enable the &amp;#8216;typography&amp;#8217; filter, which will add these typographical flares to our text. For example, it replaces three periods with an ellipsis, and replaces two hyphens with an en&amp;nbsp;dash.&lt;/p&gt;
+&lt;p&gt;All we have to do is install the smartypants module, and add the filter to our &lt;tt class=&#34;docutils literal&#34;&gt;conf.py&lt;/tt&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install smartpants
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;n&#34;&gt;&lt;span class=&#34;caps&#34;&gt;FILTERS&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#39;reStructuredText&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;hyphenate&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;typography&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;what-s-next&#34;&gt;
+&lt;h3&gt;What&amp;#8217;s&amp;nbsp;next?&lt;/h3&gt;
+&lt;p&gt;I&amp;#8217;ve covered a few of the more interesting Acrylamid customization options and Python modules, but there are many, many more. Take a look at the &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/filters.html&#34;&gt;Acrylamid filter documentation&lt;/a&gt; for an exhaustive&amp;nbsp;list!&lt;/p&gt;
 &lt;/div&gt;
 </content>
     </entry>
