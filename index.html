@@ -17,12 +17,12 @@
             })();
         </script>
     </head>
-    <body xmlns:v="http://rdf.data-vocabulary.org/#" typeof="v:Person">
-        <h1 property="v:name">Will Fuqua</h1>
+    <body vocab="http://schema.org/" typeof="Person">
+        <h1 property="name">Will Fuqua</h1>
         <ul class="boxes">
-            <li><a rel="me v:url" href="https://github.com/waf" itemprop="url">code</a></li>
-            <li><a rel="me v:url" href="http://www.twitter.com/wafuqua" itemprop="url">contact</a></li>
-            <li><a rel="me v:url" href="http://www.linkedin.com/in/wafuqua" itemprop="url">career</a></li>
+            <li><a property="url" rel="me" href="https://github.com/waf">code</a></li>
+            <li><a property="url" rel="me" href="http://www.twitter.com/wafuqua">contact</a></li>
+            <li><a property="url" rel="me" href="http://www.linkedin.com/in/wafuqua">career</a></li>
         </ul>
     </body>
 </html>
