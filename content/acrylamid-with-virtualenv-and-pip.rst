@@ -2,7 +2,7 @@ Acrylamid with virtualenv and pip
 ########################################################
 
 :date: 2013-09-10
-:tags: [acrylamid, blog, python]
+:tags: [acrylamid, blog, python, virtualenv]
 
 Every two years or so, I decide that I should probably have a tech blog, even if it's just a place for me to post notes on languages and systems I'm experimenting with. 
 That time has rolled around again, so I spent some time playing with Acrylamid_, a *static blog generator* written in Python. From Acrylamid's website:

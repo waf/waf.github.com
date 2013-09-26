@@ -13,7 +13,7 @@
         <title>Acrylamid with virtualenv and pip</title>
         <link>http://fuqua.io/blog/2013/acrylamid-with-virtualenv-and-pip/</link>
         <description>&lt;p&gt;Every two years or so, I decide that I should probably have a tech blog, even if it&amp;#8217;s just a place for me to post notes on languages and systems I&amp;#8217;m experimenting with.
-That time has rolled around again, so I spent some time playing with &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/&#34;&gt;Acrylamid&lt;/a&gt;, a &lt;em&gt;static blog generator&lt;/em&gt;, written in Python. From Acrylamid&amp;#8217;s&amp;nbsp;website:&lt;/p&gt;
+That time has rolled around again, so I spent some time playing with &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/&#34;&gt;Acrylamid&lt;/a&gt;, a &lt;em&gt;static blog generator&lt;/em&gt; written in Python. From Acrylamid&amp;#8217;s&amp;nbsp;website:&lt;/p&gt;
 &lt;blockquote&gt;
 With Acrylamid you can write your weblog entries with your editor of choice in Markdown, reStructuredText or textile. With several content filters you can pimp your &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; (typography, math, hyphenation). Acrylamid provides a very sophisticated &lt;span class=&#34;caps&#34;&gt;CLI&lt;/span&gt; and integrates perfectly with any DVCes. It generates completely static &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; you can host everywhere.&lt;/blockquote&gt;
 &lt;p&gt;As of September 2013, the Acrylamid website recommends using the older easy_install installation method, but I much prefer to use a standard virtualenv/pip-based setup. I&amp;#8217;ve detailed the installation and configuration steps&amp;nbsp;below.&lt;/p&gt;
@@ -53,7 +53,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 &lt;p&gt;Acrylamid has great, in-depth &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/conf.py.html&#34;&gt;configuration documentation&lt;/a&gt;. There are a couple of filters and modules we can install via pip into our virtualenv&amp;nbsp;environment:&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;restructuredtext&#34;&gt;
 &lt;h4&gt;reStructuredText&lt;/h4&gt;
-&lt;p&gt;Acrylamid uses Markdown by default for the authoring of blog posts. However, the &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Markdown&#34;&gt;reStructuredText&lt;/a&gt; filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to reStructureText by installing the docutils&amp;nbsp;package:&lt;/p&gt;
+&lt;p&gt;Acrylamid uses Markdown by default for the authoring of blog posts. However, the &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Markdown&#34;&gt;reStructuredText&lt;/a&gt; filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to reStructuredText by installing the docutils&amp;nbsp;package:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install docutils
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now, find the filters list in &lt;tt class=&#34;docutils literal&#34;&gt;conf.py&lt;/tt&gt; and replace Markdown with&amp;nbsp;reStructuredText:&lt;/p&gt;
@@ -65,11 +65,11 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 &lt;p&gt;We can add code syntax highlighting to our blog by installing &lt;a class=&#34;reference external&#34; href=&#34;http://pygments.org/&#34;&gt;Pygments&lt;/a&gt;:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install pygments
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; classes to individual tokens. For reStructuredText, use the&amp;nbsp;syntax:&lt;/p&gt;
+&lt;p&gt;Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; classes to individual tokens. To designate a code-block in reStructuredText, use the&amp;nbsp;syntax:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;.. code-block:: python
 
-def foo():
-    return &amp;quot;foo&amp;quot;
+    def foo():
+        return &amp;quot;foo&amp;quot;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We&amp;#8217;ll want to grab a Pygments theme, which is just a &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; file. Phil Tysoe has a good &lt;a class=&#34;reference external&#34; href=&#34;http://igniteflow.com/pygments/themes/&#34;&gt;list of themes&lt;/a&gt; on his blog, though we need to rename the wrapper class from &lt;tt class=&#34;docutils literal&#34;&gt;codehilite&lt;/tt&gt; to the class that Acrylamid uses, &lt;tt class=&#34;docutils literal&#34;&gt;highlight&lt;/tt&gt;. Include the &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; file in your Acrylamid&amp;nbsp;theme.&lt;/p&gt;
 &lt;/div&gt;

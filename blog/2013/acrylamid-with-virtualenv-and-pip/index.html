@@ -24,18 +24,25 @@
             })();
         </script>
     <meta name="description" content="Every two years or so, I decide that I should prob..." />
-    <meta name="keywords" content="acrylamid, blog, python" />
+    <meta name="keywords" content="acrylamid, blog, python, virtualenv" />
     </head>
     <body>
         <header>
             <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
         
-        <article>
+        <nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page">&#708;</a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="/blog/" title="Home">/</a><span class="label">Home</span></li>
+        <li><a class="bottom" href="#comments" title="Comments">&#709;</a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+<article>
     <time datetime="2013-09-10">September 10 2013</time>
     <h1>Acrylamid with virtualenv and pip</h1>
     <p>Every two years or so, I decide that I should probably have a tech blog, even if it&#8217;s just a place for me to post notes on languages and systems I&#8217;m ex&shy;per&shy;i&shy;ment&shy;ing with.
-That time has rolled around again, so I spent some time playing with <a class="reference external" href="http://posativ.org/acrylamid/">Acrylamid</a>, a <em>static blog generator</em>, written in Python. From Acrylamid&#8217;s&nbsp;website:</p>
+That time has rolled around again, so I spent some time playing with <a class="reference external" href="http://posativ.org/acrylamid/">Acrylamid</a>, a <em>static blog generator</em> written in Python. From Acrylamid&#8217;s&nbsp;website:</p>
 <blockquote>
 With Acrylamid you can write your weblog entries with your editor of choice in Markdown, re&shy;Struc&shy;tured&shy;Text or textile. With several content filters you can pimp your <span class="caps">HTML</span> (typography, math, hy&shy;phen&shy;ation). Acrylamid provides a very so&shy;phis&shy;ti&shy;cat&shy;ed <span class="caps">CLI</span> and integrates perfectly with any DVCes. It generates completely static <span class="caps">HTML</span> you can host everywhere.</blockquote>
 <p>As of September 2013, the Acrylamid website recommends using the older easy_in&shy;stall in&shy;stal&shy;la&shy;tion method, but I much prefer to use a standard virtualenv/pip-based setup. I&#8217;ve detailed the in&shy;stal&shy;la&shy;tion and con&shy;fig&shy;u&shy;ra&shy;tion steps&nbsp;below.</p>
@@ -75,7 +82,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <p>Acrylamid has great, in-depth <a class="reference external" href="http://posativ.org/acrylamid/conf.py.html">con&shy;fig&shy;u&shy;ra&shy;tion doc&shy;u&shy;men&shy;ta&shy;tion</a>. There are a couple of filters and modules we can install via pip into our virtualenv&nbsp;en&shy;vi&shy;ron&shy;ment:</p>
 <div class="section" id="restructuredtext">
 <h3>re&shy;Struc&shy;tured&shy;Text</h3>
-<p>Acrylamid uses Markdown by default for the authoring of blog posts. However, the <a class="reference external" href="http://en.wikipedia.org/wiki/Markdown">re&shy;Struc&shy;tured&shy;Text</a> filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to re&shy;Struc&shy;ture&shy;Text by installing the docutils&nbsp;package:</p>
+<p>Acrylamid uses Markdown by default for the authoring of blog posts. However, the <a class="reference external" href="http://en.wikipedia.org/wiki/Markdown">re&shy;Struc&shy;tured&shy;Text</a> filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to re&shy;Struc&shy;tured&shy;Text by installing the docutils&nbsp;package:</p>
 <div class="highlight"><pre><span class="gp">&gt;</span> pip install docutils
 </pre></div>
 <p>Now, find the filters list in <tt class="docutils literal">conf.py</tt> and replace Markdown with&nbsp;re&shy;Struc&shy;tured&shy;Text:</p>
@@ -87,11 +94,11 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <p>We can add code syntax high&shy;light&shy;ing to our blog by installing <a class="reference external" href="http://pygments.org/">Pygments</a>:</p>
 <div class="highlight"><pre><span class="gp">&gt;</span> pip install pygments
 </pre></div>
-<p>Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add <span class="caps">CSS</span> classes to individual tokens. For re&shy;Struc&shy;tured&shy;Text, use the&nbsp;syntax:</p>
+<p>Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add <span class="caps">CSS</span> classes to individual tokens. To designate a code-block in re&shy;Struc&shy;tured&shy;Text, use the&nbsp;syntax:</p>
 <div class="highlight"><pre>.. code-block:: python
 
-def foo():
-    return &quot;foo&quot;
+    def foo():
+        return &quot;foo&quot;
 </pre></div>
 <p>We&#8217;ll want to grab a Pygments theme, which is just a <span class="caps">CSS</span> file. Phil Tysoe has a good <a class="reference external" href="http://igniteflow.com/pygments/themes/">list of themes</a> on his blog, though we need to rename the wrapper class from <tt class="docutils literal">codehilite</tt> to the class that Acrylamid uses, <tt class="docutils literal">highlight</tt>. Include the <span class="caps">CSS</span> file in your Acrylamid&nbsp;theme.</p>
 </div>
@@ -115,25 +122,28 @@ def foo():
         
             tagged as
                 <a href="/blog/tag/acrylamid/" rel="tag">acrylamid</a>,
-                <a href="/blog/tag/blog/" rel="tag">blog</a>
+                <a href="/blog/tag/blog/" rel="tag">blog</a>,
+                <a href="/blog/tag/python/" rel="tag">python</a>
                     and
                     
-                <a href="/blog/tag/python/" rel="tag">python</a>
+                <a href="/blog/tag/virtualenv/" rel="tag">virtualenv</a>
                 
         
     </div>
-    <div class="comments"></div>
+    <script src="https://apis.google.com/js/plusone.js">
+    </script>
+    <div id="comments">
+        <div class="g-comments"
+            data-href="http://fuqua.io/blog/2013/acrylamid-with-virtualenv-and-pip/"
+            data-width="642"
+            data-first_party_property="BLOGGER"
+            data-view_type="FILTERED_POSTMOD">
+        </div>
+    </div>
 </article><div class="pager">
     
     
     </div>
-<footer>
-    <a href="/blog/atom/" rel="alternate">blog feed</a>
-            <a href="https://twitter.com/wafuqua" rel="me">twitter</a>
-            <a href="https://github.com/waf" rel="me">github</a>
-            <a href="http://www.linkedin.com/in/wafuqua" rel="me">linkedin</a>
-    
-</footer>
-        <script src="/blog/script/list.min.js"></script>
+<script src="/blog/script/list.min.js"></script>
     </body>
 </html>
