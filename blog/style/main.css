@@ -146,12 +146,14 @@ article time {
     outline:none;
 }
 
+@media (max-width:1100px) {
+    nav li:hover .label {
+        border: 1px solid #ddd;
+        border-left: none;
+    }
+}
 @media (max-width:915px) {
     nav { 
-        /* todo: the nav is a nicety and not really 
-           necessary, but we probably need a better 
-           way than just hiding it.
-         */
         display:none;
     }
 }
