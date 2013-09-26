@@ -5,7 +5,7 @@ Acrylamid with virtualenv and pip
 :tags: [acrylamid, blog, python]
 
 Every two years or so, I decide that I should probably have a tech blog, even if it's just a place for me to post notes on languages and systems I'm experimenting with. 
-That time has rolled around again, so I spent some time playing with Acrylamid_, a *static blog generator*, written in Python. From Acrylamid's website:
+That time has rolled around again, so I spent some time playing with Acrylamid_, a *static blog generator* written in Python. From Acrylamid's website:
 
     With Acrylamid you can write your weblog entries with your editor of choice in Markdown, reStructuredText or textile. With several content filters you can pimp your HTML (typography, math, hyphenation). Acrylamid provides a very sophisticated CLI and integrates perfectly with any DVCes. It generates completely static HTML you can host everywhere.
 
