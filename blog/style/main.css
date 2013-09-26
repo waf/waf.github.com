@@ -150,6 +150,7 @@ article time {
     nav li:hover .label {
         border: 1px solid #ddd;
         border-left: none;
+        background-color:#fff;
     }
 }
 @media (max-width:915px) {
@@ -202,11 +203,10 @@ nav .label {
     overflow:hidden;
     color:#888;
     transition:none;
-    background-color:#fff;
     vertical-align: middle;
 }
 nav li:hover .label {
-    width:100px;
+    width:90px;
     transition:width 0.2s linear;
 }
 nav:hover a {
