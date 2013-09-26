@@ -1,8 +1,8 @@
 <nav>
     <ul>
-        <li><a class="top" href="#" title="Top of page">&#708;</a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="/blog/" title="Home">/</a><span class="label">Home</span></li>
-        <li><a class="bottom" href="#comments" title="Comments">&#709;</a><span class="label">Comments</span></li>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="{{conf.www_root}}" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
 <article>
@@ -10,9 +10,6 @@
     <h1>{{ entry.title }}</h1>
     {{ entry.content }}
     <div class="tags">
-        {% if conf.disqus_shortname and env.type == 'index' %}
-            <a class="right" href="{{ conf.www_root + entry.permalink }}#disqus_thread">Comment</a>
-        {% endif %}
         {% if 'tag' in env.views and entry.tags %}
             tagged as
                 {% for link in entry.tags | tagify -%}

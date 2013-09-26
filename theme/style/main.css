@@ -186,19 +186,11 @@ nav a {
     display:inline-block;
     text-align:center;
     border: 1px solid #fff;
-    font-size:2.5em;
+    font-size:20px;
     transition:none;
     vertical-align:middle;
-}
-nav a.top, nav a.bottom {
-    width:0.5em;
-    height:0.5em;
     padding:10px;
-}
-nav a.root {
-    width:40px;
-    line-height:40px;
-    font-size:1.5em;
+    color:#ccc;
 }
 nav .label {
     line-height:40px;
