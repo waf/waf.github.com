@@ -94,19 +94,19 @@ article time {
     float:right;
     color:#888;
 }
-footer {
+.util-links {
     clear:both;
     text-align: center;
     margin-bottom:50px;
 }
-footer a {
+.util-links a {
     color:#888;
     display:inline-block;
     padding: 5px 10px;
     text-align:center;
     font-size:10pt;
 }
-footer a:hover {
+.util-links a:hover {
     color:#666;
 }
 .highlight pre {
@@ -146,6 +146,15 @@ footer a:hover {
     outline:none;
 }
 
+@media (max-width:915px) {
+    nav { 
+        /* todo: the nav is a nicety and not really 
+           necessary, but we probably need a better 
+           way than just hiding it.
+         */
+        display:none;
+    }
+}
 @media (max-width:800px) {
     body {
         width:98%;
@@ -159,4 +168,63 @@ footer a:hover {
         width:100%;
         text-align:center;
     }
+}
+/* navigation */
+
+nav ul, nav li {
+    margin:0;
+    padding:0;
+    list-style-type:none;
+}
+nav {
+    position:fixed;
+    top:0;
+    left:0;
+    margin:10px;
+}
+nav a {
+    display:inline-block;
+    text-align:center;
+    border: 1px solid #fff;
+    font-size:2.5em;
+    transition:none;
+    vertical-align:middle;
+}
+nav a.top, nav a.bottom {
+    width:0.5em;
+    height:0.5em;
+    padding:10px;
+}
+nav a.root {
+    width:40px;
+    line-height:40px;
+    font-size:1.5em;
+}
+nav .label {
+    line-height:40px;
+    display:inline-block;
+    padding-left:10px;
+    width:0;
+    overflow:hidden;
+    color:#888;
+    transition:none;
+    background-color:#fff;
+}
+nav li:hover .label {
+    width:100px;
+    transition:width 0.2s linear;
+}
+nav:hover a {
+    background-color:#F7F7F7;
+    border: 1px solid #eee;
+}
+nav a:hover {
+    background-color:#F56017;
+    color:#fff;
+}
+
+/* !important hack to override g+'s inline styles */
+#comments div {
+    display:block !important;
+    margin:20px auto !important;
 }
