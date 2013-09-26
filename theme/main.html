@@ -17,11 +17,11 @@
 {% endblock %}
 
 {% block content %}
-    {%- if env.entrylist|length == 1 %}
+    {%- if env.route == "/" %}
+        {% include 'articles.html' %}
+    {%- else %}
         {% set entry = env.entrylist|first %}
         {% include 'entry.html' %}
-    {%- else %}
-        {% include 'articles.html' %}
     {%- endif -%}
     <div class="pager">
     {% if env.prev is not none %}
