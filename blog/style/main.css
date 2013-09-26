@@ -209,6 +209,7 @@ nav .label {
     color:#888;
     transition:none;
     background-color:#fff;
+    vertical-align: middle;
 }
 nav li:hover .label {
     width:100px;
