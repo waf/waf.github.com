@@ -5,10 +5,10 @@ body {
     background-color: white;
     margin: 0 auto;
     padding:0;
-    width: 800px;
+    width: 600px;
     font-family:Droid Sans, sans-serif;
     font-size:12pt;
-    color:#111;
+    color:#222;
 }
 header {
     margin: 20px 0;
@@ -112,15 +112,16 @@ article time {
 .highlight pre {
     font-family: Inconsolata, monospace;
     line-height:1.2em;
-
+}
+tt, code, kbd, samp {
+    font-family:Inconsolata, monospace;
 }
 .highlight {
-    border: 1px solid #cccccc;
     padding-left: 1em;
     margin-bottom: 10px;
     margin-top: 10px;
-    background: none repeat scroll 0 0 #f0f0f0;
     overflow: auto;
+    border-left: 5px solid #F56017;
 }
 .tags {
     margin-top: 20px;
@@ -146,16 +147,19 @@ article time {
     outline:none;
 }
 
-@media (max-width:915px) {
+@media (max-width:900px) {
+    nav li:hover .label {
+        border: 1px solid #ddd;
+        border-left: none;
+        background-color:#fff;
+    }
+}
+@media (max-width:715px) {
     nav { 
-        /* todo: the nav is a nicety and not really 
-           necessary, but we probably need a better 
-           way than just hiding it.
-         */
         display:none;
     }
 }
-@media (max-width:800px) {
+@media (max-width:600px) {
     body {
         width:98%;
         padding:0 1%;
@@ -186,19 +190,11 @@ nav a {
     display:inline-block;
     text-align:center;
     border: 1px solid #fff;
-    font-size:2.5em;
+    font-size:20px;
     transition:none;
     vertical-align:middle;
-}
-nav a.top, nav a.bottom {
-    width:0.5em;
-    height:0.5em;
     padding:10px;
-}
-nav a.root {
-    width:40px;
-    line-height:40px;
-    font-size:1.5em;
+    color:#ccc;
 }
 nav .label {
     line-height:40px;
@@ -208,11 +204,10 @@ nav .label {
     overflow:hidden;
     color:#888;
     transition:none;
-    background-color:#fff;
     vertical-align: middle;
 }
 nav li:hover .label {
-    width:100px;
+    width:90px;
     transition:width 0.2s linear;
 }
 nav:hover a {
