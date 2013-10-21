@@ -154,7 +154,7 @@ tt, code, kbd, samp {
         background-color:#fff;
     }
 }
-@media (max-width:715px) {
+@media (max-width:725px) {
     nav { 
         display:none;
     }
