@@ -8,12 +8,12 @@ Clojure Web Apps with SQL Databases
    :language: clojure
 
 I've been playing around with Clojure for web applications recently, specifically with the excellent `Ring <https://github.com/ring-clojure/ring>`_ and `Compojure <https://github.com/weavejester/compojure>`_ libraries. 
-I've found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. In this article I'll cover useful libraries for interacting with a relational database in web applications.
+I've found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. In this article I'll cover useful libraries for interacting with a relational database in web applications. This article assumes you know the basics of clojure and leiningen.
 
 First, we'll create a simple todo list web application. We'll use Compojure to create a REST API, and set up a quick AngularJS UI to drive our application. Then, we'll use `Korma <http://sqlkorma.com/>`_ to query our PostgreSQL database and `Lobos <http://budu.github.io/lobos/>`_ to manage our SQL migrations.
 
-Creating the REST API
-=====================
+Generating a Compojure Application
+==================================
 
 The first thing we'll do is `set up a Compojure web application <https://github.com/weavejester/compojure/wiki/Getting-Started>`_. Use Leiningen to create and spin up an empty web application:
 
@@ -23,7 +23,7 @@ The first thing we'll do is `set up a Compojure web application <https://github.
     > cd todoapp
     > lein ring server
 
-Your browser should open up to "Hello World" page. Let's make that a little bit more interesting! Keeping the server running, open ``src/todoapp/handler.clj`` in your favorite editor:
+Your browser should open up to a "Hello World" page on http://localhost:3000/. Let's make that a little bit more interesting! Keeping the server running, open ``src/todoapp/handler.clj`` in your favorite editor and examine the contents:
 
 .. code-block:: clojure
 
@@ -42,14 +42,40 @@ Your browser should open up to "Hello World" page. Let's make that a little bit 
 
 The ``defroutes`` line is setting up our `HTTP request handlers <https://github.com/weavejester/compojure/wiki/Routes-In-Detail>`_. We're defining a "Hello World" response for HTTP GET requests to the root URL. If the incoming request is asking for some other resource, say ``/foo/bar``, the server attempts to find a static resource by that name (in the directory ``resources/public``, by default). If that fails, we'll return a 404 "Not Found" message.
 
-The ``def app`` line takes our routes that we defined, and wraps them with ``handler/site``. This Compojure handler adds useful functionality for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the `Compojure documentation <http://weavejester.github.io/compojure/compojure.handler.html>`_.
+The ``def app`` line takes our routes that we defined, and wraps them with ``handler/site``. This Compojure handler adds useful functionality (called "middleware") for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the `Compojure documentation <http://weavejester.github.io/compojure/compojure.handler.html>`_.
 
-The first thing we'll do is swap out ``handler/site`` for the more barebones ``handler/api``. Since we're building an API we don't need all the bells and whistles like user sessions and cross-page messaging that the site handler provides.
+Setting up a JSON REST API
+===========================
+
+Let's modify the middleware stack (the ``def app`` statement) to be more suitable for a REST API. The default ``handler/site`` middleware assumes you're building a website; since we're building a JSON API, we'll swap out ``handler/site`` for the more barebones ``handler/api``, and some middleware for parsing and returning JSON.
+
+In our project.clj file, we'll add a dependency on the `ring-json <https://github.com/ring-clojure/ring-json>`_ library: 
+
+.. code-block:: clojure
+
+  :dependencies [[org.clojure/clojure "1.5.1"]
+                 [compojure "1.1.6"]
+                 [ring/ring-json "0.2.0"]]
+
+Now we'll add a reference to ring-json in handler.clj:
+
+.. code-block:: clojure
+
+      (:require [compojure.handler :as handler]
+                [compojure.route :as route]
+                [ring.middleware.json :as json]))
+
+And add the middleware to our application, as well as swapping out ``handler/site`` for ``handler/api``:
 
 .. code-block:: clojure
 
     (def app
-      (handler/api app-routes))
+      (-> (handler/api app-routes)
+          (json/wrap-json-body)
+          (json/wrap-json-response)))
+
+Stubbing out our application
+============================
 
 Next, let's stub out our API. We'll need our typical CRUD operations, so let's remove the "Hello World" route and add the API stubs:
 
@@ -63,6 +89,39 @@ Next, let's stub out our API. We'll need our typical CRUD operations, so let's r
       (route/resources "/")
       (route/not-found "Not Found"))
 
-When we visit http://localhost:3000/api/todos we should get our stub message "TODO: return all list items" back. However, since we deleted the "Hello World" route that served up the application root, we'll get a "404 Not Found" error when we visit http://localhost:3000/. Let's fix that by adding an "index.html" resource in ``resources/public/``:
+When we visit http://localhost:3000/api/todos we should get our stub message "TODO: return all list items" back. However, since we deleted the "Hello World" route that served up the application root, we'll get a 404 "Not Found" error when we visit http://localhost:3000/. Let's fix that by adding an "index.html" placeholder resource in the ``resources/public/`` directory:
 
+.. code-block:: html
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+        TODO: Make a front-end :)
+    </body>
+    </html>
+
+Connecting to a Database
+========================
+
+We'll be using the `Korma <http://sqlkorma.com/>`_ library to query/update our database and `Lobos <http://budu.github.io/lobos/>`_ to manage migrations.
+
+Create a file called database.clj and specify your connection information in a map. This map can be used for both Korma and Lobos connection information.
+
+.. code-block:: clojure
+
+    (ns todoapp.database
+      (:require [[korma.db :refer :all]
+                 [lobos core schema connectivity :refer :all]]))
+
+    (def db-connection-info 
+      {:classname "org.postgresql.Driver"
+       :subprotocol "postgresql"
+       :user "db-user"
+       :password "SuperSecretPassword"
+       :subname "//localhost:5432/task"})
+
+    ; set up korma
+    (defdb db db-connection-info)
+    ; set up lobos
+    (open-global db-connection-info)
 
