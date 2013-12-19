@@ -65,7 +65,7 @@ Now we'll add a reference to ring-json in handler.clj:
                 [compojure.route :as route]
                 [ring.middleware.json :as json]))
 
-And add the middleware to our application, as well as swapping out ``handler/site`` for ``handler/api``:
+And add the middleware to our application, as well as swapping out ``handler/site`` for the aforementioned ``handler/api``:
 
 .. code-block:: clojure
 
@@ -103,25 +103,54 @@ When we visit http://localhost:3000/api/todos we should get our stub message "TO
 Connecting to a Database
 ========================
 
-We'll be using the `Korma <http://sqlkorma.com/>`_ library to query/update our database and `Lobos <http://budu.github.io/lobos/>`_ to manage migrations.
+Now that we have the REST interface stubbed out, let's move on to the postgres database layer. We'll be using the `Korma <http://sqlkorma.com/>`_ library to query/update our database and `Lobos <http://budu.github.io/lobos/>`_ to manage migrations.
 
-Create a file called database.clj and specify your connection information in a map. This map can be used for both Korma and Lobos connection information.
+Rather than create our tables manually via ``CREATE TABLE`` statements, let's use Lobos migrations. First we'll need to set up the database connection string (in a new file, database.clj), which we can use for both Korma and Lobos
+
+In our project.clj:
+
+.. code-block:: clojure
+
+        [korma "0.3.0-RC5"]
+        [lobos "1.0.0-beta1"]
+        [org.postgresql/postgresql "9.2-1002-jdbc4"]]
+
+In database.clj:
 
 .. code-block:: clojure
 
     (ns todoapp.database
-      (:require [[korma.db :refer :all]
-                 [lobos core schema connectivity :refer :all]]))
+      (:require [korma.db :as korma]
+                [lobos.connectivity :as lobos]))
 
     (def db-connection-info 
       {:classname "org.postgresql.Driver"
        :subprotocol "postgresql"
        :user "db-user"
        :password "SuperSecretPassword"
-       :subname "//localhost:5432/task"})
+       :subname "//localhost:5432/todo"})
 
     ; set up korma
-    (defdb db db-connection-info)
+    (korma/defdb db db-connection-info)
     ; set up lobos
-    (open-global db-connection-info)
+    (lobos/open-global db-connection-info)
 
+Now, let's define our migrations.
+
+.. code-block:: clojure
+
+    (ns todoapp.migrations
+      (:refer-clojure :exclude 
+            [alter drop bigint boolean char double float time complement])
+      (:use [todoapp.database]
+            [lobos migration core schema]))
+
+    (defmigration add-todo-table
+      (up [] (create (table :todos
+                            (integer :id :unique)
+                            (varchar :title 512))))
+      (down [] (drop (table :todos))))
+
+    (defn run-migrations []
+      (binding [lobos.migration/*migrations-namespace* 'todoapp.migrations]
+        (migrate)))
