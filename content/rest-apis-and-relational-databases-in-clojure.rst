@@ -10,7 +10,7 @@ REST APIs and Relational Databases in Clojure
 I've been playing around with Clojure for web applications, specifically with the excellent `Ring <https://github.com/ring-clojure/ring>`_ and `Compojure <https://github.com/weavejester/compojure>`_ libraries. 
 I've found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. In this article I'll cover useful libraries for interacting with relational databases in web applications. This article assumes you know the basics of Clojure and Leiningen.
 
-In this post we'll create a simple REST API for a todo list web application. We'll use Compojure to create a REST API, `Korma <http://sqlkorma.com/>`_ to query a PostgreSQL database, and `Lobos <http://budu.github.io/lobos/>`_ to create and alter our database tables.
+In this post we'll create a simple REST API for a todo list web application. We'll use Compojure to create a REST API, `Lobos <http://budu.github.io/lobos/>`_ to create and manage our database tables, and `Korma <http://sqlkorma.com/>`_ to query a PostgreSQL database.
 
 Generating a Compojure Application
 ==================================
@@ -107,7 +107,7 @@ Now that we have the REST interface stubbed out, let's move on to the Postgres d
 
 Rather than create our tables manually via ``CREATE TABLE`` statements, let's use Lobos migrations. First we'll need to set up the database connection string, which we can use for both Korma and Lobos.
 
-In our project.clj, add a reference to Korma, Lobos, and the PostgreSQL driver:
+In our ``project.clj``, add a reference to Korma, Lobos, and the PostgreSQL driver:
 
 .. code-block:: clojure
 
@@ -140,7 +140,7 @@ That's it! Now Lobos and Korma know how to connect to our database.
 Creating Database Tables with Lobos
 ===================================
 
-Now, let's use Lobos to create a simple table named "todo_items" with an integer primary key and varchar title. Make a new file called ``src/todoapp/migrations.clj``, and add the following:
+Now, let's use Lobos to create a simple table named "items" with an integer primary key and varchar title. Make a new file called ``src/todoapp/migrations.clj``, and add the following:
 
 .. code-block:: clojure
 
@@ -151,10 +151,10 @@ Now, let's use Lobos to create a simple table named "todo_items" with an integer
             [lobos migration core schema]))
 
     (defmigration add-todo-table
-      (up [] (create (table :todo_items
-                            (integer :id :primary-key)
+      (up [] (create (table :items
+                            (integer :id :primary-key :auto-inc)
                             (varchar :title 512))))
-      (down [] (drop (table :todo_items))))
+      (down [] (drop (table :items))))
 
 Unfortunately, one aspect of Lobos's design is rather unidiomatic: it provides a ``(migrate)`` function that, by default, only runs migrations in the ``lobos.migrations`` namespace. My personal preference is to keep my migrations for an application in that application's namespace. We can configure Lobos to run the migrations in our desired namespace by rebinding the ``lobos.migration/*migrations-namespace*`` var, and running the ``(migrate)`` function in that context: 
 
@@ -174,17 +174,30 @@ We can run our migrations to generate our table by calling ``(run-migrations)`` 
     add-todo-table
     nil
 
-Now, if you check out the database, you'll see we have a ``todo_items`` table, ready for use! Just for kicks, let's add another migration that will add an ``is_complete`` column to our ``todo_items`` table:
+Now, if you check out the database, you'll see we have a ``items`` table, ready for use! Just for kicks, let's add another migration that will add an ``is_complete`` column to our ``items`` table:
 
 .. code-block:: clojure
 
-    (let [is-complete (table :todo_items
-                        (boolean :is_complete :not-null))]
+    (let [is-complete (table :items
+                        (boolean :is_complete (default false)))]
       (defmigration add-is-complete-column
         (up [] (alter :add is-complete))
         (down [] (alter :drop is-complete))))
 
-If we call ``(run-migrations)`` again, Lobos will intelligently alter our tables -- it will only run the ``add-is-complete-column`` migration, since it knows it already ran the ``add-todo-table migration``. Lobos has an `extensive api <http://budu.github.io/lobos/doc/uberdoc.frontend.html>`_ that provides many powerful table creation and migration options.
+If we call ``(run-migrations)`` again, Lobos will intelligently alter our tables; it will only run the ``add-is-complete-column`` migration, since it knows it already ran the ``add-todo-table migration``. Lobos has an `extensive API <http://budu.github.io/lobos/doc/uberdoc.frontend.html>`_ that provides many powerful table creation and migration options.
 
-Querying and Inserting data with Korma
+Querying and Inserting Data with Korma
 ======================================
+
+Now that we have our database all ready to go, let's finish off our application! We'll be replacing our REST API stubs we built earlier with calls to our database, using the Korma library. Korma provides a `nice, composable DSL <http://sqlkorma.com/docs#select>`_ for querying our database.
+
+For simplicity, we'll be adding our database queries in ``src/todoapp/handler.clj``. In a real-life application you'd most likely want to refactor the queries out into their own namespace.
+
+We need to let Korma know about our ``items`` table. We do this by using Korma's ``defentity`` macro. After that, we can use the ``(select)``, ``(insert)``, ``(update)``, and ``(delete)`` functions to manipulate our data:
+
+.. code-block:: console
+
+    > curl -X POST -H "Content-Type: application/json" \ 
+        -d '{"title":"remember the milk"}' \
+        http://localhost:3000/api/todos
+
