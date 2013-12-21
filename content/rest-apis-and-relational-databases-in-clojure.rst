@@ -1,5 +1,5 @@
-Clojure Web Apps with SQL Databases
-###################################
+REST APIs and Relational Databases in Clojure
+#############################################
 
 :date: 2013-12-04
 :tags: [clojure, web, compojure, ring, database, sql, korma, lobos]

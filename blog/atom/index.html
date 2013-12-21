@@ -11,13 +11,146 @@
     <link rel="self" type="application/atom+xml" href="http://fuqua.io/blog/atom/" />
     <icon>http://fuqua.io/blog/favicon.ico</icon>
     <logo>http://fuqua.io/blog/feed-logo.png</logo>
-    <updated>2013-09-10T04:00:00Z</updated>
+    <updated>2013-12-04T05:00:00Z</updated>
     <generator uri="https://github.com/posativ/acrylamid/" version="0.7.7">acrylamid</generator>
         <entry>
+        <title>REST APIs and Relational Databases in Clojure</title>
+        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2013/12/rest-apis-and-relational-databases-in-clojure/" />
+        <id>tag:fuqua.io/blog,2013-12-04:/2013/12/rest-apis-and-relational-databases-in-clojure</id>
+        <updated>2013-12-04T05:00:00Z</updated>
+        <category term="clojure" />
+        <category term="web" />
+        <category term="compojure" />
+        <category term="ring" />
+        <category term="database" />
+        <category term="sql" />
+        <category term="korma" />
+        <category term="lobos" />
+        
+        <author>
+            <name>Anonymous</name>
+            <uri>http://fuqua.io/blog/</uri>
+            <email>info@example.com</email>
+        </author>
+        <content type="html">&lt;p&gt;I&amp;#8217;ve been playing around with Clojure for web applications recently, specifically with the excellent &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/ring-clojure/ring&#34;&gt;Ring&lt;/a&gt; and &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure&#34;&gt;Compojure&lt;/a&gt; libraries.
+I&amp;#8217;ve found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. In this article I&amp;#8217;ll cover useful libraries for interacting with a relational database in web applications. This article assumes you know the basics of clojure and&amp;nbsp;leiningen.&lt;/p&gt;
+&lt;p&gt;First, we&amp;#8217;ll create a simple todo list web application. We&amp;#8217;ll use Compojure to create a &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;, and set up a quick AngularJS &lt;span class=&#34;caps&#34;&gt;UI&lt;/span&gt; to drive our application. Then, we&amp;#8217;ll use &lt;a class=&#34;reference external&#34; href=&#34;http://sqlkorma.com/&#34;&gt;Korma&lt;/a&gt; to query our PostgreSQL database and &lt;a class=&#34;reference external&#34; href=&#34;http://budu.github.io/lobos/&#34;&gt;Lobos&lt;/a&gt; to manage our &lt;span class=&#34;caps&#34;&gt;SQL&lt;/span&gt;&amp;nbsp;migrations.&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;generating-a-compojure-application&#34;&gt;
+&lt;h3&gt;Generating a Compojure&amp;nbsp;Application&lt;/h3&gt;
+&lt;p&gt;The first thing we&amp;#8217;ll do is &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure/wiki/Getting-Started&#34;&gt;set up a Compojure web application&lt;/a&gt;. Use Leiningen to create and spin up an empty web&amp;nbsp;application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; lein new compojure todoapp
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd &lt;/span&gt;todoapp
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; lein ring server
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Your browser should open up to a &amp;#8220;Hello World&amp;#8221; page on &lt;a class=&#34;reference external&#34; href=&#34;http://localhost:3000/&#34;&gt;http://localhost:3000/&lt;/a&gt;. Let&amp;#8217;s make that a little bit more interesting! Keeping the server running, open &lt;tt class=&#34;docutils literal&#34;&gt;src/todoapp/handler.clj&lt;/tt&gt; in your favorite editor and examine the&amp;nbsp;contents:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.handler&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:use&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;compojure.core&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.handler&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.route&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defroutes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/resources&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/not-found&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Not Found&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;app&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;handler/site&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;tt class=&#34;docutils literal&#34;&gt;defroutes&lt;/tt&gt; line is setting up our &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure/wiki/Routes-In-Detail&#34;&gt;&lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; request handlers&lt;/a&gt;. We&amp;#8217;re defining a &amp;#8220;Hello World&amp;#8221; response for &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt; requests to the root &lt;span class=&#34;caps&#34;&gt;URL&lt;/span&gt;. If the incoming request is asking for some other resource, say &lt;tt class=&#34;docutils literal&#34;&gt;/foo/bar&lt;/tt&gt;, the server attempts to find a static resource by that name (in the directory &lt;tt class=&#34;docutils literal&#34;&gt;resources/public&lt;/tt&gt;, by default). If that fails, we&amp;#8217;ll return a 404 &amp;#8220;Not Found&amp;#8221;&amp;nbsp;message.&lt;/p&gt;
+&lt;p&gt;The &lt;tt class=&#34;docutils literal&#34;&gt;def app&lt;/tt&gt; line takes our routes that we defined, and wraps them with &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt;. This Compojure handler adds useful functionality (called &amp;#8220;middleware&amp;#8221;) for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the &lt;a class=&#34;reference external&#34; href=&#34;http://weavejester.github.io/compojure/compojure.handler.html&#34;&gt;Compojure documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;setting-up-a-json-rest-api&#34;&gt;
+&lt;h3&gt;Setting up a &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt;&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;Let&amp;#8217;s modify the middleware stack (the &lt;tt class=&#34;docutils literal&#34;&gt;def app&lt;/tt&gt; statement) to be more suitable for a &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. The default &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt; middleware assumes you&amp;#8217;re building a website; since we&amp;#8217;re building a &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;, we&amp;#8217;ll swap out &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt; for the more barebones &lt;tt class=&#34;docutils literal&#34;&gt;handler/api&lt;/tt&gt;, and some middleware for parsing and returning&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;In our project.clj file, we&amp;#8217;ll add a dependency on the &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/ring-clojure/ring-json&#34;&gt;ring-json&lt;/a&gt;&amp;nbsp;library:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;ss&#34;&gt;:dependencies&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.clojure/clojure&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.5.1&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.1.6&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ring/ring-json&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.2.0&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now we&amp;#8217;ll add a reference to ring-json in&amp;nbsp;handler.clj:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.handler&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+          &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.route&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+          &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ring.middleware.json&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And add the middleware to our application, as well as swapping out &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt; for the aforementioned &lt;tt class=&#34;docutils literal&#34;&gt;handler/api&lt;/tt&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;app&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;handler/api&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;json/wrap-json-body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;json/wrap-json-response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;stubbing-out-our-application&#34;&gt;
+&lt;h3&gt;Stubbing out our&amp;nbsp;application&lt;/h3&gt;
+&lt;p&gt;Next, let&amp;#8217;s stub out our &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. We&amp;#8217;ll need our typical &lt;span class=&#34;caps&#34;&gt;CRUD&lt;/span&gt; operations, so let&amp;#8217;s remove the &amp;#8220;Hello World&amp;#8221; route and add the &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&amp;nbsp;stubs:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defroutes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: return all list items&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;POST&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: create a list item&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;PUT&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos/:id&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: update a list item&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;DELETE&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos/:id&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: delete a list item&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/resources&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/not-found&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Not Found&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When we visit &lt;a class=&#34;reference external&#34; href=&#34;http://localhost:3000/api/todos&#34;&gt;http://localhost:3000/api/todos&lt;/a&gt; we should get our stub message &amp;#8220;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: return all list items&amp;#8221; back. However, since we deleted the &amp;#8220;Hello World&amp;#8221; route that served up the application root, we&amp;#8217;ll get a 404 &amp;#8220;Not Found&amp;#8221; error when we visit &lt;a class=&#34;reference external&#34; href=&#34;http://localhost:3000/&#34;&gt;http://localhost:3000/&lt;/a&gt;. Let&amp;#8217;s fix that by adding an &amp;#8220;index.html&amp;#8221; placeholder resource in the &lt;tt class=&#34;docutils literal&#34;&gt;resources/public/&lt;/tt&gt; directory:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;cp&#34;&gt;&amp;lt;!&lt;span class=&#34;caps&#34;&gt;DOCTYPE&lt;/span&gt; html&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;html&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;lang=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: Make a front-end :)
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;connecting-to-a-database&#34;&gt;
+&lt;h3&gt;Connecting to a&amp;nbsp;Database&lt;/h3&gt;
+&lt;p&gt;Now that we have the &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; interface stubbed out, let&amp;#8217;s move on to the postgres database layer. We&amp;#8217;ll be using the &lt;a class=&#34;reference external&#34; href=&#34;http://sqlkorma.com/&#34;&gt;Korma&lt;/a&gt; library to query/update our database and &lt;a class=&#34;reference external&#34; href=&#34;http://budu.github.io/lobos/&#34;&gt;Lobos&lt;/a&gt; to manage&amp;nbsp;migrations.&lt;/p&gt;
+&lt;p&gt;Rather than create our tables manually via &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;caps&#34;&gt;CREATE&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;TABLE&lt;/span&gt;&lt;/tt&gt; statements, let&amp;#8217;s use Lobos migrations. First we&amp;#8217;ll need to set up the database connection string (in a new file, database.clj), which we can use for both Korma and&amp;nbsp;Lobos&lt;/p&gt;
+&lt;p&gt;In our&amp;nbsp;project.clj:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;korma&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.3.0-&lt;span class=&#34;caps&#34;&gt;RC5&lt;/span&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.0.0-beta1&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.postgresql/postgresql&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;9.2-1002-jdbc4&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In&amp;nbsp;database.clj:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.database&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;korma.db&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;korma&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos.connectivity&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lobos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;db-connection-info&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:classname&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;org.postgresql.Driver&amp;quot;&lt;/span&gt;
+   &lt;span class=&#34;ss&#34;&gt;:subprotocol&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;postgresql&amp;quot;&lt;/span&gt;
+   &lt;span class=&#34;ss&#34;&gt;:user&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;db-user&amp;quot;&lt;/span&gt;
+   &lt;span class=&#34;ss&#34;&gt;:password&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;SuperSecretPassword&amp;quot;&lt;/span&gt;
+   &lt;span class=&#34;ss&#34;&gt;:subname&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;//localhost:5432/todo&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;; set up korma&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;korma/defdb&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;db&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;db-connection-info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;; set up lobos&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;lobos/open-global&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;db-connection-info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, let&amp;#8217;s define our&amp;nbsp;migrations.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.migrations&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:refer-clojure&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:exclude&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;alter drop &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;bigint&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;boolean char double float time &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;complement&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:use&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.database&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;migration&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;core&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;schema&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defmigration&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;add-todo-table&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;up &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:todos&lt;/span&gt;
+                        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;integer&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:id&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:unique&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+                        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;varchar&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:title&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;512&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;down &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;drop &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:todos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;run-migrations&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;binding &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos.migration/*migrations-namespace*&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;todoapp.migrations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;migrate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+</content>
+    </entry>
+    
+        <entry>
         <title>Acrylamid with virtualenv and pip</title>
-        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2013/acrylamid-with-virtualenv-and-pip/" />
-        <id>tag:fuqua.io/blog,2013-09-10:/2013/acrylamid-with-virtualenv-and-pip</id>
-        <updated>2013-09-10T04:00:00Z</updated>
+        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2013/09/acrylamid-with-virtualenv-and-pip/" />
+        <id>tag:fuqua.io/blog,2013-09-10:/2013/09/acrylamid-with-virtualenv-and-pip</id>
+        <updated>2013-09-10T05:00:00Z</updated>
         <category term="acrylamid" />
         <category term="blog" />
         <category term="python" />

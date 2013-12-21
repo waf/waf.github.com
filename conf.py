@@ -10,7 +10,7 @@ FILTERS = ['reStructuredText', 'hyphenate', 'typography', 'h1']
 VIEWS = {
     '/': {'filters': 'summarize', 'view': 'index',
           'pagination': '/page/:num/'},
-    '/:year/:slug/': {'views': ['entry', 'draft']},
+    '/:year/:month/:slug/': {'views': ['entry', 'draft']},
     '/tag/:name/': {'filters': 'summarize', 'view':'tag',
                     'pagination': '/tag/:name/:num/'},
     '/atom/': {'filters': ['h2', 'nohyphenate'], 'view': 'atom'},

@@ -38,20 +38,23 @@
     </ul>
 </nav>
 <article>
-    <h1>Acrylamid with virtualenv and pip</h1>
-    <p>Every two years or so, I decide that I should probably have a tech blog, even if it&#8217;s just a place for me to post notes on languages and systems I&#8217;m ex&shy;per&shy;i&shy;ment&shy;ing with.
-That time has rolled around again, so I spent some time playing with <a class="reference external" href="http://posativ.org/acrylamid/">Acrylamid</a>, a <em>static blog generator</em> written in Python. From Acrylamid&#8217;s&nbsp;website:</p>
-<blockquote>
-With Acrylamid you can write your weblog entries with your editor of choice in Markdown, re&shy;Struc&shy;tured&shy;Text or textile. With several content filters you can pimp your <span class="caps">HTML</span> (typography, math, hy&shy;phen&shy;ation). Acrylamid provides a very so&shy;phis&shy;ti&shy;cat&shy;ed <span class="caps">CLI</span> and integrates perfectly with any DVCes. It generates completely static <span>&#8230;<a href="/blog/2013/acrylamid-with-virtualenv-and-pip/" class="continue">continue</a>.</span></blockquote>
+    <h1>REST APIs and Relational Databases in Clojure</h1>
+    <p>I&#8217;ve been playing around with Clojure for web ap&shy;pli&shy;ca&shy;tions recently, specif&shy;i&shy;cal&shy;ly with the excellent <a class="reference external" href="https://github.com/ring-clojure/ring">Ring</a> and <a class="reference external" href="https://github.com/weavejester/compojure">Compojure</a> libraries.
+I&#8217;ve found that most Clojure web ap&shy;pli&shy;ca&shy;tion articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. In this article I&#8217;ll cover useful libraries for in&shy;ter&shy;act&shy;ing with a relational database in web ap&shy;pli&shy;ca&shy;tions. This article assumes you know the basics of clojure and&nbsp;leiningen.</p>
+<p>First, we&#8217;ll create a simple todo list web ap&shy;pli&shy;ca&shy;tion. We&#8217;ll use Compojure to create a <span class="caps">REST</span> <span class="caps">API</span>, and set up a quick AngularJS <span class="caps">UI</span> to drive our <span>&#8230;<a href="/blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
-                <a href="/blog/tag/acrylamid/" rel="tag">acrylamid</a>,
-                <a href="/blog/tag/blog/" rel="tag">blog</a>,
-                <a href="/blog/tag/python/" rel="tag">python</a>
+                <a href="/blog/tag/clojure/" rel="tag">clojure</a>,
+                <a href="/blog/tag/web/" rel="tag">web</a>,
+                <a href="/blog/tag/compojure/" rel="tag">compojure</a>,
+                <a href="/blog/tag/ring/" rel="tag">ring</a>,
+                <a href="/blog/tag/database/" rel="tag">database</a>,
+                <a href="/blog/tag/sql/" rel="tag">sql</a>,
+                <a href="/blog/tag/korma/" rel="tag">korma</a>
                     and
                     
-                <a href="/blog/tag/virtualenv/" rel="tag">virtualenv</a>
+                <a href="/blog/tag/lobos/" rel="tag">lobos</a>
                 
         
     </div>
@@ -59,7 +62,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
     </script>
     <div id="comments">
         <div class="g-comments"
-            data-href="http://fuqua.io/blog/2013/09/acrylamid-with-virtualenv-and-pip/"
+            data-href="http://fuqua.io/blog/2013/12/rest-apis-and-relational-databases-in-clojure/"
             data-width="642"
             data-first_party_property="BLOGGER"
             data-view_type="FILTERED_POSTMOD">

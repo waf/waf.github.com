@@ -2,47 +2,93 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://fuqua.io/blog/blog/</loc>
-    <lastmod>2013-10-21</lastmod>
+    <lastmod>2013-12-21</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/tag/blog/</loc>
-    <lastmod>2013-10-21</lastmod>
+    <lastmod>2013-12-21</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/blog/tag/acrylamid/</loc>
-    <lastmod>2013-10-21</lastmod>
+    <loc>http://fuqua.io/blog/blog/tag/database/</loc>
+    <lastmod>2013-12-21</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog/blog/tag/ring/</loc>
+    <lastmod>2013-12-21</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/articles/</loc>
-    <lastmod>2013-09-26</lastmod>
+    <lastmod>2013-12-21</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog/blog/tag/sql/</loc>
+    <lastmod>2013-12-21</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog/blog/tag/lobos/</loc>
+    <lastmod>2013-12-21</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/tag/virtualenv/</loc>
-    <lastmod>2013-10-21</lastmod>
+    <lastmod>2013-12-21</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog/blog/tag/web/</loc>
+    <lastmod>2013-12-21</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog/blog/tag/clojure/</loc>
+    <lastmod>2013-12-21</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog/blog/tag/acrylamid/</loc>
+    <lastmod>2013-12-21</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/rss/</loc>
-    <lastmod>2013-09-26</lastmod>
+    <lastmod>2013-12-21</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/tag/python/</loc>
-    <lastmod>2013-10-21</lastmod>
+    <lastmod>2013-12-21</lastmod>
     <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog/blog/tag/compojure/</loc>
+    <lastmod>2013-12-21</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog/blog/2013/12/rest-apis-and-relational-databases-in-clojure/</loc>
+    <lastmod>2013-12-21</lastmod>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>http://fuqua.io/blog/blog/atom/</loc>
-    <lastmod>2013-09-26</lastmod>
+    <lastmod>2013-12-21</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/blog/2013/acrylamid-with-virtualenv-and-pip/</loc>
-    <lastmod>2013-10-21</lastmod>
+    <loc>http://fuqua.io/blog/blog/tag/korma/</loc>
+    <lastmod>2013-12-21</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog/blog/2013/09/acrylamid-with-virtualenv-and-pip/</loc>
+    <lastmod>2013-12-21</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>

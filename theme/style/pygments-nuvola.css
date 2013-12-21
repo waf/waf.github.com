@@ -9,8 +9,8 @@
 .highlight .x { color: #222222} /* Other */
 .highlight .p { color: #222222} /* Punctuation */
 .highlight .cm { color: #3F6B5B; font-weight: bold} /* Comment.Multiline */
-.highlight .cp { color: #1071CE; font-weight: bold; text-decoration: underline} /* Comment.Preproc */
-.highlight .c1 { color: #3F6B5B; font-weight: bold} /* Comment.Single */
+.highlight .cp { color: #aaa; font-weight: bold} /* Comment.Preproc */
+.highlight .c1 { color: #aaa; font-weight: bold} /* Comment.Single */
 .highlight .cs { color: #3F6B5B; font-weight: bold} /* Comment.Special */
 .highlight .gd { color: #2020ff; } /* Generic.Deleted */
 .highlight .ge { color: #222222} /* Generic.Emph */
@@ -30,7 +30,7 @@
 .highlight .kt { color: #8a2be2; text-decoration: underline} /* Keyword.Type */
 .highlight .ld { color: #222222} /* Literal.Date */
 .highlight .m { color: #00C226; text-decoration: underline} /* Literal.Number */
-.highlight .s { color: #222222} /* Literal.String */
+.highlight .s { color: #1DBB30; font-weight:bold;} /* Literal.String */
 .highlight .na { color: #222222} /* Name.Attribute */
 .highlight .nb { color: #222222} /* Name.Builtin */
 .highlight .nc { color: #222222} /* Name.Class */
@@ -44,7 +44,7 @@
 .highlight .nx { color: #222222} /* Name.Other */
 .highlight .py { color: #222222} /* Name.Property */
 .highlight .nt { color: #F56017; font-weight: bold} /* Name.Tag */
-.highlight .nv { color: #8a2be2; text-decoration: underline} /* Name.Variable */
+.highlight .nv { color: #4C6394} /* Name.Variable */
 .highlight .ow { color: #222222} /* Operator.Word */
 .highlight .w { color: #222222} /* Text.Whitespace */
 .highlight .mf { color: #00C226; text-decoration: underline} /* Literal.Number.Float */
@@ -61,7 +61,7 @@
 .highlight .sx { color: #222222} /* Literal.String.Other */
 .highlight .sr { color: #222222} /* Literal.String.Regex */
 .highlight .s1 { color: #222222} /* Literal.String.Single */
-.highlight .ss { color: #222222} /* Literal.String.Symbol */
+.highlight .ss { color: #F56017} /* Literal.String.Symbol */
 .highlight .bp { color: #222222} /* Name.Builtin.Pseudo */
 .highlight .vc { color: #8a2be2; text-decoration: underline} /* Name.Variable.Class */
 .highlight .vg { color: #8a2be2; text-decoration: underline} /* Name.Variable.Global */
