@@ -7,7 +7,7 @@ REST APIs and Relational Databases in Clojure
 .. role:: clojure(code)
    :language: clojure
 
-I've found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. In this article I'll cover useful libraries for interacting with relational databases in web applications. This article assumes you know the basics of Clojure and Leiningen.
+I've found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational databases.
 
 In this post we'll create a simple REST API for a todo list web application. We'll use `Compojure <https://github.com/weavejester/compojure>`_ to create a REST API, `Lobos <http://budu.github.io/lobos/>`_ to create and manage our database tables, and `Korma <http://sqlkorma.com/>`_ to query a PostgreSQL database.
 
