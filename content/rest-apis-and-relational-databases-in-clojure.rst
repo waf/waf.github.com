@@ -40,9 +40,9 @@ After issuing the ``lein ring server`` command, your browser should open up a "H
     (def app
       (handler/site app-routes))
 
-The ``defroutes`` line is setting up our `HTTP request handlers <https://github.com/weavejester/compojure/wiki/Routes-In-Detail>`_. An HTTP request handler defines our application's response for a given HTTP request. Currently, we're defining a "Hello World" response for HTTP GET requests to the root URL. If the incoming request is for some other resource, say ``/foo/bar``, the server attempts to find a static resource by that name (in the directory ``resources/public``, by default). If that fails, we'll return a 404 "Not Found" message.
+The ``defroutes`` line is setting up our `HTTP request handlers <https://github.com/weavejester/compojure/wiki/Routes-In-Detail>`_. An HTTP request handler defines our application's response for a given HTTP request. Currently, we're defining a "Hello World" response for HTTP GET requests to the root URL. If the incoming request is for some other resource, say ``/foo.txt``, the server attempts to find a static resource by that name (in the directory ``resources/public``, by default). If that fails, we'll return a 404 "Not Found" message.
 
-The ``def app`` line takes our routes that we defined, and wraps them with ``handler/site`` function. This Compojure function adds useful functionality (called "middleware") for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the `Compojure documentation <http://weavejester.github.io/compojure/compojure.handler.html>`_.
+The ``def app`` line takes the ``app-routes`` that we defined, and wraps them with the ``handler/site`` function. This Compojure function adds useful functionality (called "middleware") for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the `Compojure documentation <http://weavejester.github.io/compojure/compojure.handler.html>`_.
 
 Setting up a JSON REST API
 ===========================
@@ -71,7 +71,7 @@ And add the middleware to our application, as well as swapping out ``handler/sit
 
     (def app
       (-> (handler/api app-routes)
-          (json/wrap-json-body)
+          (json/wrap-json-params)
           (json/wrap-json-response)))
 
 Stubbing out our application
@@ -83,13 +83,14 @@ Next, let's stub out our API. We'll need our typical CRUD operations, so let's r
 
     (defroutes app-routes
       (GET "/api/todos" [] "TODO: return all list items")
+      (GET "/api/todos/:id" [id] "TODO: return a single list item")
       (POST "/api/todos" [] "TODO: create a list item")
       (PUT "/api/todos/:id" [id] "TODO: update a list item")
       (DELETE "/api/todos/:id" [id] "TODO: delete a list item")
       (route/resources "/")
       (route/not-found "Not Found"))
 
-When we visit http://localhost:3000/api/todos we should get our stub message "TODO: return all list items" back. However, since we deleted the "Hello World" route that responded to the root URL, we'll get a 404 "Not Found" error when we visit http://localhost:3000/. Since we specified a static resource route, we can fix 404 error by adding an "index.html" placeholder resource in the ``resources/public/`` directory: 
+When we visit http://localhost:3000/api/todos we should get our stub message "TODO: return all list items" back. However, since we deleted the "Hello World" route that responded to the root URL, we'll get a 404 "Not Found" error when we visit http://localhost:3000/. Since we specified a static resource route, we can fix the 404 error by adding an "index.html" placeholder resource in the ``resources/public/`` directory: 
 
 .. code-block:: html
 
@@ -103,7 +104,7 @@ When we visit http://localhost:3000/api/todos we should get our stub message "TO
 Connecting to a Database
 ========================
 
-Now that we have the REST interface stubbed out, let's move on to the Postgres database layer. We'll be using the `Korma <http://sqlkorma.com/>`_ library to query/update our database and `Lobos <http://budu.github.io/lobos/>`_ to manage migrations.
+Now that we have the REST interface stubbed out, let's move on to the Postgres database layer. We'll be using the `Korma <http://sqlkorma.com/>`_ library to query our database and `Lobos <http://budu.github.io/lobos/>`_ to manage migrations.
 
 Rather than create our tables manually via ``CREATE TABLE`` statements, let's use Lobos migrations. First we'll need to set up the database connection string, which we can use for both Korma and Lobos.
 
@@ -184,20 +185,77 @@ Now, if you check out the database, you'll see we have a ``items`` table, ready 
         (up [] (alter :add is-complete))
         (down [] (alter :drop is-complete))))
 
-If we call ``(run-migrations)`` again, Lobos will intelligently alter our tables; it will only run the ``add-is-complete-column`` migration, since it knows it already ran the ``add-todo-table migration``. Lobos has an `extensive API <http://budu.github.io/lobos/doc/uberdoc.frontend.html>`_ that provides many powerful table creation and migration options.
+If we call ``(run-migrations)`` again, Lobos will intelligently alter our tables; it will only run the ``add-is-complete-column`` migration, since it knows it already ran the ``add-todo-table`` migration. Lobos has an `extensive API <http://budu.github.io/lobos/doc/uberdoc.frontend.html>`_ that provides many powerful table creation and migration options.
 
 Querying and Inserting Data with Korma
 ======================================
 
-Now that we have our database all ready to go, let's finish off our application! We'll be replacing our REST API stubs we built earlier with calls to our database, using the Korma library. Korma provides a `nice, composable DSL <http://sqlkorma.com/docs#select>`_ for querying our database.
+Now that we have our database all ready to go, let's finish off our application! We'll be replacing our REST API stubs we built earlier with calls to our database, using the Korma library. 
 
-For simplicity, we'll be adding our database queries in ``src/todoapp/handler.clj``. In a real-life application you'd most likely want to refactor the queries out into their own namespace.
+We'll be creating a ``src/todoapp/query.clj`` file that contains our Korma statements. First up, we let Korma know about our ``items`` table using a ``defentity`` statement. Korma does not need any knowledge of our table's schema; it just needs to know that the table exists:
 
-We need to let Korma know about our ``items`` table. We do this by using Korma's ``defentity`` macro. After that, we can use the ``(select)``, ``(insert)``, ``(update)``, and ``(delete)`` functions to manipulate our data:
+.. code-block:: clojure
+
+    (ns todoapp.query
+      (:require [todoapp.database]
+                [korma.core :refer :all]))
+
+    (defentity items)
+
+Korma provides a `nice, composable DSL <http://sqlkorma.com/docs#select>`_ for querying our database. Let's define a couple of functions that interact with the ``items`` table:
+
+.. code-block:: clojure
+
+    (defn get-todos []
+      (select items))
+
+    (defn add-todo [title]
+      (insert items 
+              (values {:title title})))
+
+    (defn delete-todo [id]
+      (delete items
+              (where {:id [= id]})))
+
+    (defn update-todo [id title is-complete]
+      (update items
+              (set-fields {:title title
+                           :is_complete is-complete})
+              (where {:id [= id]})))
+
+    (defn get-todo [id]
+      (first
+        (select items
+              (where {:id [= id]}))))
+
+There shouldn't be anything too shocking in these functions, except maybe how readable the Korma code is. The ``get-todo`` function uses the fact that ``(first [])`` is ``nil``, so ``get-todo`` will return a single todo item, or ``nil`` if a todo item with the given id does not exist. 
+
+These functions provide everything we need for our simple CRUD interface, so let's hook up these queries to our Compojure route handlers: 
+
+.. code-block:: clojure
+
+    (defroutes app-routes
+      (GET "/api/todos" [] 
+           (response (get-todos)))
+      (GET "/api/todos/:id" [id] 
+           (response (get-todo (Integer/parseInt id))))
+      (POST "/api/todos" [title] 
+           (response (add-todo title)))
+      (PUT "/api/todos/:id" [id title is_complete] 
+           (response (update-todo (Integer/parseInt id) title is_complete)))
+      (DELETE "/api/todos/:id" [id] 
+            (response (delete-todo (Integer/parseInt id))))
+      (route/resources "/")
+      (route/not-found "Not Found"))
+
+That's it, we're done! We can use the command line tool ``curl`` to test out our API:
 
 .. code-block:: console
 
-    > curl -X POST -H "Content-Type: application/json" \ 
-        -d '{"title":"remember the milk"}' \
-        http://localhost:3000/api/todos
+    > curl -X POST -d '{"title":"remember the milk"}' -H "Content-Type: application/json" http://localhost:3000/api/todos
+    {"is_complete":false,"title":"remember the milk","id":1}
+    > curl -X PUT -d '{"title":"don't forget the milk!", "is_complete":false}' -H "Content-Type: application/json" http://localhost:3000/api/todos/1
+    {"is_complete":false,"title":"don't forget the milk!","id":1}
+    > curl -X DELETE http://localhost:3000/api/todos/1
 
+We now have a simple JSON REST API over a relational database. We can manage our database schema using Lobos migrations, and query our database using elegant, idiomatic Clojure via Korma. 
