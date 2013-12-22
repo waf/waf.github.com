@@ -7,10 +7,9 @@ REST APIs and Relational Databases in Clojure
 .. role:: clojure(code)
    :language: clojure
 
-I've been playing around with Clojure for web applications, specifically with the excellent `Ring <https://github.com/ring-clojure/ring>`_ and `Compojure <https://github.com/weavejester/compojure>`_ libraries. 
 I've found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. In this article I'll cover useful libraries for interacting with relational databases in web applications. This article assumes you know the basics of Clojure and Leiningen.
 
-In this post we'll create a simple REST API for a todo list web application. We'll use Compojure to create a REST API, `Lobos <http://budu.github.io/lobos/>`_ to create and manage our database tables, and `Korma <http://sqlkorma.com/>`_ to query a PostgreSQL database.
+In this post we'll create a simple REST API for a todo list web application. We'll use `Compojure <https://github.com/weavejester/compojure>`_ to create a REST API, `Lobos <http://budu.github.io/lobos/>`_ to create and manage our database tables, and `Korma <http://sqlkorma.com/>`_ to query a PostgreSQL database.
 
 Generating a Compojure Application
 ==================================
@@ -248,7 +247,9 @@ These functions provide everything we need for our simple CRUD interface, so let
       (route/resources "/")
       (route/not-found "Not Found"))
 
-That's it, we're done! We can use the command line tool ``curl`` to test out our API:
+We need to parse our ``id`` parameters from strings to integers, since they're being passed in via the URL, so type info is lost. The ring-json library we added earlier allows us to specify our desired JSON fields (like ``title`` and ``is_complete``) as route parameters. We can also pass our native Clojure datastructures to the Ring response function, and JSON serialization is done automatically. 
+
+We can use the command line tool ``curl`` to test out our API:
 
 .. code-block:: console
 
