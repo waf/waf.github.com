@@ -81,6 +81,8 @@ article {
 article h1 {
     margin:0 0 32px 0;
     color:#F56017;
+    font-weight:normal;
+    font-size:20pt;
 }
 article h2 {
     font-weight:normal;
