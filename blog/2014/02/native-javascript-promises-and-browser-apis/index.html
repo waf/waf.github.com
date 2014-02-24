@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>Native JavaScript Promises and Browser APIs</title>
+        <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
+        <link media="all" href="/blog/style/main.css" rel="stylesheet" />
+        <link href="/favicon.ico" rel="shortcut icon" />
+        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
+        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
+        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-38553935-1']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    <meta name="description" content="One of the interesting evolutions of mainstream Ja..." />
+    <meta name="keywords" content="html5, javascript, promise, web" />
+    </head>
+    <body>
+        <header>
+            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        </header>
+        
+        <nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="http://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+<article>
+    <h1>Native JavaScript Promises and Browser APIs</h1>
+    <p>One of the in&shy;ter&shy;est&shy;ing evolutions of mainstream JavaScript de&shy;vel&shy;op&shy;ment has been the widespread adoption of <a class="reference external" href="http://en.wikipedia.org/wiki/Promise_(programming)">Promises</a>. Promises make dealing with asyn&shy;chro&shy;nous code bearable. Since JavaScript in the browser uses a single-threaded, callback-based pro&shy;gram&shy;ming model, asyn&shy;chronic&shy;i&shy;ty is&nbsp;everywhere.</p>
+<div class="section" id="the-problem-with-asynchronicity">
+<h2>The Problem with&nbsp;Asyn&shy;chronic&shy;i&shy;ty</h2>
+<p>Asyn&shy;chro&shy;nous patterns are great for keeping UIs responsive and non-blocking, but they have a cost: asyn&shy;chro&shy;nous JavaScript code tends to be highly nested, which hurts read&shy;abil&shy;i&shy;ty. Ad&shy;di&shy;tion&shy;al&shy;ly, because you can&#8217;t catch errors that are thrown inside callbacks from outside those callbacks, error handling needs to be spread throughout every level of&nbsp;nesting.</p>
+<p>When we use Promises, our code structure is flattened, and our error handling code can be con&shy;sol&shy;i&shy;dat&shy;ed into a single area. This makes our code much more readable. As a result, Promises have taken the JavaScript ecosystem by&nbsp;storm.</p>
+</div>
+<div class="section" id="the-native-promise-api">
+<h2>The Native Promise&nbsp;<span class="caps">API</span></h2>
+<p>His&shy;tor&shy;i&shy;cal&shy;ly, we&#8217;ve used libraries such as <a class="reference external" href="http://documentup.com/kriskowal/q/">q.js</a> to add Promises to our ap&shy;pli&shy;ca&shy;tions. However, with ECMAScript 6 <a class="reference external" href="https://github.com/domenic/promises-unwrapping">adding Promises to its spec&shy;i&shy;fi&shy;ca&shy;tion</a> and recent versions of Chrome and Firefox shipping with support (since Chrome 33 and Firefox 29), we can start using native JavaScript Promises &#8211; no libraries&nbsp;required!</p>
+<p>It&#8217;s not all roses, though. Almost all of the existing browser APIs are callback-based, so they require a thin wrapper be able to use Promises. Let&#8217;s walk through wrapping a couple of browser APIs to add support for native JavaScript&nbsp;Promises.</p>
+<p>If you&#8217;ve used q.js Promises before, you&#8217;ll find the <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">native Promise <span class="caps">API</span></a> very familiar. At its heart, there&#8217;s a global <tt class="docutils literal">Promise</tt> interface. We in&shy;stan&shy;ti&shy;ate a Promise object that represents an asyn&shy;chro&shy;nous operation. and use methods on the Promise object to chain together multiple Promises (and thus multiple asyn&shy;chro&shy;nous&nbsp;operations).</p>
+<p>A Promise object can do one of two&nbsp;things:</p>
+<ul class="simple">
+<li>Eventually return a&nbsp;value</li>
+<li>Eventually encounter an&nbsp;error</li>
+</ul>
+<p>In JavaScript Promise parlance, returning a value is known as <strong>resolving</strong> and en&shy;coun&shy;ter&shy;ing an error is known as <strong>rejecting</strong>. When we construct a promise, we specify when it resolves and when it&nbsp;rejects.</p>
+</div>
+<div class="section" id="promises-and-the-geolocation-api">
+<h2>Promises and the Ge&shy;olo&shy;ca&shy;tion&nbsp;<span class="caps">API</span></h2>
+<p>As an example, let&#8217;s add promise support to the Ge&shy;olo&shy;ca&shy;tion <span class="caps">API</span>. The Ge&shy;olo&shy;ca&shy;tion <span class="caps">API</span> is all about the <tt class="docutils literal">getCur&shy;rent&shy;Po&shy;si&shy;tion</tt> method, which makes a request for the user&#8217;s ge&shy;o&shy;graph&shy;i&shy;cal position. The method takes an success callback and an error callback. If everything goes well, the success callback is called with the user&#8217;s co&shy;or&shy;di&shy;nates as a parameter. If the user denies our request, or we can&#8217;t determine the user&#8217;s position, the error callback is called. A invocation of this method <cite>without</cite> Promises might look something&nbsp;like:</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">getUserPosition</span><span class="p">(</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// we have the user&#39;s position!</span>
+    <span class="p">},</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// uhoh, something went wrong.</span>
+    <span class="p">}</span>
+<span class="p">);</span>
+</pre></div>
+<p>The code is kind of inside-out, we have to wrap up the core of what we want to do (get the user&#8217;s position) in a function and pass it deep into the program. Let&#8217;s fix this by using Promises. The mapping from &#8216;resolve&#8217; to the success callback and from &#8216;reject&#8217; to the error callback is pretty clear. It&#8217;s simple to wrap this browser <span class="caps">API</span> in a&nbsp;Promise:</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">getUserPosition</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// we have the user&#39;s position!</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// uhoh, something went wrong</span>
+    <span class="p">});</span>
+</pre></div>
+<p>At first blush, this might not seem much better. However, notice that when we call ge&shy;tUser&shy;Po&shy;si&shy;tion, the function returns, and <cite>then</cite> we handle the position. In the earlier callback-based code, we were handling the position from <cite>inside</cite> the ge&shy;tUser&shy;Po&shy;si&shy;tion&nbsp;function.</p>
+<p>While this is a sig&shy;nif&shy;i&shy;cant change, there&#8217;s not much benefit with just one asyn&shy;chro&shy;nous operation. The benefits start com&shy;pound&shy;ing when we compose multiple asyn&shy;chro&shy;nous operations. To exercise this, let&#8217;s add another asyn&shy;chro&shy;nous operation: displaying the user&#8217;s position in an <span class="caps">HTML5</span>&nbsp;No&shy;ti&shy;fi&shy;ca&shy;tion.</p>
+</div>
+<div class="section" id="promises-and-the-html5-notification-api">
+<h2>Promises and the <span class="caps">HTML5</span> No&shy;ti&shy;fi&shy;ca&shy;tion&nbsp;<span class="caps">API</span></h2>
+<p>The <span class="caps">HTML5</span> No&shy;ti&shy;fi&shy;ca&shy;tion <span class="caps">API</span> is also callback-based, but in a different way than the Ge&shy;olo&shy;ca&shy;tion <span class="caps">API</span>: it uses a single <tt class="docutils literal">han&shy;dleSta&shy;tus</tt> callback, rather than separate callbacks for success and errors. The callback-based code might look like&nbsp;this:</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">(</span><span class="nx">handleStatus</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="nx">handleStatus</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">getNotificationPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="s2">&quot;granted&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// we can show notifications!</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// error, we didn&#39;t get permission to show notifications :(</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+<p>For this conversion, we&#8217;ll manually call the <tt class="docutils literal">resolve</tt> and <tt class="docutils literal">reject</tt> handlers:</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="s2">&quot;granted&quot;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">resolve</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">reject</span><span class="p">(</span><span class="s2">&quot;Notification status &quot;</span> <span class="o">+</span> <span class="nx">status</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">getNotificationPermission</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">permission</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// we can show notifications!</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// error, no permission</span>
+    <span class="p">});</span>
+</pre></div>
+<p>Notice that the native browser APIs for Ge&shy;olo&shy;ca&shy;tion and No&shy;ti&shy;fi&shy;ca&shy;tion used two slightly different callback patterns, but in our Promise-based <span class="caps">API</span>, we have a single, unified execution pattern! Now we can easily compose these two&nbsp;APIs.</p>
+</div>
+<div class="section" id="composing-our-promises">
+<h2>Composing our&nbsp;Promises</h2>
+<p>Now, let&#8217;s write some sample code to flex our Promise <span class="caps">API</span>. We&#8217;ll perform the following&nbsp;actions:</p>
+<ol class="arabic simple">
+<li>Ask permission to display&nbsp;no&shy;ti&shy;fi&shy;ca&shy;tions.</li>
+<li>Ask for the user&#8217;s&nbsp;position.</li>
+<li>Show a no&shy;ti&shy;fi&shy;ca&shy;tion displaying the user&#8217;s&nbsp;position.</li>
+<li>Handle all of the failure points in the above&nbsp;steps.</li>
+</ol>
+<p>We can reuse our <tt class="docutils literal">get&shy;No&shy;ti&shy;fi&shy;ca&shy;tion&shy;Per&shy;mis&shy;sion</tt> and <tt class="docutils literal">ge&shy;tUser&shy;Po&shy;si&shy;tion</tt> functions we defined earlier. Here is the code, in its&nbsp;entirety:</p>
+<div class="highlight"><pre><span class="nx">getNotificationPermission</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">getUserPosition</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displayNotification</span><span class="p">)</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// error, something went wrong.</span>
+    <span class="p">});</span>
+
+<span class="c1">// we defined this function earlier</span>
+<span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="s2">&quot;granted&quot;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">resolve</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">reject</span><span class="p">(</span><span class="s2">&quot;Notification status &quot;</span> <span class="o">+</span> <span class="nx">status</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// we defined this function earlier</span>
+<span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// new function. `position` is the user&#39;s geographical coordinates</span>
+<span class="kd">function</span> <span class="nx">displayNotification</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">new</span> <span class="nx">Notification</span><span class="p">(</span><span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span>
+                     <span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>Even though we&#8217;re dealing entirely with asyn&shy;chro&shy;nous operations, our code reads just like syn&shy;chro&shy;nous code. Ad&shy;di&shy;tion&shy;al&shy;ly, the error-handling code resembles a try-catch block we might see in normal syn&shy;chro&shy;nous code! If an error is thrown in any of our functions, our <tt class="docutils literal">catch</tt> function will take over. In this error handler function we can check the error object to figure out exactly what went wrong and display the ap&shy;pro&shy;pri&shy;ate error message to the&nbsp;user.</p>
+</div>
+<div class="section" id="altering-the-program-flow">
+<h2>Altering the Program&nbsp;Flow</h2>
+<p>Right now we&#8217;re chaining all of our functions together, one after the other. This causes some in&shy;ef&shy;fi&shy;cien&shy;cy and a poor user experience: We request permission for no&shy;ti&shy;fi&shy;ca&shy;tions and wait to receive it, and then we request permission for ge&shy;olo&shy;ca&shy;tion and wait to receive it. Ideally, we would request both the per&shy;mis&shy;sions at once and then wait until we receive both of the&nbsp;per&shy;mis&shy;sions.</p>
+<p>The Promise <span class="caps">API</span> has us covered. The static function <tt class="docutils literal">Promise.All()</tt> converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for permission request&nbsp;promises:</p>
+<div class="highlight"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+    <span class="nx">requestNotificationPermission</span><span class="p">(),</span>
+    <span class="nx">getUserPosition</span><span class="p">()</span>
+<span class="p">])</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displayPosition</span><span class="p">)</span>
+<span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// error, something went wrong.</span>
+<span class="p">});</span>
+
+<span class="kd">function</span> <span class="nx">displayPosition</span><span class="p">(</span><span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">position</span> <span class="o">=</span> <span class="nx">results</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">new</span> <span class="nx">Notification</span><span class="p">(</span><span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span>
+                     <span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>Now, we request both per&shy;mis&shy;sions and wait until the promises resolve. The values the promises resolve to are passed in as an array to the <tt class="docutils literal">dis&shy;play&shy;Po&shy;si&shy;tion</tt> function. We only care about the return value of the <tt class="docutils literal">ge&shy;tUser&shy;Po&shy;si&shy;tion</tt> call, so we index into the results array and display the&nbsp;position.</p>
+</div>
+<div class="section" id="final-word">
+<h2>Final&nbsp;Word</h2>
+<p>It&#8217;s worth noting that this will hopefully be a short-term pain. There are plans to add Promise support to existing browser APIs where possible. We&#8217;re not there yet, though, so we need these wrappers for&nbsp;now.</p>
+</div>
+
+    <div class="tags">
+        
+            tagged as
+                <a href="/blog/tag/html5/" rel="tag">html5</a>,
+                <a href="/blog/tag/javascript/" rel="tag">javascript</a>,
+                <a href="/blog/tag/promise/" rel="tag">promise</a>
+                    and
+                    
+                <a href="/blog/tag/web/" rel="tag">web</a>
+                
+        
+    </div>
+    <script src="https://apis.google.com/js/plusone.js">
+    </script>
+    <div id="comments">
+        <div class="g-comments"
+            data-href="http://fuqua.io/blog/2014/02/native-javascript-promises-and-browser-apis/"
+            data-width="642"
+            data-first_party_property="BLOGGER"
+            data-view_type="FILTERED_POSTMOD">
+        </div>
+    </div>
+</article><div class="pager">
+    
+        <a href="/blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="prev">
+        REST APIs and Relational Databases in Clojure &#x21DD;
+        </a>
+    
+    
+    </div>
+<script src="/blog/script/list.min.js"></script>
+    </body>
+</html>

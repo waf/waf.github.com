@@ -5,9 +5,177 @@
         <link>http://fuqua.io/blog/</link>
         <description></description>
         <language>en</language>
-        <pubDate>Wed, 04 Dec 2013 05:00:00 GMT</pubDate>
+        <pubDate>Sat, 22 Feb 2014 05:00:00 GMT</pubDate>
         <docs>http://fuqua.io/blog/rss/</docs>
         <generator>acrylamid 0.7.7</generator>
+        
+            <item>
+        <title>Native JavaScript Promises and Browser APIs</title>
+        <link>http://fuqua.io/blog/2014/02/native-javascript-promises-and-browser-apis/</link>
+        <description>&lt;p&gt;One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Promise_(programming)&#34;&gt;Promises&lt;/a&gt;. Promises make dealing with asynchronous code bearable. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is&amp;nbsp;everywhere.&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;the-problem-with-asynchronicity&#34;&gt;
+&lt;h3&gt;The Problem with&amp;nbsp;Asynchronicity&lt;/h3&gt;
+&lt;p&gt;Asynchronous patterns are great for keeping UIs responsive and non-blocking, but they have a cost: asynchronous JavaScript code tends to be highly nested, which hurts readability. Additionally, because you can&amp;#8217;t catch errors that are thrown inside callbacks from outside those callbacks, error handling needs to be spread throughout every level of&amp;nbsp;nesting.&lt;/p&gt;
+&lt;p&gt;When we use Promises, our code structure is flattened, and our error handling code can be consolidated into a single area. This makes our code much more readable. As a result, Promises have taken the JavaScript ecosystem by&amp;nbsp;storm.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;the-native-promise-api&#34;&gt;
+&lt;h3&gt;The Native Promise&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;Historically, we&amp;#8217;ve used libraries such as &lt;a class=&#34;reference external&#34; href=&#34;http://documentup.com/kriskowal/q/&#34;&gt;q.js&lt;/a&gt; to add Promises to our applications. However, with ECMAScript 6 &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/domenic/promises-unwrapping&#34;&gt;adding Promises to its specification&lt;/a&gt; and recent versions of Chrome and Firefox shipping with support (since Chrome 33 and Firefox 29), we can start using native JavaScript Promises &amp;#8211; no libraries&amp;nbsp;required!&lt;/p&gt;
+&lt;p&gt;It&amp;#8217;s not all roses, though. Almost all of the existing browser APIs are callback-based, so they require a thin wrapper be able to use Promises. Let&amp;#8217;s walk through wrapping a couple of browser APIs to add support for native JavaScript&amp;nbsp;Promises.&lt;/p&gt;
+&lt;p&gt;If you&amp;#8217;ve used q.js Promises before, you&amp;#8217;ll find the &lt;a class=&#34;reference external&#34; href=&#34;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise&#34;&gt;native Promise &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&lt;/a&gt; very familiar. At its heart, there&amp;#8217;s a global &lt;tt class=&#34;docutils literal&#34;&gt;Promise&lt;/tt&gt; interface. We instantiate a Promise object that represents an asynchronous operation. and use methods on the Promise object to chain together multiple Promises (and thus multiple asynchronous&amp;nbsp;operations).&lt;/p&gt;
+&lt;p&gt;A Promise object can do one of two&amp;nbsp;things:&lt;/p&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;Eventually return a&amp;nbsp;value&lt;/li&gt;
+&lt;li&gt;Eventually encounter an&amp;nbsp;error&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In JavaScript Promise parlance, returning a value is known as &lt;strong&gt;resolving&lt;/strong&gt; and encountering an error is known as &lt;strong&gt;rejecting&lt;/strong&gt;. When we construct a promise, we specify when it resolves and when it&amp;nbsp;rejects.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;promises-and-the-geolocation-api&#34;&gt;
+&lt;h3&gt;Promises and the Geolocation&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;As an example, let&amp;#8217;s add promise support to the Geolocation &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. The Geolocation &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; is all about the &lt;tt class=&#34;docutils literal&#34;&gt;getCurrentPosition&lt;/tt&gt; method, which makes a request for the user&amp;#8217;s geographical position. The method takes an success callback and an error callback. If everything goes well, the success callback is called with the user&amp;#8217;s coordinates as a parameter. If the user denies our request, or we can&amp;#8217;t determine the user&amp;#8217;s position, the error callback is called. A invocation of this method &lt;cite&gt;without&lt;/cite&gt; Promises might look something&amp;nbsp;like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;success&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;navigator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;geolocation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getCurrentPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;success&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;position&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// we have the user&amp;#39;s position!&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// uhoh, something went wrong.&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The code is kind of inside-out, we have to wrap up the core of what we want to do (get the user&amp;#8217;s position) in a function and pass it deep into the program. Let&amp;#8217;s fix this by using Promises. The mapping from &amp;#8216;resolve&amp;#8217; to the success callback and from &amp;#8216;reject&amp;#8217; to the error callback is pretty clear. It&amp;#8217;s simple to wrap this browser &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; in a&amp;nbsp;Promise:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;navigator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;geolocation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getCurrentPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;then&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;position&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// we have the user&amp;#39;s position!&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// uhoh, something went wrong&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;At first blush, this might not seem much better. However, notice that when we call getUserPosition, the function returns, and &lt;cite&gt;then&lt;/cite&gt; we handle the position. In the earlier callback-based code, we were handling the position from &lt;cite&gt;inside&lt;/cite&gt; the getUserPosition&amp;nbsp;function.&lt;/p&gt;
+&lt;p&gt;While this is a significant change, there&amp;#8217;s not much benefit with just one asynchronous operation. The benefits start compounding when we compose multiple asynchronous operations. To exercise this, let&amp;#8217;s add another asynchronous operation: displaying the user&amp;#8217;s position in an &lt;span class=&#34;caps&#34;&gt;HTML5&lt;/span&gt;&amp;nbsp;Notification.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;promises-and-the-html5-notification-api&#34;&gt;
+&lt;h3&gt;Promises and the &lt;span class=&#34;caps&#34;&gt;HTML5&lt;/span&gt; Notification&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;The &lt;span class=&#34;caps&#34;&gt;HTML5&lt;/span&gt; Notification &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; is also callback-based, but in a different way than the Geolocation &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;: it uses a single &lt;tt class=&#34;docutils literal&#34;&gt;handleStatus&lt;/tt&gt; callback, rather than separate callbacks for success and errors. The callback-based code might look like&amp;nbsp;this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;handleStatus&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;Notification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;requestPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;handleStatus&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;===&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;granted&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// we can show notifications!&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// error, we didn&amp;#39;t get permission to show notifications :(&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For this conversion, we&amp;#8217;ll manually call the &lt;tt class=&#34;docutils literal&#34;&gt;resolve&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;reject&lt;/tt&gt; handlers:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;Notification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;requestPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;===&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;granted&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;quot;Notification status &amp;quot;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;then&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;permission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// we can show notifications!&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// error, no permission&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Notice that the native browser APIs for Geolocation and Notification used two slightly different callback patterns, but in our Promise-based &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;, we have a single, unified execution pattern! Now we can easily compose these two&amp;nbsp;APIs.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;composing-our-promises&#34;&gt;
+&lt;h3&gt;Composing our&amp;nbsp;Promises&lt;/h3&gt;
+&lt;p&gt;Now, let&amp;#8217;s write some sample code to flex our Promise &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. We&amp;#8217;ll perform the following&amp;nbsp;actions:&lt;/p&gt;
+&lt;ol class=&#34;arabic simple&#34;&gt;
+&lt;li&gt;Ask permission to display&amp;nbsp;notifications.&lt;/li&gt;
+&lt;li&gt;Ask for the user&amp;#8217;s&amp;nbsp;position.&lt;/li&gt;
+&lt;li&gt;Show a notification displaying the user&amp;#8217;s&amp;nbsp;position.&lt;/li&gt;
+&lt;li&gt;Handle all of the failure points in the above&amp;nbsp;steps.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;We can reuse our &lt;tt class=&#34;docutils literal&#34;&gt;getNotificationPermission&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;getUserPosition&lt;/tt&gt; functions we defined earlier. Here is the code, in its&amp;nbsp;entirety:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;then&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;then&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;displayNotification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// error, something went wrong.&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// we defined this function earlier&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;Notification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;requestPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;===&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;granted&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;quot;Notification status &amp;quot;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// we defined this function earlier&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;navigator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;geolocation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getCurrentPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// new function. `position` is the user&amp;#39;s geographical coordinates&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;displayNotification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;position&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Notification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;position&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;coords&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;latitude&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;,&amp;quot;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;
+                     &lt;span class=&#34;nx&#34;&gt;position&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;coords&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;longitude&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Even though we&amp;#8217;re dealing entirely with asynchronous operations, our code reads just like synchronous code. Additionally, the error-handling code resembles a try-catch block we might see in normal synchronous code! If an error is thrown in any of our functions, our &lt;tt class=&#34;docutils literal&#34;&gt;catch&lt;/tt&gt; function will take over. In this error handler function we can check the error object to figure out exactly what went wrong and display the appropriate error message to the&amp;nbsp;user.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;altering-the-program-flow&#34;&gt;
+&lt;h3&gt;Altering the Program&amp;nbsp;Flow&lt;/h3&gt;
+&lt;p&gt;Right now we&amp;#8217;re chaining all of our functions together, one after the other. This causes some inefficiency and a poor user experience: We request permission for notifications and wait to receive it, and then we request permission for geolocation and wait to receive it. Ideally, we would request both the permissions at once and then wait until we receive both of the&amp;nbsp;permissions.&lt;/p&gt;
+&lt;p&gt;The Promise &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; has us covered. The static function &lt;tt class=&#34;docutils literal&#34;&gt;Promise.All()&lt;/tt&gt; converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for permission request&amp;nbsp;promises:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;all&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;([&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;requestNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;])&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;then&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;displayPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;err&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// error, something went wrong.&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;displayPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;results&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;position&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;results&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Notification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;position&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;coords&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;latitude&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;,&amp;quot;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;
+                     &lt;span class=&#34;nx&#34;&gt;position&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;coords&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;longitude&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, we request both permissions and wait until the promises resolve. The values the promises resolve to are passed in as an array to the &lt;tt class=&#34;docutils literal&#34;&gt;displayPosition&lt;/tt&gt; function. We only care about the return value of the &lt;tt class=&#34;docutils literal&#34;&gt;getUserPosition&lt;/tt&gt; call, so we index into the results array and display the&amp;nbsp;position.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;final-word&#34;&gt;
+&lt;h3&gt;Final&amp;nbsp;Word&lt;/h3&gt;
+&lt;p&gt;It&amp;#8217;s worth noting that this will hopefully be a short-term pain. There are plans to add Promise support to existing browser APIs where possible. We&amp;#8217;re not there yet, though, so we need these wrappers for&amp;nbsp;now.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sat, 22 Feb 2014 05:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2014-02-22:/2014/02/native-javascript-promises-and-browser-apis</guid>
+    </item>
         
             <item>
         <title>REST APIs and Relational Databases in Clojure</title>
