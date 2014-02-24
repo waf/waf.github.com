@@ -198,7 +198,7 @@ The Promise API has a solution. The static function ``Promise.All()`` converts m
 
 Now, we request both permissions and wait until the promises resolve. The values the promises resolve to are passed in as an array to the ``displayPosition`` function. We only care about the return value of the ``getUserPosition`` call, so we index into the results array and display the position.
 
-Final Word
+The Future
 ==========
 
 It's worth noting that the need to wrap Browser APIs in compatibility layers will hopefully be a short-term pain. There are plans to add Promise support to existing browser APIs where possible. We're not there yet, though, so we need these wrappers for now.
