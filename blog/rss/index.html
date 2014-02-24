@@ -151,7 +151,7 @@
 &lt;/div&gt;
 &lt;div class=&#34;section&#34; id=&#34;altering-the-program-flow&#34;&gt;
 &lt;h3&gt;Altering the Program&amp;nbsp;Flow&lt;/h3&gt;
-&lt;p&gt;Right now we&amp;#8217;re chaining all of our functions together, one after the other. This causes some inefficiency and a poor user experience: We request permission for notifications and wait to receive it, and then we request permission for geolocation and wait to receive it. Ideally, we would request both the permissions at once and then wait until we receive both of the&amp;nbsp;permissions.&lt;/p&gt;
+&lt;p&gt;Right now we&amp;#8217;re chaining all of our functions together, one after the other. This causes some inefficiency and a poor user experience: We request permission for notifications and wait to receive it, and then we request the user&amp;#8217;s position and wait to receive it. Since these requests don&amp;#8217;t depend on each other, ideally we would issue both of these requests at once, and then wait until both of the requests were&amp;nbsp;successful.&lt;/p&gt;
 &lt;p&gt;The Promise &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; has a solution. The static function &lt;tt class=&#34;docutils literal&#34;&gt;Promise.All()&lt;/tt&gt; converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for our desired&amp;nbsp;behavior:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;all&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;([&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;requestNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt;
@@ -168,7 +168,7 @@
                      &lt;span class=&#34;nx&#34;&gt;position&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;coords&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;longitude&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Now, we request both permissions and wait until the promises resolve. The values the promises resolve to are passed in as an array to the &lt;tt class=&#34;docutils literal&#34;&gt;displayPosition&lt;/tt&gt; function. We only care about the return value of the &lt;tt class=&#34;docutils literal&#34;&gt;getUserPosition&lt;/tt&gt; call, so we index into the results array and display the&amp;nbsp;position.&lt;/p&gt;
+&lt;p&gt;Now, we make both requests and wait until both promises resolve. The values the promises resolve to are passed in an array to the &lt;tt class=&#34;docutils literal&#34;&gt;displayPosition&lt;/tt&gt; function. We only care about the return value of the &lt;tt class=&#34;docutils literal&#34;&gt;getUserPosition&lt;/tt&gt; call, so we index into the results array and retrieve the&amp;nbsp;position.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&#34;section&#34; id=&#34;the-future&#34;&gt;
 &lt;h3&gt;The&amp;nbsp;Future&lt;/h3&gt;

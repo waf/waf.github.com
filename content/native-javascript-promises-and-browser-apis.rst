@@ -175,7 +175,7 @@ Even though we're dealing entirely with asynchronous operations, our code reads 
 Altering the Program Flow
 ============================
 
-Right now we're chaining all of our functions together, one after the other. This causes some inefficiency and a poor user experience: We request permission for notifications and wait to receive it, and then we request permission for geolocation and wait to receive it. Ideally, we would request both the permissions at once and then wait until we receive both of the permissions. 
+Right now we're chaining all of our functions together, one after the other. This causes some inefficiency and a poor user experience: We request permission for notifications and wait to receive it, and then we request the user's position and wait to receive it. Since these requests don't depend on each other, ideally we would issue both of these requests at once, and then wait until both of the requests were successful.
 
 The Promise API has a solution. The static function ``Promise.All()`` converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for our desired behavior:
 
@@ -196,7 +196,7 @@ The Promise API has a solution. The static function ``Promise.All()`` converts m
                          position.coords.longitude);
     }
 
-Now, we request both permissions and wait until the promises resolve. The values the promises resolve to are passed in as an array to the ``displayPosition`` function. We only care about the return value of the ``getUserPosition`` call, so we index into the results array and display the position.
+Now, we make both requests and wait until both promises resolve. The values the promises resolve to are passed in an array to the ``displayPosition`` function. We only care about the return value of the ``getUserPosition`` call, so we index into the results array and retrieve the position.
 
 The Future
 ==========
