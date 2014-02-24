@@ -148,6 +148,9 @@ tt, code, kbd, samp {
     box-shadow: 0 0 5px #999999;
     outline:none;
 }
+.entry-list a {
+    line-height: 1.5em;
+}
 
 @media (max-width:900px) {
     nav li:hover .label {

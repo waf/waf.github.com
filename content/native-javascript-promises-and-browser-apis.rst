@@ -4,14 +4,14 @@ Native JavaScript Promises and Browser APIs
 :date: 2014-02-22
 :tags: [html5, javascript, promise, web]
 
-One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of Promises_. Promises make dealing with asynchronous code bearable. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is everywhere. 
+One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of Promises_. Promises simplify asynchronous code. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is everywhere. 
 
 The Problem with Asynchronicity
 ===============================
 
 Asynchronous patterns are great for keeping UIs responsive and non-blocking, but they have a cost: asynchronous JavaScript code tends to be highly nested, which hurts readability. Additionally, because you can't catch errors that are thrown inside callbacks from outside those callbacks, error handling needs to be spread throughout every level of nesting. 
 
-When we use Promises, our code structure is flattened, and our error handling code can be consolidated into a single area. This makes our code much more readable. As a result, Promises have taken the JavaScript ecosystem by storm.
+When we use Promises, our code structure is flattened, and our error handling code can be consolidated into a single area. This makes our code easier to both understand and modify. As a result, Promises have taken the JavaScript ecosystem by storm.
 
 The Native Promise API
 =======================
@@ -33,7 +33,7 @@ In JavaScript Promise parlance, returning a value is known as **resolving** and 
 Promises and the Geolocation API
 ================================
 
-As an example, let's add promise support to the Geolocation API. The Geolocation API is all about the ``getCurrentPosition`` method, which makes a request for the user's geographical position. The method takes an success callback and an error callback. If everything goes well, the success callback is called with the user's coordinates as a parameter. If the user denies our request, or we can't determine the user's position, the error callback is called. A invocation of this method `without` Promises might look something like:
+As an example, let's add promise support to the Geolocation API. The Geolocation API exposes the ``getCurrentPosition`` function, which makes a request for the user's geographical position. The function takes an success callback and an error callback. If everything goes well, the success callback is called with the user's coordinates as a parameter. If the user denies our request, or we can't determine the user's position, the error callback is called. A invocation of this function `without` Promises might look something like:
 
 .. code-block:: javascript
     
@@ -50,7 +50,9 @@ As an example, let's add promise support to the Geolocation API. The Geolocation
         }
     );
 
-The code is kind of inside-out, we have to wrap up the core of what we want to do (get the user's position) in a function and pass it deep into the program. Let's fix this by using Promises. The mapping from 'resolve' to the success callback and from 'reject' to the error callback is pretty clear. It's simple to wrap this browser API in a Promise:
+The code is kind of inside-out; we have to wrap up the core of what we want to do (get the user's position) in a function and pass it deep into the program. Let's fix this by using Promises. 
+
+Remember that a Promise can either **resolve** or **reject**. The mapping from resolve to the success callback and from reject to the error callback is pretty clear. It's simple to wrap this browser API in a Promise:
 
 .. code-block:: javascript
     
@@ -60,6 +62,10 @@ The code is kind of inside-out, we have to wrap up the core of what we want to d
         });
     }
 
+We can invoke the function to get our promise, and then specify success and failure callbacks using the ``then()`` method on our Promise object:
+
+.. code-block:: javascript
+    
     getUserPosition()
         .then(function(position) {
             // we have the user's position!
@@ -68,7 +74,7 @@ The code is kind of inside-out, we have to wrap up the core of what we want to d
             // uhoh, something went wrong
         });
 
-At first blush, this might not seem much better. However, notice that when we call getUserPosition, the function returns, and `then` we handle the position. In the earlier callback-based code, we were handling the position from `inside` the getUserPosition function.
+At first blush, this might not seem much better. However, notice that when we call ``getUserPosition``, the function returns, and `then` we handle the position. In the callback-based version, we handled the position from `inside` the ``getUserPosition`` function.
 
 While this is a significant change, there's not much benefit with just one asynchronous operation. The benefits start compounding when we compose multiple asynchronous operations. To exercise this, let's add another asynchronous operation: displaying the user's position in an HTML5 Notification.
 
@@ -115,7 +121,7 @@ For this conversion, we'll manually call the ``resolve`` and ``reject`` handlers
             // error, no permission
         });
 
-Notice that the native browser APIs for Geolocation and Notification used two slightly different callback patterns, but in our Promise-based API, we have a single, unified execution pattern! Now we can easily compose these two APIs.
+Notice that the native browser APIs for Geolocation and Notification originally used two slightly different callback patterns, but in our Promise-based API, we have a single, unified execution pattern! Now we can easily compose these two operations and start to see the benefits of Promises.
 
 Composing our Promises
 ======================
@@ -171,7 +177,7 @@ Altering the Program Flow
 
 Right now we're chaining all of our functions together, one after the other. This causes some inefficiency and a poor user experience: We request permission for notifications and wait to receive it, and then we request permission for geolocation and wait to receive it. Ideally, we would request both the permissions at once and then wait until we receive both of the permissions. 
 
-The Promise API has us covered. The static function ``Promise.All()`` converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for permission request promises:
+The Promise API has a solution. The static function ``Promise.All()`` converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for our desired behavior:
 
 .. code-block:: javascript
 
@@ -195,7 +201,7 @@ Now, we request both permissions and wait until the promises resolve. The values
 Final Word
 ==========
 
-It's worth noting that this will hopefully be a short-term pain. There are plans to add Promise support to existing browser APIs where possible. We're not there yet, though, so we need these wrappers for now.
+It's worth noting that the need to wrap Browser APIs in compatibility layers will hopefully be a short-term pain. There are plans to add Promise support to existing browser APIs where possible. We're not there yet, though, so we need these wrappers for now.
 
 
 .. _Promises: http://en.wikipedia.org/wiki/Promise_(programming)

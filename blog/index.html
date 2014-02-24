@@ -39,7 +39,7 @@
 </div>
 <div id="entries-search">
     <input class="search-box" type="search" placeholder="Filter&hellip;" />
-    <ul class="list">
+    <ul class="entry-list">
     
         <li>
             <span class="date">2014 February 22</span>
@@ -65,7 +65,8 @@
     window.addEventListener("load", function() {
         new List('entries-search', { 
             valueNames: ['title'],
-            searchClass: 'search-box'
+            searchClass: 'search-box',
+            listClass: 'entry-list'
         });
     }, false);
 </script>

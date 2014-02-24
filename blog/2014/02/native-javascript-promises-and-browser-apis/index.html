@@ -41,11 +41,11 @@
 </nav>
 <article>
     <h1>Native JavaScript Promises and Browser APIs</h1>
-    <p>One of the in&shy;ter&shy;est&shy;ing evolutions of mainstream JavaScript de&shy;vel&shy;op&shy;ment has been the widespread adoption of <a class="reference external" href="http://en.wikipedia.org/wiki/Promise_(programming)">Promises</a>. Promises make dealing with asyn&shy;chro&shy;nous code bearable. Since JavaScript in the browser uses a single-threaded, callback-based pro&shy;gram&shy;ming model, asyn&shy;chronic&shy;i&shy;ty is&nbsp;everywhere.</p>
+    <p>One of the in&shy;ter&shy;est&shy;ing evolutions of mainstream JavaScript de&shy;vel&shy;op&shy;ment has been the widespread adoption of <a class="reference external" href="http://en.wikipedia.org/wiki/Promise_(programming)">Promises</a>. Promises simplify asyn&shy;chro&shy;nous code. Since JavaScript in the browser uses a single-threaded, callback-based pro&shy;gram&shy;ming model, asyn&shy;chronic&shy;i&shy;ty is&nbsp;everywhere.</p>
 <div class="section" id="the-problem-with-asynchronicity">
 <h2>The Problem with&nbsp;Asyn&shy;chronic&shy;i&shy;ty</h2>
 <p>Asyn&shy;chro&shy;nous patterns are great for keeping UIs responsive and non-blocking, but they have a cost: asyn&shy;chro&shy;nous JavaScript code tends to be highly nested, which hurts read&shy;abil&shy;i&shy;ty. Ad&shy;di&shy;tion&shy;al&shy;ly, because you can&#8217;t catch errors that are thrown inside callbacks from outside those callbacks, error handling needs to be spread throughout every level of&nbsp;nesting.</p>
-<p>When we use Promises, our code structure is flattened, and our error handling code can be con&shy;sol&shy;i&shy;dat&shy;ed into a single area. This makes our code much more readable. As a result, Promises have taken the JavaScript ecosystem by&nbsp;storm.</p>
+<p>When we use Promises, our code structure is flattened, and our error handling code can be con&shy;sol&shy;i&shy;dat&shy;ed into a single area. This makes our code easier to both understand and modify. As a result, Promises have taken the JavaScript ecosystem by&nbsp;storm.</p>
 </div>
 <div class="section" id="the-native-promise-api">
 <h2>The Native Promise&nbsp;<span class="caps">API</span></h2>
@@ -61,7 +61,7 @@
 </div>
 <div class="section" id="promises-and-the-geolocation-api">
 <h2>Promises and the Ge&shy;olo&shy;ca&shy;tion&nbsp;<span class="caps">API</span></h2>
-<p>As an example, let&#8217;s add promise support to the Ge&shy;olo&shy;ca&shy;tion <span class="caps">API</span>. The Ge&shy;olo&shy;ca&shy;tion <span class="caps">API</span> is all about the <tt class="docutils literal">getCur&shy;rent&shy;Po&shy;si&shy;tion</tt> method, which makes a request for the user&#8217;s ge&shy;o&shy;graph&shy;i&shy;cal position. The method takes an success callback and an error callback. If everything goes well, the success callback is called with the user&#8217;s co&shy;or&shy;di&shy;nates as a parameter. If the user denies our request, or we can&#8217;t determine the user&#8217;s position, the error callback is called. A invocation of this method <cite>without</cite> Promises might look something&nbsp;like:</p>
+<p>As an example, let&#8217;s add promise support to the Ge&shy;olo&shy;ca&shy;tion <span class="caps">API</span>. The Ge&shy;olo&shy;ca&shy;tion <span class="caps">API</span> exposes the <tt class="docutils literal">getCur&shy;rent&shy;Po&shy;si&shy;tion</tt> function, which makes a request for the user&#8217;s ge&shy;o&shy;graph&shy;i&shy;cal position. The function takes an success callback and an error callback. If everything goes well, the success callback is called with the user&#8217;s co&shy;or&shy;di&shy;nates as a parameter. If the user denies our request, or we can&#8217;t determine the user&#8217;s position, the error callback is called. A invocation of this function <cite>without</cite> Promises might look something&nbsp;like:</p>
 <div class="highlight"><pre><span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
 <span class="p">}</span>
@@ -75,14 +75,16 @@
     <span class="p">}</span>
 <span class="p">);</span>
 </pre></div>
-<p>The code is kind of inside-out, we have to wrap up the core of what we want to do (get the user&#8217;s position) in a function and pass it deep into the program. Let&#8217;s fix this by using Promises. The mapping from &#8216;resolve&#8217; to the success callback and from &#8216;reject&#8217; to the error callback is pretty clear. It&#8217;s simple to wrap this browser <span class="caps">API</span> in a&nbsp;Promise:</p>
+<p>The code is kind of inside-out; we have to wrap up the core of what we want to do (get the user&#8217;s position) in a function and pass it deep into the program. Let&#8217;s fix this by using&nbsp;Promises.</p>
+<p>Remember that a Promise can either <strong>resolve</strong> or <strong>reject</strong>. The mapping from resolve to the success callback and from reject to the error callback is pretty clear. It&#8217;s simple to wrap this browser <span class="caps">API</span> in a&nbsp;Promise:</p>
 <div class="highlight"><pre><span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">);</span>
     <span class="p">});</span>
 <span class="p">}</span>
-
-<span class="nx">getUserPosition</span><span class="p">()</span>
+</pre></div>
+<p>We can invoke the function to get our promise, and then specify success and failure callbacks using the <tt class="docutils literal">then()</tt> method on our Promise&nbsp;object:</p>
+<div class="highlight"><pre><span class="nx">getUserPosition</span><span class="p">()</span>
     <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// we have the user&#39;s position!</span>
     <span class="p">})</span>
@@ -90,7 +92,7 @@
         <span class="c1">// uhoh, something went wrong</span>
     <span class="p">});</span>
 </pre></div>
-<p>At first blush, this might not seem much better. However, notice that when we call ge&shy;tUser&shy;Po&shy;si&shy;tion, the function returns, and <cite>then</cite> we handle the position. In the earlier callback-based code, we were handling the position from <cite>inside</cite> the ge&shy;tUser&shy;Po&shy;si&shy;tion&nbsp;function.</p>
+<p>At first blush, this might not seem much better. However, notice that when we call <tt class="docutils literal">ge&shy;tUser&shy;Po&shy;si&shy;tion</tt>, the function returns, and <cite>then</cite> we handle the position. In the callback-based version, we handled the position from <cite>inside</cite> the <tt class="docutils literal">ge&shy;tUser&shy;Po&shy;si&shy;tion</tt> function.</p>
 <p>While this is a sig&shy;nif&shy;i&shy;cant change, there&#8217;s not much benefit with just one asyn&shy;chro&shy;nous operation. The benefits start com&shy;pound&shy;ing when we compose multiple asyn&shy;chro&shy;nous operations. To exercise this, let&#8217;s add another asyn&shy;chro&shy;nous operation: displaying the user&#8217;s position in an <span class="caps">HTML5</span>&nbsp;No&shy;ti&shy;fi&shy;ca&shy;tion.</p>
 </div>
 <div class="section" id="promises-and-the-html5-notification-api">
@@ -129,7 +131,7 @@
         <span class="c1">// error, no permission</span>
     <span class="p">});</span>
 </pre></div>
-<p>Notice that the native browser APIs for Ge&shy;olo&shy;ca&shy;tion and No&shy;ti&shy;fi&shy;ca&shy;tion used two slightly different callback patterns, but in our Promise-based <span class="caps">API</span>, we have a single, unified execution pattern! Now we can easily compose these two&nbsp;APIs.</p>
+<p>Notice that the native browser APIs for Ge&shy;olo&shy;ca&shy;tion and No&shy;ti&shy;fi&shy;ca&shy;tion originally used two slightly different callback patterns, but in our Promise-based <span class="caps">API</span>, we have a single, unified execution pattern! Now we can easily compose these two operations and start to see the benefits of&nbsp;Promises.</p>
 </div>
 <div class="section" id="composing-our-promises">
 <h2>Composing our&nbsp;Promises</h2>
@@ -179,7 +181,7 @@
 <div class="section" id="altering-the-program-flow">
 <h2>Altering the Program&nbsp;Flow</h2>
 <p>Right now we&#8217;re chaining all of our functions together, one after the other. This causes some in&shy;ef&shy;fi&shy;cien&shy;cy and a poor user experience: We request permission for no&shy;ti&shy;fi&shy;ca&shy;tions and wait to receive it, and then we request permission for ge&shy;olo&shy;ca&shy;tion and wait to receive it. Ideally, we would request both the per&shy;mis&shy;sions at once and then wait until we receive both of the&nbsp;per&shy;mis&shy;sions.</p>
-<p>The Promise <span class="caps">API</span> has us covered. The static function <tt class="docutils literal">Promise.All()</tt> converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for permission request&nbsp;promises:</p>
+<p>The Promise <span class="caps">API</span> has a solution. The static function <tt class="docutils literal">Promise.All()</tt> converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for our desired&nbsp;behavior:</p>
 <div class="highlight"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
     <span class="nx">requestNotificationPermission</span><span class="p">(),</span>
     <span class="nx">getUserPosition</span><span class="p">()</span>
@@ -199,7 +201,7 @@
 </div>
 <div class="section" id="final-word">
 <h2>Final&nbsp;Word</h2>
-<p>It&#8217;s worth noting that this will hopefully be a short-term pain. There are plans to add Promise support to existing browser APIs where possible. We&#8217;re not there yet, though, so we need these wrappers for&nbsp;now.</p>
+<p>It&#8217;s worth noting that the need to wrap Browser APIs in com&shy;pat&shy;i&shy;bil&shy;i&shy;ty layers will hopefully be a short-term pain. There are plans to add Promise support to existing browser APIs where possible. We&#8217;re not there yet, though, so we need these wrappers for&nbsp;now.</p>
 </div>
 
     <div class="tags">
