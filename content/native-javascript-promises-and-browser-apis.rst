@@ -93,7 +93,7 @@ The HTML5 Notification API is also callback-based, but in a different way than t
         if(status === "granted") {
             // we can show notifications!
         } else {
-            // error, we didn't get permission to show notifications :(
+            // error, permission denied :(
         }
     });
 
@@ -164,7 +164,7 @@ We can reuse our ``getNotificationPermission`` and ``getUserPosition`` functions
         });
     }
 
-    // new function. `position` is the user's geographical coordinates
+    // new function. displays lat/lng coordinates in a notification
     function displayNotification(position) {
         new Notification(position.coords.latitude + "," + 
                          position.coords.longitude);

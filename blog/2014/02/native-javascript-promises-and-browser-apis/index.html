@@ -106,7 +106,7 @@
     <span class="k">if</span><span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="s2">&quot;granted&quot;</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// we can show notifications!</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="c1">// error, we didn&#39;t get permission to show notifications :(</span>
+        <span class="c1">// error, permission denied :(</span>
     <span class="p">}</span>
 <span class="p">});</span>
 </pre></div>
@@ -170,7 +170,7 @@
     <span class="p">});</span>
 <span class="p">}</span>
 
-<span class="c1">// new function. `position` is the user&#39;s geographical coordinates</span>
+<span class="c1">// new function. displays lat/lng coordinates in a notification</span>
 <span class="kd">function</span> <span class="nx">displayNotification</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">new</span> <span class="nx">Notification</span><span class="p">(</span><span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span>
                      <span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span><span class="p">);</span>
