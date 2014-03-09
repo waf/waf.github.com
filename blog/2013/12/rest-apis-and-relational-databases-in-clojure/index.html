@@ -44,16 +44,16 @@ I&#39;v..." />
 </nav>
 <article>
     <h1>REST APIs and Relational Databases in Clojure</h1>
-    <p>I&#8217;ve found that most Clojure web ap&shy;pli&shy;ca&shy;tion articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational&nbsp;databases.</p>
-<p>In this post we&#8217;ll create a simple <span class="caps">REST</span> <span class="caps">API</span> for a todo list web ap&shy;pli&shy;ca&shy;tion. We&#8217;ll use <a class="reference external" href="https://github.com/weavejester/compojure">Compojure</a> to create a <span class="caps">REST</span> <span class="caps">API</span>, <a class="reference external" href="http://budu.github.io/lobos/">Lobos</a> to create and manage our database tables, and <a class="reference external" href="http://sqlkorma.com/">Korma</a> to query a PostgreSQL&nbsp;database.</p>
+    <p>I&#8217;ve found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational&nbsp;databases.</p>
+<p>In this post we&#8217;ll create a simple <span class="caps">REST</span> <span class="caps">API</span> for a todo list web application. We&#8217;ll use <a class="reference external" href="https://github.com/weavejester/compojure">Compojure</a> to create a <span class="caps">REST</span> <span class="caps">API</span>, <a class="reference external" href="http://budu.github.io/lobos/">Lobos</a> to create and manage our database tables, and <a class="reference external" href="http://sqlkorma.com/">Korma</a> to query a PostgreSQL&nbsp;database.</p>
 <div class="section" id="generating-a-compojure-application">
-<h2>Generating a Compojure&nbsp;Ap&shy;pli&shy;ca&shy;tion</h2>
-<p>The first thing we&#8217;ll do is <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Getting-Started">set up a Compojure web ap&shy;pli&shy;ca&shy;tion</a>. Use Leiningen to create and spin up an empty web&nbsp;ap&shy;pli&shy;ca&shy;tion:</p>
+<h2>Generating a Compojure&nbsp;Application</h2>
+<p>The first thing we&#8217;ll do is <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Getting-Started">set up a Compojure web application</a>. Use Leiningen to create and spin up an empty web&nbsp;application:</p>
 <div class="highlight"><pre><span class="gp">&gt;</span> lein new compojure todoapp
 <span class="gp">&gt;</span> <span class="nb">cd </span>todoapp
 <span class="gp">&gt;</span> lein ring server
 </pre></div>
-<p>After issuing the <tt class="docutils literal">lein ring server</tt> command, your browser should open up a &#8220;Hello World&#8221; page on <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Let&#8217;s make that a little bit more in&shy;ter&shy;est&shy;ing! Keeping the server running, open the generated <tt class="docutils literal">src/todoapp/handler.clj</tt> file in your favorite editor and examine the&nbsp;contents:</p>
+<p>After issuing the <tt class="docutils literal">lein ring server</tt> command, your browser should open up a &#8220;Hello World&#8221; page on <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Let&#8217;s make that a little bit more interesting! Keeping the server running, open the generated <tt class="docutils literal">src/todoapp/handler.clj</tt> file in your favorite editor and examine the&nbsp;contents:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.handler</span>
   <span class="p">(</span><span class="ss">:use</span> <span class="nv">compojure.core</span><span class="p">)</span>
   <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">compojure.handler</span> <span class="ss">:as</span> <span class="nv">handler</span><span class="p">]</span>
@@ -67,8 +67,8 @@ I&#39;v..." />
 <span class="p">(</span><span class="k">def </span><span class="nv">app</span>
   <span class="p">(</span><span class="nf">handler/site</span> <span class="nv">app-routes</span><span class="p">))</span>
 </pre></div>
-<p>The <tt class="docutils literal">defroutes</tt> line is setting up our <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Routes-In-Detail"><span class="caps">HTTP</span> request handlers</a>. An <span class="caps">HTTP</span> request handler defines our ap&shy;pli&shy;ca&shy;tion&#8217;s response for a given <span class="caps">HTTP</span> request. Currently, we&#8217;re defining a &#8220;Hello World&#8221; response for <span class="caps">HTTP</span> <span class="caps">GET</span> requests to the root <span class="caps">URL</span>. If the incoming request is for some other resource, say <tt class="docutils literal">/foo.txt</tt>, the server attempts to find a static resource by that name (in the directory <tt class="docutils literal">resources/public</tt>, by default). If that fails, we&#8217;ll return a 404 &#8220;Not Found&#8221;&nbsp;message.</p>
-<p>The <tt class="docutils literal">def app</tt> line takes the <tt class="docutils literal"><span class="pre">app-routes</span></tt> that we defined, and wraps them with the <tt class="docutils literal">handler/site</tt> function. This Compojure function adds useful func&shy;tion&shy;al&shy;i&shy;ty (called &#8220;middleware&#8221;) for websites, like user session tracking, cookie handling, etc. For a full list of added func&shy;tion&shy;al&shy;i&shy;ty see the <a class="reference external" href="http://weavejester.github.io/compojure/compojure.handler.html">Compojure doc&shy;u&shy;men&shy;ta&shy;tion</a>.</p>
+<p>The <tt class="docutils literal">defroutes</tt> line is setting up our <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Routes-In-Detail"><span class="caps">HTTP</span> request handlers</a>. An <span class="caps">HTTP</span> request handler defines our application&#8217;s response for a given <span class="caps">HTTP</span> request. Currently, we&#8217;re defining a &#8220;Hello World&#8221; response for <span class="caps">HTTP</span> <span class="caps">GET</span> requests to the root <span class="caps">URL</span>. If the incoming request is for some other resource, say <tt class="docutils literal">/foo.txt</tt>, the server attempts to find a static resource by that name (in the directory <tt class="docutils literal">resources/public</tt>, by default). If that fails, we&#8217;ll return a 404 &#8220;Not Found&#8221;&nbsp;message.</p>
+<p>The <tt class="docutils literal">def app</tt> line takes the <tt class="docutils literal"><span class="pre">app-routes</span></tt> that we defined, and wraps them with the <tt class="docutils literal">handler/site</tt> function. This Compojure function adds useful functionality (called &#8220;middleware&#8221;) for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the <a class="reference external" href="http://weavejester.github.io/compojure/compojure.handler.html">Compojure documentation</a>.</p>
 </div>
 <div class="section" id="setting-up-a-json-rest-api">
 <h2>Setting up a <span class="caps">JSON</span> <span class="caps">REST</span>&nbsp;<span class="caps">API</span></h2>
@@ -83,7 +83,7 @@ I&#39;v..." />
           <span class="p">[</span><span class="nv">compojure.route</span> <span class="ss">:as</span> <span class="nv">route</span><span class="p">]</span>
           <span class="p">[</span><span class="nv">ring.middleware.json</span> <span class="ss">:as</span> <span class="nv">json</span><span class="p">]))</span>
 </pre></div>
-<p>And add the middleware to our ap&shy;pli&shy;ca&shy;tion, as well as swapping out <tt class="docutils literal">handler/site</tt> for the afore&shy;men&shy;tioned <tt class="docutils literal">handler/api</tt>:</p>
+<p>And add the middleware to our application, as well as swapping out <tt class="docutils literal">handler/site</tt> for the aforementioned <tt class="docutils literal">handler/api</tt>:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="k">def </span><span class="nv">app</span>
   <span class="p">(</span><span class="nb">-&gt; </span><span class="p">(</span><span class="nf">handler/api</span> <span class="nv">app-routes</span><span class="p">)</span>
       <span class="p">(</span><span class="nf">json/wrap-json-params</span><span class="p">)</span>
@@ -91,7 +91,7 @@ I&#39;v..." />
 </pre></div>
 </div>
 <div class="section" id="stubbing-out-our-application">
-<h2>Stubbing out our&nbsp;ap&shy;pli&shy;ca&shy;tion</h2>
+<h2>Stubbing out our&nbsp;application</h2>
 <p>Next, let&#8217;s stub out our <span class="caps">API</span>. We&#8217;ll need our typical <span class="caps">CRUD</span> operations, so let&#8217;s remove the &#8220;Hello World&#8221; route and add the <span class="caps">API</span>&nbsp;stubs:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="nf">defroutes</span> <span class="nv">app-routes</span>
   <span class="p">(</span><span class="nf"><span class="caps">GET</span></span> <span class="s">&quot;/api/todos&quot;</span> <span class="p">[]</span> <span class="s">&quot;<span class="caps">TODO</span>: return all list items&quot;</span><span class="p">)</span>
@@ -102,7 +102,7 @@ I&#39;v..." />
   <span class="p">(</span><span class="nf">route/resources</span> <span class="s">&quot;/&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">route/not-found</span> <span class="s">&quot;Not Found&quot;</span><span class="p">))</span>
 </pre></div>
-<p>When we visit <a class="reference external" href="http://localhost:3000/api/todos">http://localhost:3000/api/todos</a> we should get our stub message &#8220;<span class="caps">TODO</span>: return all list items&#8221; back. However, since we deleted the &#8220;Hello World&#8221; route that responded to the root <span class="caps">URL</span>, we&#8217;ll get a 404 &#8220;Not Found&#8221; error when we visit <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Since we specified a static resource route, we can fix the 404 error by adding an &#8220;index.html&#8221; place&shy;hold&shy;er resource in the <tt class="docutils literal">resources/public/</tt> directory:</p>
+<p>When we visit <a class="reference external" href="http://localhost:3000/api/todos">http://localhost:3000/api/todos</a> we should get our stub message &#8220;<span class="caps">TODO</span>: return all list items&#8221; back. However, since we deleted the &#8220;Hello World&#8221; route that responded to the root <span class="caps">URL</span>, we&#8217;ll get a 404 &#8220;Not Found&#8221; error when we visit <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Since we specified a static resource route, we can fix the 404 error by adding an &#8220;index.html&#8221; placeholder resource in the <tt class="docutils literal">resources/public/</tt> directory:</p>
 <div class="highlight"><pre><span class="cp">&lt;!<span class="caps">DOCTYPE</span> html&gt;</span>
 <span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>
 <span class="nt">&lt;body&gt;</span>
@@ -120,7 +120,7 @@ I&#39;v..." />
 <span class="p">[</span><span class="nv">lobos</span> <span class="s">&quot;1.0.0-beta1&quot;</span><span class="p">]</span>
 <span class="p">[</span><span class="nv">org.postgresql/postgresql</span> <span class="s">&quot;9.2-1002-jdbc4&quot;</span><span class="p">]]</span>
 </pre></div>
-<p>In a new file, <tt class="docutils literal">src/todoapp/database.clj</tt>, specify the database connection in&shy;for&shy;ma&shy;tion. We&#8217;re using an empty database called &#8220;todo&#8221; with the user &#8220;db-user&#8221; and the password&nbsp;&#8220;Su&shy;per&shy;Secret&shy;Pass&shy;word&#8221;:</p>
+<p>In a new file, <tt class="docutils literal">src/todoapp/database.clj</tt>, specify the database connection information. We&#8217;re using an empty database called &#8220;todo&#8221; with the user &#8220;db-user&#8221; and the password&nbsp;&#8220;SuperSecretPassword&#8221;:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.database</span>
   <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">korma.db</span> <span class="ss">:as</span> <span class="nv">korma</span><span class="p">]</span>
             <span class="p">[</span><span class="nv">lobos.connectivity</span> <span class="ss">:as</span> <span class="nv">lobos</span><span class="p">]))</span>
@@ -154,7 +154,7 @@ I&#39;v..." />
                         <span class="p">(</span><span class="nf">varchar</span> <span class="ss">:title</span> <span class="mi">512</span><span class="p">))))</span>
   <span class="p">(</span><span class="nb">down </span><span class="p">[]</span> <span class="p">(</span><span class="nb">drop </span><span class="p">(</span><span class="nf">table</span> <span class="ss">:items</span><span class="p">))))</span>
 </pre></div>
-<p>Un&shy;for&shy;tu&shy;nate&shy;ly, one aspect of Lobos&#8217;s design is rather uni&shy;d&shy;iomat&shy;ic: it provides a <tt class="docutils literal">(migrate)</tt> function that, by default, only runs migrations in the <tt class="docutils literal">lobos.migrations</tt> namespace. My personal preference is to keep my migrations for an ap&shy;pli&shy;ca&shy;tion in that ap&shy;pli&shy;ca&shy;tion&#8217;s namespace. We can configure Lobos to run the migrations in our desired namespace by rebinding the <tt class="docutils literal"><span class="pre">lobos.migration/*mi&shy;gra&shy;tions-namespace*</span></tt> var, and running the <tt class="docutils literal">(migrate)</tt> function in that&nbsp;context:</p>
+<p>Unfortunately, one aspect of Lobos&#8217;s design is rather unidiomatic: it provides a <tt class="docutils literal">(migrate)</tt> function that, by default, only runs migrations in the <tt class="docutils literal">lobos.migrations</tt> namespace. My personal preference is to keep my migrations for an application in that application&#8217;s namespace. We can configure Lobos to run the migrations in our desired namespace by rebinding the <tt class="docutils literal"><span class="pre">lobos.migration/*migrations-namespace*</span></tt> var, and running the <tt class="docutils literal">(migrate)</tt> function in that&nbsp;context:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="kd">defn </span><span class="nv">run-migrations</span> <span class="p">[]</span>
   <span class="p">(</span><span class="nb">binding </span><span class="p">[</span><span class="nv">lobos.migration/*migrations-namespace*</span> <span class="ss">&#39;todoapp.migrations</span><span class="p">]</span>
     <span class="p">(</span><span class="nf">migrate</span><span class="p">)))</span>
@@ -166,18 +166,18 @@ I&#39;v..." />
 <span class="go">add-todo-table</span>
 <span class="go">nil</span>
 </pre></div>
-<p>Now, if you check out the database, you&#8217;ll see we have a <tt class="docutils literal">items</tt> table, ready for use! Just for kicks, let&#8217;s add another migration that will add an <tt class="docutils literal">is_&shy;com&shy;plete</tt> column to our <tt class="docutils literal">items</tt> table:</p>
+<p>Now, if you check out the database, you&#8217;ll see we have a <tt class="docutils literal">items</tt> table, ready for use! Just for kicks, let&#8217;s add another migration that will add an <tt class="docutils literal">is_complete</tt> column to our <tt class="docutils literal">items</tt> table:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">is-complete</span> <span class="p">(</span><span class="nf">table</span> <span class="ss">:items</span>
                     <span class="p">(</span><span class="nb">boolean </span><span class="ss">:is_complete</span> <span class="p">(</span><span class="nf">default</span> <span class="nv">false</span><span class="p">)))]</span>
   <span class="p">(</span><span class="nf">defmigration</span> <span class="nv">add-is-complete-column</span>
     <span class="p">(</span><span class="nb">up </span><span class="p">[]</span> <span class="p">(</span><span class="nb">alter </span><span class="ss">:add</span> <span class="nv">is-complete</span><span class="p">))</span>
     <span class="p">(</span><span class="nb">down </span><span class="p">[]</span> <span class="p">(</span><span class="nb">alter </span><span class="ss">:drop</span> <span class="nv">is-complete</span><span class="p">))))</span>
 </pre></div>
-<p>If we call <tt class="docutils literal"><span class="pre">(run-migrations)</span></tt> again, Lobos will in&shy;tel&shy;li&shy;gent&shy;ly alter our tables; it will only run the <tt class="docutils literal"><span class="pre">add-is-complete-column</span></tt> migration, since it knows it already ran the <tt class="docutils literal"><span class="pre">add-todo-table</span></tt> migration. Lobos has an <a class="reference external" href="http://budu.github.io/lobos/doc/uberdoc.frontend.html">extensive <span class="caps">API</span></a> that provides many powerful table creation and migration&nbsp;options.</p>
+<p>If we call <tt class="docutils literal"><span class="pre">(run-migrations)</span></tt> again, Lobos will intelligently alter our tables; it will only run the <tt class="docutils literal"><span class="pre">add-is-complete-column</span></tt> migration, since it knows it already ran the <tt class="docutils literal"><span class="pre">add-todo-table</span></tt> migration. Lobos has an <a class="reference external" href="http://budu.github.io/lobos/doc/uberdoc.frontend.html">extensive <span class="caps">API</span></a> that provides many powerful table creation and migration&nbsp;options.</p>
 </div>
 <div class="section" id="querying-and-inserting-data-with-korma">
 <h2>Querying and Inserting Data with&nbsp;Korma</h2>
-<p>Now that we have our database all ready to go, let&#8217;s finish off our ap&shy;pli&shy;ca&shy;tion! We&#8217;ll be replacing our <span class="caps">REST</span> <span class="caps">API</span> stubs we built earlier with calls to our database, using the Korma&nbsp;library.</p>
+<p>Now that we have our database all ready to go, let&#8217;s finish off our application! We&#8217;ll be replacing our <span class="caps">REST</span> <span class="caps">API</span> stubs we built earlier with calls to our database, using the Korma&nbsp;library.</p>
 <p>We&#8217;ll be creating a <tt class="docutils literal">src/todoapp/query.clj</tt> file that contains our Korma statements. First up, we let Korma know about our <tt class="docutils literal">items</tt> table using a <tt class="docutils literal">defentity</tt> statement. Korma does not need any knowledge of our table&#8217;s schema; it just needs to know that the table&nbsp;exists:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.query</span>
   <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">todoapp.database</span><span class="p">]</span>
@@ -224,7 +224,7 @@ I&#39;v..." />
   <span class="p">(</span><span class="nf">route/resources</span> <span class="s">&quot;/&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">route/not-found</span> <span class="s">&quot;Not Found&quot;</span><span class="p">))</span>
 </pre></div>
-<p>We need to parse our <tt class="docutils literal">id</tt> parameters from strings to integers, since they&#8217;re being passed in via the <span class="caps">URL</span>, so type info is lost. The ring-json library we added earlier allows us to specify our desired <span class="caps">JSON</span> fields (like <tt class="docutils literal">title</tt> and <tt class="docutils literal">is_&shy;com&shy;plete</tt>) as route parameters. We can also pass our native Clojure datas&shy;truc&shy;tures to the Ring response function, and <span class="caps">JSON</span> se&shy;ri&shy;al&shy;iza&shy;tion is done&nbsp;au&shy;to&shy;mat&shy;i&shy;cal&shy;ly.</p>
+<p>We need to parse our <tt class="docutils literal">id</tt> parameters from strings to integers, since they&#8217;re being passed in via the <span class="caps">URL</span>, so type info is lost. The ring-json library we added earlier allows us to specify our desired <span class="caps">JSON</span> fields (like <tt class="docutils literal">title</tt> and <tt class="docutils literal">is_complete</tt>) as route parameters. We can also pass our native Clojure datastructures to the Ring response function, and <span class="caps">JSON</span> serialization is done&nbsp;automatically.</p>
 <p>We can use the command line tool <tt class="docutils literal">curl</tt> to test out our&nbsp;<span class="caps">API</span>:</p>
 <div class="highlight"><pre><span class="gp">&gt;</span> curl -X <span class="caps">POST</span> -d <span class="s1">&#39;{&quot;title&quot;:&quot;remember the milk&quot;}&#39;</span> -H <span class="s2">&quot;Content-Type: application/json&quot;</span> http://localhost:3000/api/todos
 <span class="go">{&quot;is_complete&quot;:false,&quot;title&quot;:&quot;remember the milk&quot;,&quot;id&quot;:1}</span>
