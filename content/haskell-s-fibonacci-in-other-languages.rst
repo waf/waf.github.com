@@ -49,6 +49,41 @@ The core of the implementation uses lazy evaluation of sequences. Most other lan
 Fibonacci in C#
 ===============
 
+Haskell's implementation defines a variable that recurses on itself to produce additional values (technically, this is known as "corecursion"). C# does not have concept of recursive variable definitions, but it can recurse on methods. 
+
+C# has the concept of IEnumerables and IEnumerators. An IEnumerable represents a lazy collection, and it has an associated IEnumerator that knows how to get the next value. The ``yield return`` keyword is a shortcut for setting up this relationship. For example, here is how we could create a method that returns a lazy sequence of the numbers 1, 2, and 3:
+
+.. code-block:: csharp
+
+    public IEnumerable<int> Lazy()
+    {
+        yield return 1;
+        yield return 2;
+        yield return 3;
+    }
+
+
+IEnumerables also have a rich library of higher-order functions. We'll be using C#'s ``Zip`` for Haskell's ``zipWith``, and ``Skip(1)`` for Haskell's ``tail``.
+
+.. code-block:: csharp
+
+    public IEnumerable<int> Fib()
+    {
+        var fib = new[] { 1, 1 }.Concat(
+            Fib().Zip(Fib().Skip(1), (a, b) => a + b)
+        );
+        foreach (var item in fib) {
+            yield return item;
+        }
+    }
+
+This implementation is suprisingly concise. There's a couple of rough edges in this implementation:
+
+The most major rough edge stems from the fact that C# is eagerly evaluated and Haskell is lazily evaluated. If C# were lazily evaluated we could directly return the ``fib`` variable from the ``Fib()`` function. This doesn't work in an eagerly evaluated language like C#; we would encounter a stack overflow as we eagerly evaluated our recursive calls. We use ``yield return`` to transform the method into an IEnumerable and IEnumerator interaction, which works around the lack of lazy evaluation in C#.
+
+The proper way to get around this would be to wrap all of our recursive calls in 0-argument lambda expressions. This would be roughly equivalent to the concept of `Haskell's thunks`_. This would require us to write our own library functions to work with 0-argument lambda expressions instead of IEnumerables. While this would be interesting (and may be a future blog post), the above implementation strikes me as a "good enough" solution that is still idiomatic C#.
+
+
 Fibonacci in Python
 ===================
 
@@ -57,3 +92,4 @@ Fibonacci in Clojure
 
 .. _Haskell: http://www.haskell.org/haskellwiki/Introduction
 .. _Fibonacci series: http://en.wikipedia.org/wiki/Fibonacci_number
+.. _Haskell's thunks: http://www.haskell.org/haskellwiki/Thunk
