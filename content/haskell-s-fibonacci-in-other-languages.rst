@@ -2,7 +2,7 @@ Haskell's Elegant Fibonacci in Other Languages
 ##############################################
 
 :date: 2014-03-09
-:tags: [haskell, python, clojure, c#, fibonacci]
+:tags: [haskell, clojure, c#, fibonacci]
 
 Haskell_ is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the `Fibonacci series`_ algorithm:
 
@@ -17,7 +17,7 @@ This creates a variable called ``fib`` that contains an infinite sequence of Fib
     take 10 fib
     [1,1,2,3,5,8,13,21,34,55]
 
-The above implementation of ``fib`` fascinates me, so I decided to try my hand at implementing it in other languages. I chose C#, Python, and Clojure.
+The above implementation of ``fib`` fascinates me, so I decided to try my hand at implementing it in other languages: C# and Clojure.
 
 Algorithm Explanation
 =====================
@@ -44,14 +44,14 @@ Once we have the third element, we can calculate the fourth element, the number 
     (tail fib)                 = 1 : 2 : <unknown>
     zipWith (+) fib (tail fib) = 2 : 3 : <unknown>
 
-The core of the implementation uses lazy evaluation of sequences. Most other languages have a similar concept. C# has IEnumerables, Python has itertools, and Clojure has sequences. Additionally, Clojure has macros, which will help us get very close to Haskell's implementation.
+The core of the implementation uses lazy evaluation of sequences. Most other languages have a similar concept. C# has IEnumerables and Clojure has sequences. Additionally, Clojure has macros, which will help us get very close to Haskell's implementation.
 
 Fibonacci in C#
 ===============
 
 Haskell's implementation defines a variable that recurses on itself to produce additional values (technically, this is known as "corecursion"). C# does not have concept of recursive variable definitions, but it can recurse on methods. 
 
-C# has the concept of IEnumerables and IEnumerators. An IEnumerable represents a lazy collection, and it has an associated IEnumerator that knows how to get the next value. The ``yield return`` keyword is a shortcut for setting up this relationship. For example, here is how we could create a method that returns a lazy sequence of the numbers 1, 2, and 3:
+In our implementation we'll rely on IEnumerables and IEnumerators. An IEnumerable represents a lazy collection, and it has an associated IEnumerator that knows how to get the next value. The ``yield return`` keyword is a shortcut for setting up this relationship. For example, here is how we could create a method that returns a lazy sequence of the numbers 1, 2, and 3:
 
 .. code-block:: csharp
 
@@ -63,11 +63,17 @@ C# has the concept of IEnumerables and IEnumerators. An IEnumerable represents a
     }
 
 
-IEnumerables also have a rich library of higher-order functions. We'll be using C#'s ``Zip`` for Haskell's ``zipWith``, and ``Skip(1)`` for Haskell's ``tail``.
+IEnumerables also have a rich library of higher-order functions. We'll be using C#'s ``Zip`` for Haskell's ``zipWith``, and ``Skip(1)`` for Haskell's ``tail``. Here's a first pass:
 
 .. code-block:: csharp
 
-    public IEnumerable<int> Fib()
+    public static void Main(string[] args)
+    {
+        var fibonacci = Fib();
+        var first10 = fibonacci.Take(10);
+    }
+
+    public static IEnumerable<int> Fib()
     {
         var fib = new[] { 1, 1 }.Concat(
             Fib().Zip(Fib().Skip(1), (a, b) => a + b)
@@ -77,19 +83,38 @@ IEnumerables also have a rich library of higher-order functions. We'll be using 
         }
     }
 
-This implementation is suprisingly concise. There's a couple of rough edges in this implementation:
+This is a good start, but if we run it, we'll see that it's much slower than the Haskell version. This is due to the constant reevaluation of the ``Fib()`` function, which leads to terrible performance. Haskell can be more intelligent about this since it doesn't have to worry about mutability; it only evaluates ``fib`` once, and subsequent iterations use the result of this immutable evaluation.
 
-The most major rough edge stems from the fact that C# is eagerly evaluated and Haskell is lazily evaluated. If C# were lazily evaluated we could directly return the ``fib`` variable from the ``Fib()`` function. This doesn't work in an eagerly evaluated language like C#; we would encounter a stack overflow as we eagerly evaluated our recursive calls. We use ``yield return`` to transform the method into an IEnumerable and IEnumerator interaction, which works around the lack of lazy evaluation in C#.
+We could achieve this in our C# version by writing our own memoizing IEnumerable implementation, but let's just use the one available in `Interactive Extensions`_, part of the `Rx Project`_. We can pass our Enumerable into the library's ``Memoize`` function:
 
-The proper way to get around this would be to wrap all of our recursive calls in 0-argument lambda expressions. This would be roughly equivalent to the concept of `Haskell's thunks`_. This would require us to write our own library functions to work with 0-argument lambda expressions instead of IEnumerables. While this would be interesting (and may be a future blog post), the above implementation strikes me as a "good enough" solution that is still idiomatic C#.
+.. code-block:: csharp
 
+    private static IEnumerable<int> fibm = EnumerableEx.Memoize(Fib());
+    public static IEnumerable<int> Fib()
+    {
+        var fib = new[] { 1, 1 }.Concat(
+            fibm.Zip(fibm.Skip(1), (a, b) => a + b)
+        );
+        foreach (var item in fib) {
+            yield return item;
+        }
+    }
 
-Fibonacci in Python
-===================
+Now our performance is comparable to the Haskell implementation.
+
 
 Fibonacci in Clojure
 ====================
 
+.. code-block:: clojure
+
+    (def fib
+      (lazy-cat [1 1] (map + (rest fib) fib)))
+
+    (println (take 50 fib))
+
 .. _Haskell: http://www.haskell.org/haskellwiki/Introduction
 .. _Fibonacci series: http://en.wikipedia.org/wiki/Fibonacci_number
 .. _Haskell's thunks: http://www.haskell.org/haskellwiki/Thunk
+.. _Rx Project: https://rx.codeplex.com/
+.. _Interactive Extensions: http://www.nuget.org/packages/ix_experimental-main
