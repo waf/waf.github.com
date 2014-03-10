@@ -105,8 +105,22 @@ We could achieve this in our C# version by writing our own memoizing IEnumerable
         }
     }
 
-Now our performance is comparable to the Haskell implementation.
+Now our performance is comparable to the Haskell implementation, and this is perfectly idiomatic C# [citation needed]. But we can do better! Let's try to match the Haskell implementation more exactly.
 
+.. code-block:: csharp
+
+    public static void Main(string[] args)
+    {
+        IEnumerable<int fib = null;
+        fib = EnumerableEx.Memoize(
+            ((Func<IEnumerable<int>>)(() => new[] { 1, 1 }))
+            .Concat(
+                () => fibm.Zip(fibm.Skip(1), (a, b) => a + b)
+            )
+        );
+
+        var first10 = fib.Take(10);
+    }
 
 Fibonacci in Clojure
 ====================
