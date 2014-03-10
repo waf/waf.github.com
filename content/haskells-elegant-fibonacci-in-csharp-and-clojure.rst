@@ -1,7 +1,8 @@
-Haskell's Elegant Fibonacci in Other Languages
-##############################################
+Haskell's Elegant Fibonacci in C# and Clojure
+#############################################
 
 :date: 2014-03-09
+:permalink: /2014/03/haskells-elegant-fibonacci-in-csharp-and-clojure/
 :tags: [haskell, clojure, c#, fibonacci]
 
 Haskell_ is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the `Fibonacci series`_ algorithm:
@@ -17,12 +18,16 @@ This creates a variable called ``fib`` that contains an infinite sequence of Fib
     take 10 fib
     [1,1,2,3,5,8,13,21,34,55]
 
-The above implementation of ``fib`` fascinates me, so I decided to try my hand at implementing it in other languages: C# and Clojure.
+The above implementation of ``fib`` fascinates me, so I decided to try my hand at implementing it in two other programming languages: C# and Clojure.
 
 Algorithm Explanation
 =====================
 
-First, before we can implement this algorithm in other languages, we need to know how it works. We're taking advantage of Haskell's `lazy evaluation`. 
+First, before we can implement this algorithm in other languages, we need to know how it works. Here's the algorithm again:
+
+.. code-block:: haskell
+
+    let fib = 1 : 1 : zipWith (+) fib (tail fib)
 
 We provide the first two numbers to start off the series. As we request additional elements, Haskell will calculate them recursively, using the ``zipWith`` function. ``zipWith`` takes a function as a parameter, in this case the addition function ``(+)``, and two sequences. It feeds pairs of numbers, one from each sequence, into the addition function. The resulting sum is the next element of our series.
 
@@ -44,14 +49,14 @@ Once we have the third element, we can calculate the fourth element, the number 
     (tail fib)                 = 1 : 2 : <unknown>
     zipWith (+) fib (tail fib) = 2 : 3 : <unknown>
 
-The core of the implementation uses lazy evaluation of sequences. Most other languages have a similar concept. C# has IEnumerables and Clojure has sequences. Additionally, Clojure has macros, which will help us get very close to Haskell's implementation.
+The core of the implementation uses lazy evaluation of sequences. Even though we're setting up infinite recursion, if we ask for the first 10 fibonacci numbers, our program will only recurse 8 times (since we provided the first 2 values). Most other languages have some sort of lazy sequence concept: C# has IEnumerables and Clojure has sequences. Additionally, Clojure has macros, which will help us get very close to Haskell's implementation.
 
 Fibonacci in C#
 ===============
 
 Haskell's implementation defines a variable that recurses on itself to produce additional values (technically, this is known as "corecursion"). C# does not have concept of recursive variable definitions, but it can recurse on methods. 
 
-In our implementation we'll rely on IEnumerables and IEnumerators. An IEnumerable represents a lazy collection, and it has an associated IEnumerator that knows how to get the next value. The ``yield return`` keyword is a shortcut for setting up this relationship. For example, here is how we could create a method that returns a lazy sequence of the numbers 1, 2, and 3:
+In our initial implementation we'll rely on IEnumerables and IEnumerators. An IEnumerable represents a lazy sequence, and it has an associated IEnumerator that knows how to get the next value for the sequence. The ``yield return`` keyword is a shortcut for setting up this relationship. For example, here is how we could create a method that returns a lazy sequence of the numbers 1, 2, and 3:
 
 .. code-block:: csharp
 
@@ -63,7 +68,7 @@ In our implementation we'll rely on IEnumerables and IEnumerators. An IEnumerabl
     }
 
 
-IEnumerables also have a rich library of higher-order functions. We'll be using C#'s ``Zip`` for Haskell's ``zipWith``, and ``Skip(1)`` for Haskell's ``tail``. Here's a first pass:
+IEnumerables come with a rich library of higher-order functions out of the box. We'll be using IEnumerable's ``Zip`` method for Haskell's ``zipWith`` function, and the ``Skip`` method for Haskell's ``tail`` function. Here's a first pass:
 
 .. code-block:: csharp
 
