@@ -53,7 +53,7 @@ I&#39;v..." />
 <span class="gp">&gt;</span> <span class="nb">cd </span>todoapp
 <span class="gp">&gt;</span> lein ring server
 </pre></div>
-<p>After issuing the <tt class="docutils literal">lein ring server</tt> command, your browser should open up a &#8220;Hello World&#8221; page on <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Let&#8217;s make that a little bit more interesting! Keeping the server running, open the generated <tt class="docutils literal">src/todoapp/handler.clj</tt> file in your favorite editor and examine the&nbsp;contents:</p>
+<p>After issuing the <tt class="docutils literal">lein ring server</tt> command, your browser should open up a &quot;Hello World&quot; page on <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Let&#8217;s make that a little bit more interesting! Keeping the server running, open the generated <tt class="docutils literal">src/todoapp/handler.clj</tt> file in your favorite editor and examine the&nbsp;contents:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.handler</span>
   <span class="p">(</span><span class="ss">:use</span> <span class="nv">compojure.core</span><span class="p">)</span>
   <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">compojure.handler</span> <span class="ss">:as</span> <span class="nv">handler</span><span class="p">]</span>
@@ -67,8 +67,8 @@ I&#39;v..." />
 <span class="p">(</span><span class="k">def </span><span class="nv">app</span>
   <span class="p">(</span><span class="nf">handler/site</span> <span class="nv">app-routes</span><span class="p">))</span>
 </pre></div>
-<p>The <tt class="docutils literal">defroutes</tt> line is setting up our <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Routes-In-Detail"><span class="caps">HTTP</span> request handlers</a>. An <span class="caps">HTTP</span> request handler defines our application&#8217;s response for a given <span class="caps">HTTP</span> request. Currently, we&#8217;re defining a &#8220;Hello World&#8221; response for <span class="caps">HTTP</span> <span class="caps">GET</span> requests to the root <span class="caps">URL</span>. If the incoming request is for some other resource, say <tt class="docutils literal">/foo.txt</tt>, the server attempts to find a static resource by that name (in the directory <tt class="docutils literal">resources/public</tt>, by default). If that fails, we&#8217;ll return a 404 &#8220;Not Found&#8221;&nbsp;message.</p>
-<p>The <tt class="docutils literal">def app</tt> line takes the <tt class="docutils literal"><span class="pre">app-routes</span></tt> that we defined, and wraps them with the <tt class="docutils literal">handler/site</tt> function. This Compojure function adds useful functionality (called &#8220;middleware&#8221;) for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the <a class="reference external" href="http://weavejester.github.io/compojure/compojure.handler.html">Compojure documentation</a>.</p>
+<p>The <tt class="docutils literal">defroutes</tt> line is setting up our <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Routes-In-Detail"><span class="caps">HTTP</span> request handlers</a>. An <span class="caps">HTTP</span> request handler defines our application&#8217;s response for a given <span class="caps">HTTP</span> request. Currently, we&#8217;re defining a &quot;Hello World&quot; response for <span class="caps">HTTP</span> <span class="caps">GET</span> requests to the root <span class="caps">URL</span>. If the incoming request is for some other resource, say <tt class="docutils literal">/foo.txt</tt>, the server attempts to find a static resource by that name (in the directory <tt class="docutils literal">resources/public</tt>, by default). If that fails, we&#8217;ll return a 404 &quot;Not Found&quot;&nbsp;message.</p>
+<p>The <tt class="docutils literal">def app</tt> line takes the <tt class="docutils literal"><span class="pre">app-routes</span></tt> that we defined, and wraps them with the <tt class="docutils literal">handler/site</tt> function. This Compojure function adds useful functionality (called &quot;middleware&quot;) for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the <a class="reference external" href="http://weavejester.github.io/compojure/compojure.handler.html">Compojure documentation</a>.</p>
 </div>
 <div class="section" id="setting-up-a-json-rest-api">
 <h2>Setting up a <span class="caps">JSON</span> <span class="caps">REST</span>&nbsp;<span class="caps">API</span></h2>
@@ -92,7 +92,7 @@ I&#39;v..." />
 </div>
 <div class="section" id="stubbing-out-our-application">
 <h2>Stubbing out our&nbsp;application</h2>
-<p>Next, let&#8217;s stub out our <span class="caps">API</span>. We&#8217;ll need our typical <span class="caps">CRUD</span> operations, so let&#8217;s remove the &#8220;Hello World&#8221; route and add the <span class="caps">API</span>&nbsp;stubs:</p>
+<p>Next, let&#8217;s stub out our <span class="caps">API</span>. We&#8217;ll need our typical <span class="caps">CRUD</span> operations, so let&#8217;s remove the &quot;Hello World&quot; route and add the <span class="caps">API</span>&nbsp;stubs:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="nf">defroutes</span> <span class="nv">app-routes</span>
   <span class="p">(</span><span class="nf"><span class="caps">GET</span></span> <span class="s">&quot;/api/todos&quot;</span> <span class="p">[]</span> <span class="s">&quot;<span class="caps">TODO</span>: return all list items&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nf"><span class="caps">GET</span></span> <span class="s">&quot;/api/todos/:id&quot;</span> <span class="p">[</span><span class="nv">id</span><span class="p">]</span> <span class="s">&quot;<span class="caps">TODO</span>: return a single list item&quot;</span><span class="p">)</span>
@@ -102,7 +102,7 @@ I&#39;v..." />
   <span class="p">(</span><span class="nf">route/resources</span> <span class="s">&quot;/&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">route/not-found</span> <span class="s">&quot;Not Found&quot;</span><span class="p">))</span>
 </pre></div>
-<p>When we visit <a class="reference external" href="http://localhost:3000/api/todos">http://localhost:3000/api/todos</a> we should get our stub message &#8220;<span class="caps">TODO</span>: return all list items&#8221; back. However, since we deleted the &#8220;Hello World&#8221; route that responded to the root <span class="caps">URL</span>, we&#8217;ll get a 404 &#8220;Not Found&#8221; error when we visit <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Since we specified a static resource route, we can fix the 404 error by adding an &#8220;index.html&#8221; placeholder resource in the <tt class="docutils literal">resources/public/</tt> directory:</p>
+<p>When we visit <a class="reference external" href="http://localhost:3000/api/todos">http://localhost:3000/api/todos</a> we should get our stub message &quot;<span class="caps">TODO</span>: return all list items&quot; back. However, since we deleted the &quot;Hello World&quot; route that responded to the root <span class="caps">URL</span>, we&#8217;ll get a 404 &quot;Not Found&quot; error when we visit <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Since we specified a static resource route, we can fix the 404 error by adding an &quot;index.html&quot; placeholder resource in the <tt class="docutils literal">resources/public/</tt> directory:</p>
 <div class="highlight"><pre><span class="cp">&lt;!<span class="caps">DOCTYPE</span> html&gt;</span>
 <span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>
 <span class="nt">&lt;body&gt;</span>
@@ -120,7 +120,7 @@ I&#39;v..." />
 <span class="p">[</span><span class="nv">lobos</span> <span class="s">&quot;1.0.0-beta1&quot;</span><span class="p">]</span>
 <span class="p">[</span><span class="nv">org.postgresql/postgresql</span> <span class="s">&quot;9.2-1002-jdbc4&quot;</span><span class="p">]]</span>
 </pre></div>
-<p>In a new file, <tt class="docutils literal">src/todoapp/database.clj</tt>, specify the database connection information. We&#8217;re using an empty database called &#8220;todo&#8221; with the user &#8220;db-user&#8221; and the password&nbsp;&#8220;SuperSecretPassword&#8221;:</p>
+<p>In a new file, <tt class="docutils literal">src/todoapp/database.clj</tt>, specify the database connection information. We&#8217;re using an empty database called &quot;todo&quot; with the user &quot;db-user&quot; and the password&nbsp;&quot;SuperSecretPassword&quot;:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.database</span>
   <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">korma.db</span> <span class="ss">:as</span> <span class="nv">korma</span><span class="p">]</span>
             <span class="p">[</span><span class="nv">lobos.connectivity</span> <span class="ss">:as</span> <span class="nv">lobos</span><span class="p">]))</span>
@@ -141,7 +141,7 @@ I&#39;v..." />
 </div>
 <div class="section" id="creating-database-tables-with-lobos">
 <h2>Creating Database Tables with&nbsp;Lobos</h2>
-<p>Now, let&#8217;s use Lobos to create a simple table named &#8220;items&#8221; with an integer primary key and varchar title. Make a new file called <tt class="docutils literal">src/todoapp/migrations.clj</tt>, and add the&nbsp;following:</p>
+<p>Now, let&#8217;s use Lobos to create a simple table named &quot;items&quot; with an integer primary key and varchar title. Make a new file called <tt class="docutils literal">src/todoapp/migrations.clj</tt>, and add the&nbsp;following:</p>
 <div class="highlight"><pre><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.migrations</span>
   <span class="p">(</span><span class="ss">:refer-clojure</span> <span class="ss">:exclude</span>
         <span class="p">[</span><span class="nb">alter drop </span><span class="nv">bigint</span> <span class="nb">boolean char double float time </span><span class="nv">complement</span><span class="p">])</span>
