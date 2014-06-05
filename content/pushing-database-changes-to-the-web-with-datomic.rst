@@ -54,24 +54,24 @@ We pull in all these libraries via Leiningen, plus some logging libraries:
                  [ch.qos.logback/logback-classic "1.1.2"]
                  [org.clojure/core.async "0.1.303.0-886421-alpha"]
                  [com.datomic/datomic-free "0.9.4755" 
-                     :exclusions [org.slf4j/slf4j-nop
+                     :exclusions [org.slf4j/slf4j-nop ; exclude datomic's conflicting log libs
                                   org.slf4j/slf4j-log4j12]]]
 
 The Backend Clojure Code
 ========================
 
-Let's start with our standard Compojure routing setup. The only change we've made here is to use the httpkit server, and to require the Sente library, which we'll use in a bit:
+Let's start with our standard Compojure routing setup. The only change we've made here is to use the httpkit server. Let's also import the Sente websocket and Datomic libraries, which we'll use in a bit:
 
 .. code-block:: clojure
 
     (ns userlist.server
       (:require [org.httpkit.server :as server]
                 [ring.util.response :as response]
-                [clojure.tools.logging :as log]
                 [compojure.core :refer :all]
                 [compojure.handler :as handler]
+                [compojure.route :as route]
                 [taoensso.sente :as sente]
-                [compojure.route :as route]))
+                [datomic.api :as d]))
 
     (defroutes app-routes
       (GET "/" [] (response/resource-response "public/index.html"))
@@ -83,7 +83,7 @@ Let's start with our standard Compojure routing setup. The only change we've mad
           (handler/site)))
 
     (defn -main [& args]
-      (server/run-server app {:port 3000}))
+      (server/run-server app {:port 3000})) ; replace jetty with http-kit
 
 Now that we're using HTTP kit, we have websocket support. We just need to add an endpoint for the websocket connection. The Sente library has some prebuilt functions that will handle the websocket connections, and also fall back to AJAX long-polling. We can retrieve references to these functions by calling Sente's ``make-channel-socket!``, and passing in a ``:user-id-fn``.
 
@@ -99,8 +99,8 @@ The ``:user-id-fn`` is a way for Sente to associate a connection with a specific
     (let [{:keys [ch-recv send-fn ajax-post-fn ajax-get-or-ws-handshake-fn
                   connected-uids]}
           ws-connection]
-      (def ring-ws-post ajax-post-fn)
-      (def ring-ws-handoff ajax-get-or-ws-handshake-fn)
+      (def ring-ws-post ajax-post-fn) ; ring handler for POSTs
+      (def ring-ws-handoff ajax-get-or-ws-handshake-fn) ; ring handler for GETs
       (def receive-channel ch-recv) ; receives inbound messages from clients
       (def channel-send! send-fn) ; send message to a client
       (def connected-uids connected-uids)) ; all connected clients
@@ -113,8 +113,25 @@ And now, we can reference the endpoint functions in our Compojure routes:
     (POST "/channel" req (ring-ws-post req))
     (GET  "/channel" req (ring-ws-handoff req))
 
-Let's set up the Datomic database next:
+Now that we have the basic HTTP endpoints set up, let's focus on setting up the Datomic database. After that, we'll hook up the datomic database to our websocket endpoints.
 
+Datomic Setup
+=============
+
+The first thing we'll need for our Datomic setup is a schema. Schemas in Datomic are defined in EDN_, a standard Clojure data-transfer format. Our schema will be very simple, as we just need to store a list of usernames. In ``resources/userlist.edn``:
+
+.. code-block:: clojure
+
+    [{:db/id #db/id[:db.part/db]
+      :db/ident :user/name
+      :db/valueType :db.type/string
+      :db/cardinality :db.cardinality/one
+      :db/doc "A user's name"
+      :db.install/_attribute :db.part/db}]
+
+This datastructure represents a ``:user/name`` property with a corresponding ``id`` property. In the future, we could conceivably add other user-related properties, such as ``:user/email`` or ``:user/password-hash``.
+
+In order to load our schema into Datomic, we simply send the above datastructure to Datomic. Let's create an in-memory database, set up the schema, and return a reference to the connection so we can use it for further queries:
 
 .. code-block:: clojure
 
@@ -122,9 +139,32 @@ Let's set up the Datomic database next:
       (d/create-database url)
       (let [schema (read-string (slurp "resources/roomlist.edn"))
             conn (d/connect url)]
-        (d/transact conn schema)
-        {:db-connection conn
-         :change-queue (d/tx-report-queue conn)}))
+        (d/transact conn schema) ; install the schema in the db
+        conn))
+
+    (create-db "datomic:mem://roomlist") ; create an in-memory db called 'roomlist'
+
+The last thing we'll need to do is set up the transaction report queue. We can obtain this queue from the Datomic connection object:
+
+
+.. code-block:: clojure
+
+    ; given a report from the tx-report-queue, read the changed values
+    (defn- read-changes [{:keys [db-after tx-data] :as report}]
+      (d/q '[:find ?aname ?v
+             :in $ [[_ ?a ?v]]
+             :where [?a :db/ident ?aname]]
+           db-after
+           tx-data))
+
+    ; set up a monitor loop using the tx-report-queue
+    (defn change-monitor [conn]
+      (let [report-queue (d/tx-report-queue conn)]
+        (while true
+          (let [report (.take report-queue)
+                changes (into {} (read-changes report))]
+            (doseq [uid (:any @connected-uids)]
+              (channel-send! uid [:room/join changes]))))))
 
 .. _Datomic: http://www.datomic.com
 .. _architecture documentation: http://docs.datomic.com/architecture.html
@@ -136,3 +176,5 @@ Let's set up the Datomic database next:
 .. _Compojure: https://github.com/weavejester/compojure
 .. _Reagent: https://github.com/holmsand/reagent
 .. _peer library: http://docs.datomic.com/integrating-peer-lib.html
+.. _EDN: https://github.com/edn-format/edn
+
