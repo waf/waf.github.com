@@ -21,7 +21,7 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog//tag/lobos/</loc>
+    <loc>http://fuqua.io/blog//tag/promise/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
@@ -62,6 +62,12 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>http://fuqua.io/blog//2015/02/quick-tip-format-finder-for-net-date-strings/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
     <loc>http://fuqua.io/blog//2016/06/vim-presentation/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>never</changefreq>
@@ -69,6 +75,11 @@
   </url>
   <url>
     <loc>http://fuqua.io/blog//tag/sql/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//tag/tool/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
@@ -109,7 +120,12 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog//tag/promise/</loc>
+    <loc>http://fuqua.io/blog//tag/dates/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//tag/lobos/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
