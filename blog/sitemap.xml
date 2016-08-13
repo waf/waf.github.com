@@ -1,6 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://fuqua.io/blog//tag/analysis/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>http://fuqua.io/blog//tag/acrylamid/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -40,6 +45,11 @@
     <lastmod>2016-08-13</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//rss.xml</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog//tag/fibonacci/</loc>
@@ -92,9 +102,10 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog//rss.xml</loc>
+    <loc>http://fuqua.io/blog//2016/08/finding-dead-csharp-code-in-aspnet/</loc>
     <lastmod>2016-08-13</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>http://fuqua.io/blog//tag/functional/</loc>
@@ -147,6 +158,11 @@
     <lastmod>2016-08-13</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//tag/opencover/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog//2013/12/rest-apis-and-relational-databases-in-clojure/</loc>

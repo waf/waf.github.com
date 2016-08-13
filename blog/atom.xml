@@ -11,8 +11,99 @@
     <link rel="self" type="application/atom+xml" href="http://fuqua.io/blog/atom.xml" />
     <icon>http://fuqua.io/blog/favicon.ico</icon>
     <logo>http://fuqua.io/blog/feed-logo.png</logo>
-    <updated>2014-05-25T04:00:00Z</updated>
+    <updated>2016-08-13T04:00:00Z</updated>
     <generator uri="https://github.com/posativ/acrylamid/" version="0.7.10">acrylamid</generator>
+        <entry>
+        <title>Finding Dead C# Code in an ASP.NET application</title>
+        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2016/08/finding-dead-csharp-code-in-aspnet/" />
+        <id>tag:fuqua.io/blog,2016-08-13:/2016/08/finding-dead-csharp-code-in-aspnet</id>
+        <updated>2016-08-13T04:00:00Z</updated>
+        <category term="c#" />
+        <category term="analysis" />
+        <category term="opencover" />
+        
+        <author>
+            <name>Anonymous</name>
+            <uri>http://fuqua.io/blog/</uri>
+            <email>info@example.com</email>
+        </author>
+        <content type="html">&lt;p&gt;Large, long-lasting codebases tend to accumulate unused code, or dead code, over time. This happens as features are added, changed and removed over&amp;nbsp;time.&lt;/p&gt;
+&lt;p&gt;Some dead code, like unreferenced methods, are easy to detect with Visual Studio&amp;#8217;s out-of-the-box static analysis. However, other dead code is only referenced by unit tests, or it&amp;#8217;s referenced under a condition that&amp;#8217;s never valid, like the&amp;nbsp;following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Now&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1970&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// some dead code&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;How can we detect this kind of dead code? Rather than using static analysis to detect it, we can use dynamic analysis &amp;#8211; the same technique used to measure unit test code&amp;nbsp;coverage.&lt;/p&gt;
+&lt;p&gt;We can use &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/OpenCover/opencover/&#34;&gt;OpenCover&lt;/a&gt;, an open source code coverage tool, to run the dynamic analysis. We will run our application under OpenCover, and then use &lt;a class=&#34;reference external&#34; href=&#34;http://danielpalme.github.io/ReportGenerator/&#34;&gt;ReportGenerator&lt;/a&gt; to visualize the results. Both these tools can be downloaded from their homepage, or through&amp;nbsp;Nuget.&lt;/p&gt;
+&lt;p&gt;First, let&amp;#8217;s create some dead code to detect. Here&amp;#8217;s a sample &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; application, with some hard-to-detect dead code that guards against time travel. The relevant portion is in&amp;nbsp;HomeController.cs:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;HomeController&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Controller&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ActionResult&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Index&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;model&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventViewModel&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;DateDescription&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HasValue&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HumanFriendlyTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Empty&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;View&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;model&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;HumanFriendlyTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;today&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Now&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Date&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tomorrow&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;today&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AddDays&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tomorrow&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Event is tomorrow&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;today&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tomorrow&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Time-traveling detected. Dispatching time police.&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;today&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Event is in {(eventDate - today).Days} days&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Event was {(today - eventDate).Days} days ago&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Our goal is to detect the &lt;tt class=&#34;docutils literal&#34;&gt;today &amp;gt; tomorrow&lt;/tt&gt; code block as dead code. Let&amp;#8217;s target OpenCover at the &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; application. We can use &lt;span class=&#34;caps&#34;&gt;IIS&lt;/span&gt; or&amp;nbsp;IISExpress:&lt;/p&gt;
+&lt;p&gt;Using&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;IIS&lt;/span&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; net stop w3svc /y
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; OpenCover.Console.exe -target:&lt;span class=&#34;s2&#34;&gt;&amp;quot;C:\Windows\System32\inetsrv\w3wp.exe&amp;quot;&lt;/span&gt; -targetargs:-debug -targetdir:&lt;span class=&#34;s2&#34;&gt;&amp;quot;C:\Path\To\WebApp\web\bin&amp;quot;&lt;/span&gt; -register:user
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using&amp;nbsp;IISExpress:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; OpenCover.Console.exe -target:&lt;span class=&#34;s2&#34;&gt;&amp;quot;C:\Program Files (x86)\&lt;span class=&#34;caps&#34;&gt;IIS&lt;/span&gt; Express\iisexpress.exe&amp;quot;&lt;/span&gt; -targetdir:&lt;span class=&#34;s2&#34;&gt;&amp;quot;C:\Path\To\WebApp\Web\bin&amp;quot;&lt;/span&gt; -targetargs:&lt;span class=&#34;s2&#34;&gt;&amp;quot;/site:WebApp /config:\&amp;quot;C:\Path\To\WebApp\.vs\config\applicationhost.config\&amp;quot;&amp;quot;&lt;/span&gt; -register:user
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;OpenCover has &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/OpenCover/opencover/wiki/Usage/&#34;&gt;many configuration options&lt;/a&gt; we can use to tweak the behavior, including filters by namespace or&amp;nbsp;attribute.&lt;/p&gt;
+&lt;p&gt;After starting OpenCover, we can send &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; requests to the application to fully exercise it. This can be scripted, or done manually using a&amp;nbsp;browser.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;#&lt;/span&gt; exercise the &lt;span class=&#34;s1&#34;&gt;&amp;#39;tomorrow&amp;#39;&lt;/span&gt; code path
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; wget http://localhost/?eventDate&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;2016-08-14
+&lt;span class=&#34;gp&#34;&gt;#&lt;/span&gt; exercise the &lt;span class=&#34;s1&#34;&gt;&amp;#39;in X days&amp;#39;&lt;/span&gt; code path
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; wget http://localhost/?eventDate&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;2016-08-29
+&lt;span class=&#34;gp&#34;&gt;#&lt;/span&gt; exercise the &lt;span class=&#34;s1&#34;&gt;&amp;#39;X days ago&amp;#39;&lt;/span&gt; code path
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; wget http://localhost/?eventDate&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;2016-07-10
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When we&amp;#8217;re done sending requests to the application, we can stop OpenCover by pressing &amp;#8216;q&amp;#8217;. OpenCover will generate our coverage results in a file called &lt;tt class=&#34;docutils literal&#34;&gt;results.xml&lt;/tt&gt;. We can then use the ReportGenerator to create an &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;&amp;nbsp;report:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; ReportGenerator.exe -reports:&lt;span class=&#34;s2&#34;&gt;&amp;quot;.\results.xml&amp;quot;&lt;/span&gt; -targetdir:report
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And we&amp;#8217;re done! ReportGenerator will create a nice report for us, showing the lines of code that are unused (including Razor&amp;nbsp;files):&lt;/p&gt;
+&lt;div class=&#34;system-message&#34;&gt;
+&lt;p class=&#34;system-message-title&#34;&gt;System Message: &lt;span class=&#34;caps&#34;&gt;ERROR&lt;/span&gt;/3 (&lt;tt class=&#34;docutils&#34;&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line&amp;nbsp;86)&lt;/p&gt;
+&lt;p&gt;Error in &amp;quot;image&amp;quot; directive:
+unknown option:&amp;nbsp;&amp;quot;display&amp;quot;.&lt;/p&gt;
+&lt;pre class=&#34;literal-block&#34;&gt;
+.. image:: /img/opencover-dead-code.png
+    :width: 80%
+    :display: block
+    :margin: 20px auto
+
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;This technique depends on us being able to fully exercise all parts of the web application. That could be the hardest part, depending on how large the application is. Tooling like OpenCover and ReportGenerator make the rest of it&amp;nbsp;easy!&lt;/p&gt;
+</content>
+    </entry>
+    
         <entry>
         <title>Pushing Database Changes to the Web with Datomic</title>
         <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" />
@@ -36,8 +127,8 @@ Datomic feels like a natural extension of Clojure&amp;#8217;s immutable, persist
 A Datomic database stores a collection of facts. The facts in a database are immutable; once stored, they do not change. However, old facts can be superseded by new facts over time. The state of the database is a value defined by the set of facts in effect at a given moment in time.&lt;/blockquote&gt;
 &lt;p&gt;Daniel Higginbotham wrote a great tutorial on the basics of Datomic called &lt;a class=&#34;reference external&#34; href=&#34;http://www.flyingmachinestudios.com/programming/datomic-for-five-year-olds/&#34;&gt;Datomic for Five Year Olds&lt;/a&gt;, which I highly recommend (even if you are older than&amp;nbsp;five).&lt;/p&gt;
 &lt;p&gt;We&amp;#8217;re going to focus on one aspect of Datomic in this post: the &lt;a class=&#34;reference external&#34; href=&#34;http://blog.datomic.com/2013/10/the-transaction-report-queue.html&#34;&gt;Transaction Report Queue&lt;/a&gt;, and how we can use it to push database changes to a web client using websockets. We&amp;#8217;ll assume some basic Clojure web application&amp;nbsp;experience.&lt;/p&gt;
-&lt;p&gt;At this point, most blog posts would explain that the web is becomingly increasingly real-time, that users expect this sort of thing, yadda yadda. Instead, let&amp;#8217;s jump right into what we&amp;#8217;re building. Hover over or tap the image for a&amp;nbsp;demo:&lt;/p&gt;
-&lt;img alt=&#34;/img/datomic-pushing-changes-demo.gif&#34; class=&#34;freezeframe&#34; src=&#34;http://fuqua.io/blog/img/datomic-pushing-changes-demo.gif&#34; style=&#34;width: 100%;&#34;/&gt;
+&lt;p&gt;At this point, most blog posts would explain that the web is becomingly increasingly real-time, that users expect this sort of thing, yadda yadda. Instead, let&amp;#8217;s jump right into what we&amp;#8217;re building &amp;#8211; a simple &amp;quot;connected users&amp;quot;&amp;nbsp;application:&lt;/p&gt;
+&lt;img alt=&#34;/img/datomic-pushing-changes-demo.gif&#34; src=&#34;http://fuqua.io/blog/img/datomic-pushing-changes-demo.gif&#34; style=&#34;width: 100%;&#34;/&gt;
 &lt;p&gt;What&amp;#8217;s going on here? As users connect to our web application, they&amp;#8217;re assigned a random username (such as &amp;quot;Merry Frog&amp;quot; or &amp;quot;Cheerful Aardvark&amp;quot;). This username is then inserted into a Datomic database, and the change is pushed from the database to all the connected users. The source for this application is &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/push-demo&#34;&gt;on GitHub&lt;/a&gt;. We&amp;#8217;ll walk through how it all works for the rest of this blog&amp;nbsp;post.&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;application-design&#34;&gt;
 &lt;h3&gt;Application&amp;nbsp;Design&lt;/h3&gt;
