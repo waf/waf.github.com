@@ -11,7 +11,7 @@ Haskell_ is a high-level, functional, programming language. Its combination of h
 
     let fib = 1 : 1 : zipWith (+) fib (tail fib)
 
-This creates a variable called ``fib`` that contains an infinite sequence of Fibonacci numbers. We could print this variable, but our program would start trying to print an infinite number of elements,  rendering it useless. A much better approach is to choose a finite number of elements from the series:
+This creates a variable called ``fib`` that contains an infinite sequence of Fibonacci numbers. We could print this variable, but our program would start trying to print an infinite number of elements. A better approach is to choose a finite number of elements from the sequence:
 
 .. code-block:: haskell
 

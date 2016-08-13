@@ -42,11 +42,11 @@
     <p><a class="reference external" href="http://www.haskell.org/haskellwiki/Introduction">Haskell</a> is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the <a class="reference external" href="http://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci series</a>&nbsp;algorithm:</p>
 <div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">fib</span> <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="n">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fib</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span>
 </pre></div>
-<p>This creates a variable called <tt class="docutils literal">fib</tt> that contains an infinite sequence of Fibonacci numbers. We could print this variable, but our program would start trying to print an infinite number of elements,  rendering it useless. A much better approach is to choose a finite number of elements from the&nbsp;series:</p>
+<p>This creates a variable called <tt class="docutils literal">fib</tt> that contains an infinite sequence of Fibonacci numbers. We could print this variable, but our program would start trying to print an infinite number of elements. A better approach is to choose a finite number of elements from the&nbsp;sequence:</p>
 <div class="highlight"><pre><span></span><span class="nf">take</span> <span class="mi">10</span> <span class="n">fib</span>
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="mi">55</span><span class="p">]</span>
 </pre></div>
-<p>The above implementation of <tt class="docutils literal">fib</tt> fascinates me, so I decided <span>&#8230;<a href="/blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="continue">continue</a>.</span></p>
+<p>The above implementation of <tt class="docutils literal">fib</tt> fascinates me, so I decided to try my hand at <span>&#8230;<a href="/blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
