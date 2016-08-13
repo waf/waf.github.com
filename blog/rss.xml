@@ -1,55 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
-    <author>
-        <name>Anonymous</name>
-        <uri>http://fuqua.io/blog/</uri>
-        <email>info@example.com</email>
-    </author>
-    <title>Blog - Will Fuqua</title>
-    <id>tag:fuqua.io/blog,2011-06-11:/atom/</id>
-    <link rel="alternate" type="text/html" href="http://fuqua.io/blog/" />
-    <link rel="self" type="application/atom+xml" href="http://fuqua.io/blog/atom/" />
-    <icon>http://fuqua.io/blog/favicon.ico</icon>
-    <logo>http://fuqua.io/blog/feed-logo.png</logo>
-    <updated>2014-03-11T04:00:00Z</updated>
-    <generator uri="https://github.com/posativ/acrylamid/" version="0.7.8">acrylamid</generator>
-        <entry>
-        <title>Haskell&#39;s Elegant Fibonacci Implementation in C#</title>
-        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2014/03/haskells-elegant-fibonacci-in-csharp/" />
-        <id>tag:fuqua.io/blog,2014-03-11:/2014/03/haskells-elegant-fibonacci-in-csharp</id>
-        <updated>2014-03-11T04:00:00Z</updated>
-        <category term="haskell" />
-        <category term="c#" />
-        <category term="fibonacci" />
-        <category term="functional" />
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Blog - Will Fuqua</title>
+        <link>http://fuqua.io/blog/</link>
+        <description></description>
+        <language>en</language>
+        <pubDate>Sun, 25 May 2014 04:00:00 GMT</pubDate>
+        <docs>http://fuqua.io/blog/rss.xml</docs>
+        <generator>acrylamid 0.7.10</generator>
         
-        <author>
-            <name>Anonymous</name>
-            <uri>http://fuqua.io/blog/</uri>
-            <email>info@example.com</email>
-        </author>
-        <content type="html">&lt;p&gt;&lt;a class=&#34;reference external&#34; href=&#34;http://www.haskell.org/haskellwiki/Introduction&#34;&gt;Haskell&lt;/a&gt; is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Fibonacci_number&#34;&gt;Fibonacci series&lt;/a&gt;&amp;nbsp;algorithm:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;kr&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;zipWith&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tail&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+            <item>
+        <title>Pushing Database Changes to the Web with Datomic</title>
+        <link>http://fuqua.io/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/</link>
+        <description>&lt;p&gt;Lately I&amp;#8217;ve been playing around with &lt;a class=&#34;reference external&#34; href=&#34;http://www.datomic.com&#34;&gt;Datomic&lt;/a&gt;, a database invented by Rich Hickey, the creator of Clojure.
+Datomic feels like a natural extension of Clojure&amp;#8217;s immutable, persistent datastructures. From Datomic&amp;#8217;s &lt;a class=&#34;reference external&#34; href=&#34;http://docs.datomic.com/architecture.html&#34;&gt;architecture documentation&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+A Datomic database stores a collection of facts. The facts in a database are immutable; once stored, they do not change. However, old facts can be superseded by new facts over time. The state of the database is a value defined by the set of facts in effect at a given moment in time.&lt;/blockquote&gt;
+&lt;p&gt;Daniel Higginbotham wrote a great tutorial on the basics of Datomic called &lt;a class=&#34;reference external&#34; href=&#34;http://www.flyingmachinestudios.com/programming/datomic-for-five-year-olds/&#34;&gt;Datomic for Five Year Olds&lt;/a&gt;, which I highly recommend (even if you are older than&amp;nbsp;five).&lt;/p&gt;
+&lt;p&gt;We&amp;#8217;re going to focus on one aspect of Datomic in this post: the &lt;a class=&#34;reference external&#34; href=&#34;http://blog.datomic.com/2013/10/the-transaction-report-queue.html&#34;&gt;Transaction Report Queue&lt;/a&gt;, and how we can use it to push database changes to a web client using websockets. We&amp;#8217;ll assume some basic Clojure web application&amp;nbsp;experience.&lt;/p&gt;
+&lt;p&gt;At this point, most blog posts would explain that the web is becomingly increasingly real-time, that users expect this sort of thing, yadda yadda. Instead, let&amp;#8217;s jump right into what we&amp;#8217;re building. Hover over or tap the image for a&amp;nbsp;demo:&lt;/p&gt;
+&lt;img alt=&#34;/img/datomic-pushing-changes-demo.gif&#34; class=&#34;freezeframe&#34; src=&#34;http://fuqua.io/blog/img/datomic-pushing-changes-demo.gif&#34; style=&#34;width: 100%;&#34;/&gt;
+&lt;p&gt;What&amp;#8217;s going on here? As users connect to our web application, they&amp;#8217;re assigned a random username (such as &amp;quot;Merry Frog&amp;quot; or &amp;quot;Cheerful Aardvark&amp;quot;). This username is then inserted into a Datomic database, and the change is pushed from the database to all the connected users. The source for this application is &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/push-demo&#34;&gt;on GitHub&lt;/a&gt;. We&amp;#8217;ll walk through how it all works for the rest of this blog&amp;nbsp;post.&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;application-design&#34;&gt;
+&lt;h3&gt;Application&amp;nbsp;Design&lt;/h3&gt;
+&lt;p&gt;Here&amp;#8217;s the basic layout of the&amp;nbsp;application:&lt;/p&gt;
+&lt;img alt=&#34;/img/datomic-push-architecture.png&#34; src=&#34;http://fuqua.io/blog/img/datomic-push-architecture.png&#34; style=&#34;width: 100%;&#34;/&gt;
+&lt;p&gt;The core piece here is the Transaction Report Queue that resides in our Clojure backend. This blocking queue will provide us with the all of the database transactions that happen against Datomic. Our application reads from this queue in a background thread, and whenever it&amp;#8217;s notified of a change, it will send it to the connected&amp;nbsp;clients.&lt;/p&gt;
+&lt;p&gt;The &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; server is powered by &lt;a class=&#34;reference external&#34; href=&#34;http://http-kit.org/index.html&#34;&gt;&lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; Kit&lt;/a&gt; and &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure&#34;&gt;Compojure&lt;/a&gt;. This is not much different than the typical Ring/Compojure Clojure web application stack; we&amp;#8217;ve simply swapped out the standard Jetty Ring adapter for &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; Kit. This allows us to handle asynchronous requests and websocket&amp;nbsp;connections.&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/ptaoussanis/sente&#34;&gt;Sente&lt;/a&gt; is similar to socket.io from the Node.js world. It&amp;#8217;s an abstraction layer that provides real-time communication over websockets, with an &lt;span class=&#34;caps&#34;&gt;AJAX&lt;/span&gt; long-polling fallback. This library has both Clojure and ClojureScript&amp;nbsp;components.&lt;/p&gt;
+&lt;p&gt;On the client, we&amp;#8217;ll render the list of users using the ClojureScript library  &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/holmsand/reagent&#34;&gt;Reagent&lt;/a&gt;, which wraps Facebook&amp;#8217;s React library. It&amp;#8217;s similar in concept to&amp;nbsp;Om.&lt;/p&gt;
+&lt;p&gt;All communication to Datomic is handled via Datomic&amp;#8217;s &lt;a class=&#34;reference external&#34; href=&#34;http://docs.datomic.com/integrating-peer-lib.html&#34;&gt;peer library&lt;/a&gt;. We&amp;#8217;ll use this library to both query the database and monitor the transaction report&amp;nbsp;queue.&lt;/p&gt;
+&lt;p&gt;We pull in all these libraries via Leiningen, plus some logging&amp;nbsp;libraries:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:dependencies&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.clojure/clojure&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.6.0&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.clojure/clojurescript&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.0-2202&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;http-kit&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;2.1.18&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ring&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.2.2&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.1.8&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;com.taoensso/sente&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.14.0&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;reagent&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.4.2&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.clojure/tools.logging&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.2.6&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ch.qos.logback/logback-classic&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.1.2&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.clojure/core.async&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.1.303.0-886421-alpha&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;com.datomic/datomic-free&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.9.4755&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;ss&#34;&gt;:exclusions&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.slf4j/slf4j-nop&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;; exclude datomic&amp;#39;s conflicting log libs&lt;/span&gt;
+                                &lt;span class=&#34;nv&#34;&gt;org.slf4j/slf4j-log4j12&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;the-backend-clojure-code&#34;&gt;
+&lt;h3&gt;The Backend Clojure&amp;nbsp;Code&lt;/h3&gt;
+&lt;p&gt;Let&amp;#8217;s start with our standard Compojure routing setup. The only change we&amp;#8217;ve made here is to use the httpkit server. Let&amp;#8217;s also import the Sente websocket and Datomic libraries, which we&amp;#8217;ll use in a&amp;nbsp;bit:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;userlist.server&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.httpkit.server&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ring.util.response&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.core&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:refer&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:all&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.handler&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.route&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;taoensso.sente&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;sente&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;datomic.api&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defroutes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;response/resource-response&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;public/index.html&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/resources&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/not-found&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;404! :(&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;app&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
+      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;handler/site&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;-main&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;server/run-server&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:port&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}))&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;; replace jetty with http-kit&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now that we&amp;#8217;re using &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; kit, we have websocket support. We just need to add an endpoint for the websocket connection. The Sente library has some prebuilt functions that will handle the websocket connections, and also fall back to &lt;span class=&#34;caps&#34;&gt;AJAX&lt;/span&gt; long-polling. We can retrieve references to these functions by calling Sente&amp;#8217;s &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;make-channel-socket!&lt;/span&gt;&lt;/tt&gt;, and passing in a &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;:user-id-fn&lt;/span&gt;&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;:user-id-fn&lt;/span&gt;&lt;/tt&gt; is a way for Sente to associate a connection with a specific user, so if a user connects with multiple devices, a message can be sent to all of that user&amp;#8217;s devices. In a Real World Application this would be some application-specific user identity. For our demo application, however, we won&amp;#8217;t worry about this, and just generate a random &lt;span class=&#34;caps&#34;&gt;UUID&lt;/span&gt; for the user&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;ID&lt;/span&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn- &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;get-user-id&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;str &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;java.util.&lt;span class=&#34;caps&#34;&gt;UUID&lt;/span&gt;/randomUUID&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ws-connection&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;sente/make-channel-socket!&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:user-id-fn&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;get-user-id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;let &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:keys&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ch-recv&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;send-fn&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ajax-post-fn&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ajax-get-or-ws-handshake-fn&lt;/span&gt;
+              &lt;span class=&#34;nv&#34;&gt;connected-uids&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]}&lt;/span&gt;
+      &lt;span class=&#34;nv&#34;&gt;ws-connection&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ring-ws-post&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ajax-post-fn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;; ring handler for POSTs&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ring-ws-handoff&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ajax-get-or-ws-handshake-fn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;; ring handler for GETs&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;receive-channel&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ch-recv&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;; receives inbound messages from clients&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;channel-send!&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;send-fn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;; send message to a client&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;connected-uids&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;connected-uids&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;; all connected clients&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And now, we can reference the endpoint functions in our Compojure&amp;nbsp;routes:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;;; compojure routes&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;POST&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/channel&amp;quot;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;req&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;ring-ws-post&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt;  &lt;span class=&#34;s&#34;&gt;&amp;quot;/channel&amp;quot;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;req&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;ring-ws-handoff&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now that we have the basic &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; endpoints set up, let&amp;#8217;s focus on setting up the Datomic database. After that, we&amp;#8217;ll hook up the datomic database to our websocket&amp;nbsp;endpoints.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;datomic-setup&#34;&gt;
+&lt;h3&gt;Datomic&amp;nbsp;Setup&lt;/h3&gt;
+&lt;p&gt;The first thing we&amp;#8217;ll need for our Datomic setup is a schema. Schemas in Datomic are defined in &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/edn-format/edn&#34;&gt;&lt;span class=&#34;caps&#34;&gt;EDN&lt;/span&gt;&lt;/a&gt;, a standard Clojure data-transfer format. Our schema will be very simple, as we just need to store a list of usernames. In &lt;tt class=&#34;docutils literal&#34;&gt;resources/userlist.edn&lt;/tt&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:db/id&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;db/id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:db.part/db&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;ss&#34;&gt;:db/ident&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:user/name&lt;/span&gt;
+  &lt;span class=&#34;ss&#34;&gt;:db/valueType&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:db.type/string&lt;/span&gt;
+  &lt;span class=&#34;ss&#34;&gt;:db/cardinality&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:db.cardinality/one&lt;/span&gt;
+  &lt;span class=&#34;ss&#34;&gt;:db/doc&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;A user&amp;#39;s name&amp;quot;&lt;/span&gt;
+  &lt;span class=&#34;ss&#34;&gt;:db.install/_attribute&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:db.part/db&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This datastructure represents a &lt;tt class=&#34;docutils literal&#34;&gt;:user/name&lt;/tt&gt; property with a corresponding &lt;tt class=&#34;docutils literal&#34;&gt;id&lt;/tt&gt; property. In the future, we could conceivably add other user-related properties, such as &lt;tt class=&#34;docutils literal&#34;&gt;:user/email&lt;/tt&gt; or &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;:user/password-hash&lt;/span&gt;&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;In order to load our schema into Datomic, we simply send the above datastructure to Datomic. Let&amp;#8217;s create an in-memory database, set up the schema, and return a reference to the connection so we can use it for further&amp;nbsp;queries:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;create-db&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;d/create-database&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;let &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;schema&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;read-string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;slurp &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;resources/roomlist.edn&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+        &lt;span class=&#34;nv&#34;&gt;conn&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;d/connect&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)]&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;d/transact&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;conn&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;schema&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;; install the schema in the db&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;conn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;create-db&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;datomic:mem://roomlist&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;; create an in-memory db called &amp;#39;roomlist&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The last thing we&amp;#8217;ll need to do is set up the transaction report queue. We can obtain this queue from the Datomic connection&amp;nbsp;object:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;; given a report from the tx-report-queue, read the changed values&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn- &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;read-changes&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:keys&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;db-after&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tx-data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;report&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;d/q&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:find&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;?aname&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;?v&lt;/span&gt;
+         &lt;span class=&#34;ss&#34;&gt;:in&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;_&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;?a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;?v&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]&lt;/span&gt;
+         &lt;span class=&#34;ss&#34;&gt;:where&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;?a&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:db/ident&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;?aname&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]&lt;/span&gt;
+       &lt;span class=&#34;nv&#34;&gt;db-after&lt;/span&gt;
+       &lt;span class=&#34;nv&#34;&gt;tx-data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;; set up a monitor loop using the tx-report-queue&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;change-monitor&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;conn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;let &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;report-queue&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;d/tx-report-queue&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;conn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)]&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;true&lt;/span&gt;
+      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;let &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;report&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;.take&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;report-queue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+            &lt;span class=&#34;nv&#34;&gt;changes&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;into &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;read-changes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;report&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))]&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;doseq &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;uid&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:any&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;connected-uids&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)]&lt;/span&gt;
+          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;channel-send!&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;uid&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:room/join&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;changes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))))))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And the server-side is done! &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;read-changes&lt;/span&gt;&lt;/tt&gt; will get the changes from the report queue, and these changes are passed to &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;channel-send!&lt;/span&gt;&lt;/tt&gt; to send it to our connected&amp;nbsp;clients.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;the-frontend-clojurescript-code&#34;&gt;
+&lt;h3&gt;The Frontend ClojureScript&amp;nbsp;Code&lt;/h3&gt;
+&lt;p&gt;The clojurescript code is actually pretty boring. It&amp;#8217;s a standard reagent app that re-renders based on the &lt;tt class=&#34;docutils literal&#34;&gt;&amp;#64;push/events&lt;/tt&gt; reactive&amp;nbsp;atom:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;roomlist.client&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;reagent.core&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;roomlist.push&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;push&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;user-item&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;join-event&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:li&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;str &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:user/name&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;join-event&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot; joined at &amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:db/txInstant&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;join-event&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))])&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;users-list&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:ul&lt;/span&gt;
+   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;for &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;join-event&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;push/events&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+     &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;user-item&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;join-event&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])])&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;r/render-component&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;users-list&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;.getElementById&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;js/document&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;entry-list&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here&amp;#8217;s the clojurescript code that populates the &lt;tt class=&#34;docutils literal&#34;&gt;&amp;#64;push/events&lt;/tt&gt; reactive&amp;nbsp;atom:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;; sente js setup&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ws-connection&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;sente/make-channel-socket!&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/channel&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:type&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:auto&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}))&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;let &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:keys&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ch-recv&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;send-fn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]}&lt;/span&gt;
+      &lt;span class=&#34;nv&#34;&gt;ws-connection&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;receive-channel&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:ch-recv&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ws-connection&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;send-channel!&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:send-fn&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ws-connection&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;; reactive atom that manages our application state&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;events&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;r/atom&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]))&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;; handle application-specific events&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn- &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;app-message-received&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;msgType&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;case&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;msgType&lt;/span&gt;
+    &lt;span class=&#34;ss&#34;&gt;:room/join&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;swap!&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;events&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;conj &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;.log&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;js/console&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Unmatched application event&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;; handle websocket-connection-specific events&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;; `possible-usernames` is just a sequence of string usernames&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn- &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;channel-state-message-received&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;state&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;if &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:first-open?&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;state&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;send-channel!&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:room/ident&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:name&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;rand-nth&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;possible-usernames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)}])))&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;; main router for websocket events&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn- &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;event-handler&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;_&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;.log&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;js/console&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;received message&amp;quot;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;case&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;
+    &lt;span class=&#34;ss&#34;&gt;:chsk/state&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;channel-state-message-received&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;ss&#34;&gt;:chsk/recv&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;app-message-received&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;.log&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;js/console&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Unmatched connection event&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;; and off we go!&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;sente/start-chsk-router-loop!&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;event-handler&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;receive-channel&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;A full, working demo is available &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/push-demo&#34;&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sun, 25 May 2014 04:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2014-05-25:/2014/05/pushing-database-changes-to-the-web-with-datomic</guid>
+    </item>
+        
+            <item>
+        <title>Haskell&#39;s Elegant Fibonacci Implementation in C#</title>
+        <link>http://fuqua.io/blog/2014/03/haskells-elegant-fibonacci-in-csharp/</link>
+        <description>&lt;p&gt;&lt;a class=&#34;reference external&#34; href=&#34;http://www.haskell.org/haskellwiki/Introduction&#34;&gt;Haskell&lt;/a&gt; is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Fibonacci_number&#34;&gt;Fibonacci series&lt;/a&gt;&amp;nbsp;algorithm:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kr&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;zipWith&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tail&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This creates a variable called &lt;tt class=&#34;docutils literal&#34;&gt;fib&lt;/tt&gt; that contains an infinite sequence of Fibonacci numbers. We could print this variable, but our program would start trying to print an infinite number of elements,  rendering it useless. A much better approach is to choose a finite number of elements from the&amp;nbsp;series:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nf&#34;&gt;take&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;take&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;21&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;34&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;55&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The above implementation of &lt;tt class=&#34;docutils literal&#34;&gt;fib&lt;/tt&gt; fascinates me, so I decided to try my hand at implementing it in another, less-functional language:&amp;nbsp;C#.&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;algorithm-explanation&#34;&gt;
 &lt;h3&gt;Algorithm&amp;nbsp;Explanation&lt;/h3&gt;
 &lt;p&gt;First, before we can implement this Fibonacci algorithm in C#, we need to know how the algorithm works. Here&amp;#8217;s the Haskell version&amp;nbsp;again:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;kr&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;zipWith&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tail&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kr&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;zipWith&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tail&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We provide the first two numbers to start off the series. As we request additional elements, Haskell will calculate them &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Corecursion&#34;&gt;corecursively&lt;/a&gt;, using the &lt;tt class=&#34;docutils literal&#34;&gt;zipWith&lt;/tt&gt; function. &lt;tt class=&#34;docutils literal&#34;&gt;zipWith&lt;/tt&gt; takes a function as a parameter, in this case the addition function &lt;tt class=&#34;docutils literal&#34;&gt;(+)&lt;/tt&gt;, and two sequences. It feeds pairs of elements, one from each sequence, into the addition function. The result is a single sequence made from combining or &amp;quot;zipping together&amp;quot; the input&amp;nbsp;sequences.&lt;/p&gt;
 &lt;p&gt;The other function in play is &lt;tt class=&#34;docutils literal&#34;&gt;tail&lt;/tt&gt;, which returns everything but the first element of the list. The &lt;tt class=&#34;docutils literal&#34;&gt;tail&lt;/tt&gt; of &lt;tt class=&#34;docutils literal&#34;&gt;[1, 2, 3, 4]&lt;/tt&gt; would be &lt;tt class=&#34;docutils literal&#34;&gt;[2, 3, 4]&lt;/tt&gt;.&lt;/p&gt;
 &lt;p&gt;We combine these two functions to calculate the Fibonacci numbers on demand. Here&amp;#8217;s a snapshot of the program&amp;#8217;s state when we calculate the third element, the number&amp;nbsp;2:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nf&#34;&gt;fib&lt;/span&gt;                        &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;unknown&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;fib&lt;/span&gt;                        &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;unknown&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tail&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;                 &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;unknown&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
 &lt;span class=&#34;nf&#34;&gt;zipWith&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tail&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;unknown&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Once we have the third element, we can calculate the fourth element, the number&amp;nbsp;3:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nf&#34;&gt;fib&lt;/span&gt;                        &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;unknown&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;fib&lt;/span&gt;                        &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;unknown&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tail&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;                 &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;unknown&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
 &lt;span class=&#34;nf&#34;&gt;zipWith&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tail&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;unknown&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -58,7 +228,7 @@
 &lt;div class=&#34;section&#34; id=&#34;idiomatic-c-version&#34;&gt;
 &lt;h3&gt;Idiomatic C#&amp;nbsp;Version&lt;/h3&gt;
 &lt;p&gt;In our initial C# implementation we&amp;#8217;ll rely on IEnumerables and IEnumerators. An IEnumerable represents a lazy sequence, and it has an associated IEnumerator that knows how to get the next value for the sequence. The &lt;tt class=&#34;docutils literal&#34;&gt;yield return&lt;/tt&gt; keyword is a shortcut for setting up this relationship. For example, here is how we could create a method that returns a lazy sequence of the numbers 1, 2, and&amp;nbsp;3:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Lazy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Lazy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;k&#34;&gt;yield&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
     &lt;span class=&#34;k&#34;&gt;yield&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
@@ -66,7 +236,7 @@
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;IEnumerables come with a rich library of higher-order functions out of the box. We&amp;#8217;ll be using IEnumerable&amp;#8217;s &lt;tt class=&#34;docutils literal&#34;&gt;Zip&lt;/tt&gt; method for Haskell&amp;#8217;s &lt;tt class=&#34;docutils literal&#34;&gt;zipWith&lt;/tt&gt; function, and the &lt;tt class=&#34;docutils literal&#34;&gt;Skip&lt;/tt&gt; method for Haskell&amp;#8217;s &lt;tt class=&#34;docutils literal&#34;&gt;tail&lt;/tt&gt; function. Here&amp;#8217;s a first&amp;nbsp;pass:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fibonacci&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
     &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;first10&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fibonacci&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Take&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
@@ -94,7 +264,7 @@
 &lt;/ol&gt;
 &lt;p&gt;We can get lazy behavior in C# by wrapping our operations in a 0-argument lambda expression, then evaluating the lambda expression when we need the value. This &amp;quot;lazy operation&amp;quot; is called a &lt;a class=&#34;reference external&#34; href=&#34;http://www.haskell.org/haskellwiki/Thunk&#34;&gt;thunk&lt;/a&gt;. Haskell uses thunks to defer evaluation, too (the actual Haskell thunk implementation is more involved, but a 0-argument lambda expression captures the essence of the&amp;nbsp;idea).&lt;/p&gt;
 &lt;p&gt;Let&amp;#8217;s thunk-ify our two arguments to &lt;tt class=&#34;docutils literal&#34;&gt;Concat()&lt;/tt&gt;. Since each thunk is a 0-argument lambda that resolves to an IEnumerable of integers, both thunks will have the type signature &lt;tt class=&#34;docutils literal&#34;&gt;Func&amp;lt;IEnumerable&amp;lt;int&amp;gt;&amp;gt;&lt;/tt&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;Func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;seedThunk&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;
         &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
@@ -108,7 +278,7 @@
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Uh-oh, this doesn&amp;#8217;t compile! All of the IEnumerable methods, including &lt;tt class=&#34;docutils literal&#34;&gt;Concat()&lt;/tt&gt;, expect IEnumerables, not thunks. Luckily, we can use C#&amp;#8217;s extension method system to add thunk&amp;nbsp;support:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Concat&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Concat&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;
     &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;first&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;Func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;second&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
@@ -119,7 +289,7 @@
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Our &lt;tt class=&#34;docutils literal&#34;&gt;Fib()&lt;/tt&gt; method is quite a bit harder to read, so what did it gain us? With our arguments being lazily evaluated, we can remove the function recursion and &lt;tt class=&#34;docutils literal&#34;&gt;yield return&lt;/tt&gt; statements, and replace them with a neat trick that simulates recursive variable&amp;nbsp;definitions:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
 
@@ -136,7 +306,7 @@
 &lt;p&gt;Isn&amp;#8217;t that cool (or is it terrifying)? Our thunks, which are closures, capture the reference to the &lt;tt class=&#34;docutils literal&#34;&gt;fib&lt;/tt&gt; variable, which is initially null. Then, we assign the result of the expression back to &lt;tt class=&#34;docutils literal&#34;&gt;fib&lt;/tt&gt;, changing the implementation to which the captured &lt;tt class=&#34;docutils literal&#34;&gt;fib&lt;/tt&gt; refers. This is how we can use lazy evaluation to fake recursive data&amp;nbsp;definitions.&lt;/p&gt;
 &lt;p&gt;Finally, now that we&amp;#8217;re just dealing with an IEnumerable, it&amp;#8217;s easy to memoize&amp;nbsp;it.&lt;/p&gt;
 &lt;p&gt;Rather than writing our own memoizing IEnumerable code, let&amp;#8217;s use the one available in &lt;a class=&#34;reference external&#34; href=&#34;http://www.nuget.org/packages/ix_experimental-main&#34;&gt;Interactive Extensions&lt;/a&gt;, part of the &lt;a class=&#34;reference external&#34; href=&#34;https://rx.codeplex.com/&#34;&gt;Rx Project&lt;/a&gt;. We can pass our Enumerable into the library&amp;#8217;s &lt;tt class=&#34;docutils literal&#34;&gt;Memoize&lt;/tt&gt; function:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
 
@@ -150,7 +320,7 @@
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;At this point we&amp;#8217;re done! We have a lazily-evaluated, infinite Fibonacci sequence that is defined in terms of itself. Here&amp;#8217;s the full working&amp;nbsp;code!&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;k&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
 &lt;span class=&#34;k&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;System.Linq&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
 &lt;span class=&#34;k&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;System.Collections.Generic&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
 
@@ -192,25 +362,15 @@
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content>
-    </entry>
-    
-        <entry>
-        <title>Native JavaScript Promises and Browser APIs</title>
-        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2014/02/native-javascript-promises-and-browser-apis/" />
-        <id>tag:fuqua.io/blog,2014-02-22:/2014/02/native-javascript-promises-and-browser-apis</id>
-        <updated>2014-02-22T04:00:00Z</updated>
-        <category term="html5" />
-        <category term="javascript" />
-        <category term="promise" />
-        <category term="web" />
+</description>
+        <pubDate>Tue, 11 Mar 2014 04:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2014-03-11:/2014/03/haskells-elegant-fibonacci-in-csharp</guid>
+    </item>
         
-        <author>
-            <name>Anonymous</name>
-            <uri>http://fuqua.io/blog/</uri>
-            <email>info@example.com</email>
-        </author>
-        <content type="html">&lt;p&gt;One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Promise_(programming)&#34;&gt;Promises&lt;/a&gt;. Promises simplify asynchronous code. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is&amp;nbsp;everywhere.&lt;/p&gt;
+            <item>
+        <title>Native JavaScript Promises and Browser APIs</title>
+        <link>http://fuqua.io/blog/2014/02/native-javascript-promises-and-browser-apis/</link>
+        <description>&lt;p&gt;One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Promise_(programming)&#34;&gt;Promises&lt;/a&gt;. Promises simplify asynchronous code. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is&amp;nbsp;everywhere.&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;the-problem-with-asynchronicity&#34;&gt;
 &lt;h3&gt;The Problem with&amp;nbsp;Asynchronicity&lt;/h3&gt;
 &lt;p&gt;Asynchronous patterns are great for keeping UIs responsive and non-blocking, but they have a cost: asynchronous JavaScript code tends to be highly nested, which hurts readability. Additionally, because you can&amp;#8217;t catch errors that are thrown inside callbacks from outside those callbacks, error handling needs to be spread throughout every level of&amp;nbsp;nesting.&lt;/p&gt;
@@ -231,7 +391,7 @@
 &lt;div class=&#34;section&#34; id=&#34;promises-and-the-geolocation-api&#34;&gt;
 &lt;h3&gt;Promises and the Geolocation&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&lt;/h3&gt;
 &lt;p&gt;As an example, let&amp;#8217;s add promise support to the Geolocation &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. The Geolocation &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; exposes the &lt;tt class=&#34;docutils literal&#34;&gt;getCurrentPosition&lt;/tt&gt; function, which makes a request for the user&amp;#8217;s geographical position. The function takes an success callback and an error callback. If everything goes well, the success callback is called with the user&amp;#8217;s coordinates as a parameter. If the user denies our request, or we can&amp;#8217;t determine the user&amp;#8217;s position, the error callback is called. A invocation of this function &lt;cite&gt;without&lt;/cite&gt; Promises might look something&amp;nbsp;like:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;success&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;success&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;navigator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;geolocation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getCurrentPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;success&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 
@@ -246,14 +406,14 @@
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The code is kind of inside-out; we have to wrap up the core of what we want to do (get the user&amp;#8217;s position) in a function and pass it deep into the program. Let&amp;#8217;s fix this by using&amp;nbsp;Promises.&lt;/p&gt;
 &lt;p&gt;Remember that a Promise can either &lt;strong&gt;resolve&lt;/strong&gt; or &lt;strong&gt;reject&lt;/strong&gt;. The mapping from resolve to the success callback and from reject to the error callback is pretty clear. It&amp;#8217;s simple to wrap this browser &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; in a&amp;nbsp;Promise:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
         &lt;span class=&#34;nx&#34;&gt;navigator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;geolocation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getCurrentPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We can invoke the function to get our promise, and then specify success and failure callbacks using the &lt;tt class=&#34;docutils literal&#34;&gt;then()&lt;/tt&gt; method on our Promise&amp;nbsp;object:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;then&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;position&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
         &lt;span class=&#34;c1&#34;&gt;// we have the user&amp;#39;s position!&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
@@ -267,7 +427,7 @@
 &lt;div class=&#34;section&#34; id=&#34;promises-and-the-html5-notification-api&#34;&gt;
 &lt;h3&gt;Promises and the &lt;span class=&#34;caps&#34;&gt;HTML5&lt;/span&gt; Notification&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&lt;/h3&gt;
 &lt;p&gt;The &lt;span class=&#34;caps&#34;&gt;HTML5&lt;/span&gt; Notification &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; is also callback-based, but in a different way than the Geolocation &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;: it uses a single &lt;tt class=&#34;docutils literal&#34;&gt;handleStatus&lt;/tt&gt; callback, rather than separate callbacks for success and errors. The callback-based code might look like&amp;nbsp;this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;handleStatus&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;handleStatus&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;Notification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;requestPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;handleStatus&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 
@@ -280,8 +440,8 @@
 &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;For this conversion, we&amp;#8217;ll manually call the &lt;tt class=&#34;docutils literal&#34;&gt;resolve&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;reject&lt;/tt&gt; handlers:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
         &lt;span class=&#34;nx&#34;&gt;Notification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;requestPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
             &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;===&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;granted&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
                 &lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
@@ -312,7 +472,7 @@
 &lt;li&gt;Handle all of the failure points in the above&amp;nbsp;steps.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;We can reuse our &lt;tt class=&#34;docutils literal&#34;&gt;getNotificationPermission&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;getUserPosition&lt;/tt&gt; functions we defined earlier. Here is the code, in its&amp;nbsp;entirety:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;then&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;then&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;displayNotification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
@@ -321,7 +481,7 @@
 
 &lt;span class=&#34;c1&#34;&gt;// we defined this function earlier&lt;/span&gt;
 &lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
         &lt;span class=&#34;nx&#34;&gt;Notification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;requestPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
             &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;===&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;granted&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
                 &lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
@@ -334,7 +494,7 @@
 
 &lt;span class=&#34;c1&#34;&gt;// we defined this function earlier&lt;/span&gt;
 &lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
         &lt;span class=&#34;nx&#34;&gt;navigator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;geolocation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getCurrentPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
@@ -351,7 +511,7 @@
 &lt;h3&gt;Altering the Program&amp;nbsp;Flow&lt;/h3&gt;
 &lt;p&gt;Right now we&amp;#8217;re chaining all of our functions together, one after the other. This causes some inefficiency and a poor user experience: We request permission for notifications and wait to receive it, and then we request the user&amp;#8217;s position and wait to receive it. Since these requests don&amp;#8217;t depend on each other, ideally we would issue both of these requests at once, and then wait until both of the requests were&amp;nbsp;successful.&lt;/p&gt;
 &lt;p&gt;The Promise &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; has a solution. The static function &lt;tt class=&#34;docutils literal&#34;&gt;Promise.All()&lt;/tt&gt; converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for our desired&amp;nbsp;behavior:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nx&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;all&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;([&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;Promise&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;all&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;([&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;requestNotificationPermission&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt;
     &lt;span class=&#34;nx&#34;&gt;getUserPosition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;])&lt;/span&gt;
@@ -372,39 +532,25 @@
 &lt;h3&gt;The&amp;nbsp;Future&lt;/h3&gt;
 &lt;p&gt;It&amp;#8217;s worth noting that the need to wrap Browser APIs in compatibility layers will hopefully be a short-term pain. There are plans to add Promise support to existing browser APIs where possible. We&amp;#8217;re not there yet, though, so we need these wrappers for&amp;nbsp;now.&lt;/p&gt;
 &lt;/div&gt;
-</content>
-    </entry>
-    
-        <entry>
-        <title>REST APIs and Relational Databases in Clojure</title>
-        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2013/12/rest-apis-and-relational-databases-in-clojure/" />
-        <id>tag:fuqua.io/blog,2013-12-04:/2013/12/rest-apis-and-relational-databases-in-clojure</id>
-        <updated>2013-12-04T04:00:00Z</updated>
-        <category term="clojure" />
-        <category term="web" />
-        <category term="compojure" />
-        <category term="ring" />
-        <category term="database" />
-        <category term="sql" />
-        <category term="korma" />
-        <category term="lobos" />
+</description>
+        <pubDate>Sat, 22 Feb 2014 04:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2014-02-22:/2014/02/native-javascript-promises-and-browser-apis</guid>
+    </item>
         
-        <author>
-            <name>Anonymous</name>
-            <uri>http://fuqua.io/blog/</uri>
-            <email>info@example.com</email>
-        </author>
-        <content type="html">&lt;p&gt;I&amp;#8217;ve found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational&amp;nbsp;databases.&lt;/p&gt;
+            <item>
+        <title>REST APIs and Relational Databases in Clojure</title>
+        <link>http://fuqua.io/blog/2013/12/rest-apis-and-relational-databases-in-clojure/</link>
+        <description>&lt;p&gt;I&amp;#8217;ve found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational&amp;nbsp;databases.&lt;/p&gt;
 &lt;p&gt;In this post we&amp;#8217;ll create a simple &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; for a todo list web application. We&amp;#8217;ll use &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure&#34;&gt;Compojure&lt;/a&gt; to create a &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;, &lt;a class=&#34;reference external&#34; href=&#34;http://budu.github.io/lobos/&#34;&gt;Lobos&lt;/a&gt; to create and manage our database tables, and &lt;a class=&#34;reference external&#34; href=&#34;http://sqlkorma.com/&#34;&gt;Korma&lt;/a&gt; to query a PostgreSQL&amp;nbsp;database.&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;generating-a-compojure-application&#34;&gt;
 &lt;h3&gt;Generating a Compojure&amp;nbsp;Application&lt;/h3&gt;
 &lt;p&gt;The first thing we&amp;#8217;ll do is &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure/wiki/Getting-Started&#34;&gt;set up a Compojure web application&lt;/a&gt;. Use Leiningen to create and spin up an empty web&amp;nbsp;application:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; lein new compojure todoapp
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd &lt;/span&gt;todoapp
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; lein new compojure todoapp
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; todoapp
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; lein ring server
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After issuing the &lt;tt class=&#34;docutils literal&#34;&gt;lein ring server&lt;/tt&gt; command, your browser should open up a &amp;quot;Hello World&amp;quot; page on &lt;a class=&#34;reference external&#34; href=&#34;http://localhost:3000/&#34;&gt;http://localhost:3000/&lt;/a&gt;. Let&amp;#8217;s make that a little bit more interesting! Keeping the server running, open the generated &lt;tt class=&#34;docutils literal&#34;&gt;src/todoapp/handler.clj&lt;/tt&gt; file in your favorite editor and examine the&amp;nbsp;contents:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.handler&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.handler&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:use&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;compojure.core&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.handler&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
             &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.route&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
@@ -424,17 +570,17 @@
 &lt;h3&gt;Setting up a &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt;&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&lt;/h3&gt;
 &lt;p&gt;Let&amp;#8217;s modify the middleware stack (the &lt;tt class=&#34;docutils literal&#34;&gt;def app&lt;/tt&gt; statement) to be more suitable for a &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. The default &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt; middleware assumes you&amp;#8217;re building a website; since we&amp;#8217;re building a &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;, we&amp;#8217;ll swap out &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt; for the more barebones &lt;tt class=&#34;docutils literal&#34;&gt;handler/api&lt;/tt&gt;, and add some middleware for parsing and returning&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt;.&lt;/p&gt;
 &lt;p&gt;In our &lt;tt class=&#34;docutils literal&#34;&gt;project.clj&lt;/tt&gt; file, we&amp;#8217;ll add a dependency on the &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/ring-clojure/ring-json&#34;&gt;ring-json&lt;/a&gt;&amp;nbsp;library:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;ss&#34;&gt;:dependencies&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.clojure/clojure&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.5.1&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:dependencies&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.clojure/clojure&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.5.1&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
                &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.1.6&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
                &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ring/ring-json&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.2.0&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now we&amp;#8217;ll add a reference to ring-json in &lt;tt class=&#34;docutils literal&#34;&gt;handler.clj&lt;/tt&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.handler&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.handler&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
           &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.route&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
           &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ring.middleware.json&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And add the middleware to our application, as well as swapping out &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt; for the aforementioned &lt;tt class=&#34;docutils literal&#34;&gt;handler/api&lt;/tt&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;app&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;app&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;handler/api&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;json/wrap-json-params&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;json/wrap-json-response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
@@ -443,7 +589,7 @@
 &lt;div class=&#34;section&#34; id=&#34;stubbing-out-our-application&#34;&gt;
 &lt;h3&gt;Stubbing out our&amp;nbsp;application&lt;/h3&gt;
 &lt;p&gt;Next, let&amp;#8217;s stub out our &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. We&amp;#8217;ll need our typical &lt;span class=&#34;caps&#34;&gt;CRUD&lt;/span&gt; operations, so let&amp;#8217;s remove the &amp;quot;Hello World&amp;quot; route and add the &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&amp;nbsp;stubs:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defroutes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defroutes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: return all list items&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos/:id&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: return a single list item&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;POST&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: create a list item&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
@@ -453,12 +599,12 @@
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/not-found&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Not Found&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;When we visit &lt;a class=&#34;reference external&#34; href=&#34;http://localhost:3000/api/todos&#34;&gt;http://localhost:3000/api/todos&lt;/a&gt; we should get our stub message &amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: return all list items&amp;quot; back. However, since we deleted the &amp;quot;Hello World&amp;quot; route that responded to the root &lt;span class=&#34;caps&#34;&gt;URL&lt;/span&gt;, we&amp;#8217;ll get a 404 &amp;quot;Not Found&amp;quot; error when we visit &lt;a class=&#34;reference external&#34; href=&#34;http://localhost:3000/&#34;&gt;http://localhost:3000/&lt;/a&gt;. Since we specified a static resource route, we can fix the 404 error by adding an &amp;quot;index.html&amp;quot; placeholder resource in the &lt;tt class=&#34;docutils literal&#34;&gt;resources/public/&lt;/tt&gt; directory:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;cp&#34;&gt;&amp;lt;!&lt;span class=&#34;caps&#34;&gt;DOCTYPE&lt;/span&gt; html&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;nt&#34;&gt;&amp;lt;html&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;lang=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;nt&#34;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;&amp;lt;!&lt;span class=&#34;caps&#34;&gt;DOCTYPE&lt;/span&gt; html&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;lang&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
     &lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: Make a front-end :)
-&lt;span class=&#34;nt&#34;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;nt&#34;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;section&#34; id=&#34;connecting-to-a-database&#34;&gt;
@@ -466,12 +612,12 @@
 &lt;p&gt;Now that we have the &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; interface stubbed out, let&amp;#8217;s move on to the Postgres database layer. We&amp;#8217;ll be using the &lt;a class=&#34;reference external&#34; href=&#34;http://sqlkorma.com/&#34;&gt;Korma&lt;/a&gt; library to query our database and &lt;a class=&#34;reference external&#34; href=&#34;http://budu.github.io/lobos/&#34;&gt;Lobos&lt;/a&gt; to manage&amp;nbsp;migrations.&lt;/p&gt;
 &lt;p&gt;Rather than create our tables manually via &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;caps&#34;&gt;CREATE&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;TABLE&lt;/span&gt;&lt;/tt&gt; statements, let&amp;#8217;s use Lobos migrations. First we&amp;#8217;ll need to set up the database connection string, which we can use for both Korma and&amp;nbsp;Lobos.&lt;/p&gt;
 &lt;p&gt;In our &lt;tt class=&#34;docutils literal&#34;&gt;project.clj&lt;/tt&gt;, add a reference to Korma, Lobos, and the PostgreSQL&amp;nbsp;driver:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;korma&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.3.0-&lt;span class=&#34;caps&#34;&gt;RC5&lt;/span&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;korma&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.3.0-&lt;span class=&#34;caps&#34;&gt;RC5&lt;/span&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.0.0-beta1&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.postgresql/postgresql&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;9.2-1002-jdbc4&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In a new file, &lt;tt class=&#34;docutils literal&#34;&gt;src/todoapp/database.clj&lt;/tt&gt;, specify the database connection information. We&amp;#8217;re using an empty database called &amp;quot;todo&amp;quot; with the user &amp;quot;db-user&amp;quot; and the password&amp;nbsp;&amp;quot;SuperSecretPassword&amp;quot;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.database&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.database&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;korma.db&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;korma&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
             &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos.connectivity&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lobos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
 
@@ -492,7 +638,7 @@
 &lt;div class=&#34;section&#34; id=&#34;creating-database-tables-with-lobos&#34;&gt;
 &lt;h3&gt;Creating Database Tables with&amp;nbsp;Lobos&lt;/h3&gt;
 &lt;p&gt;Now, let&amp;#8217;s use Lobos to create a simple table named &amp;quot;items&amp;quot; with an integer primary key and varchar title. Make a new file called &lt;tt class=&#34;docutils literal&#34;&gt;src/todoapp/migrations.clj&lt;/tt&gt;, and add the&amp;nbsp;following:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.migrations&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.migrations&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:refer-clojure&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:exclude&lt;/span&gt;
         &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;alter drop &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;bigint&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;boolean char double float time &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;complement&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:use&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.database&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
@@ -505,19 +651,19 @@
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;down &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;drop &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:items&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Unfortunately, one aspect of Lobos&amp;#8217;s design is rather unidiomatic: it provides a &lt;tt class=&#34;docutils literal&#34;&gt;(migrate)&lt;/tt&gt; function that, by default, only runs migrations in the &lt;tt class=&#34;docutils literal&#34;&gt;lobos.migrations&lt;/tt&gt; namespace. My personal preference is to keep my migrations for an application in that application&amp;#8217;s namespace. We can configure Lobos to run the migrations in our desired namespace by rebinding the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;lobos.migration/*migrations-namespace*&lt;/span&gt;&lt;/tt&gt; var, and running the &lt;tt class=&#34;docutils literal&#34;&gt;(migrate)&lt;/tt&gt; function in that&amp;nbsp;context:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;run-migrations&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;run-migrations&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;binding &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos.migration/*migrations-namespace*&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;todoapp.migrations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;migrate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We can run our migrations to generate our table by calling &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;(run-migrations)&lt;/span&gt;&lt;/tt&gt; in our&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; lein repl
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; lein repl
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;use &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;todoapp.migrations&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;run-migrations&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;go&#34;&gt;add-todo-table&lt;/span&gt;
 &lt;span class=&#34;go&#34;&gt;nil&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now, if you check out the database, you&amp;#8217;ll see we have a &lt;tt class=&#34;docutils literal&#34;&gt;items&lt;/tt&gt; table, ready for use! Just for kicks, let&amp;#8217;s add another migration that will add an &lt;tt class=&#34;docutils literal&#34;&gt;is_complete&lt;/tt&gt; column to our &lt;tt class=&#34;docutils literal&#34;&gt;items&lt;/tt&gt; table:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;let &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;is-complete&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:items&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;let &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;is-complete&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:items&lt;/span&gt;
                     &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;boolean &lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:is_complete&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))]&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defmigration&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;add-is-complete-column&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;up &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;alter &lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:add&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;is-complete&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
@@ -529,14 +675,14 @@
 &lt;h3&gt;Querying and Inserting Data with&amp;nbsp;Korma&lt;/h3&gt;
 &lt;p&gt;Now that we have our database all ready to go, let&amp;#8217;s finish off our application! We&amp;#8217;ll be replacing our &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; stubs we built earlier with calls to our database, using the Korma&amp;nbsp;library.&lt;/p&gt;
 &lt;p&gt;We&amp;#8217;ll be creating a &lt;tt class=&#34;docutils literal&#34;&gt;src/todoapp/query.clj&lt;/tt&gt; file that contains our Korma statements. First up, we let Korma know about our &lt;tt class=&#34;docutils literal&#34;&gt;items&lt;/tt&gt; table using a &lt;tt class=&#34;docutils literal&#34;&gt;defentity&lt;/tt&gt; statement. Korma does not need any knowledge of our table&amp;#8217;s schema; it just needs to know that the table&amp;nbsp;exists:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.query&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.query&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.database&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
             &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;korma.core&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:refer&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:all&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
 
 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defentity&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;items&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Korma provides a &lt;a class=&#34;reference external&#34; href=&#34;http://sqlkorma.com/docs#select&#34;&gt;nice, composable &lt;span class=&#34;caps&#34;&gt;DSL&lt;/span&gt;&lt;/a&gt; for querying our database. Let&amp;#8217;s define a couple of functions that interact with the &lt;tt class=&#34;docutils literal&#34;&gt;items&lt;/tt&gt; table:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;get-todos&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;get-todos&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;select &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;items&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
 
 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;add-todo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
@@ -560,7 +706,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;There shouldn&amp;#8217;t be anything too shocking in these functions, except maybe how readable the Korma code is. The &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;get-todo&lt;/span&gt;&lt;/tt&gt; function uses the fact that &lt;tt class=&#34;docutils literal&#34;&gt;(first [])&lt;/tt&gt; is &lt;tt class=&#34;docutils literal&#34;&gt;nil&lt;/tt&gt;, so &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;get-todo&lt;/span&gt;&lt;/tt&gt; will return a single todo item, or &lt;tt class=&#34;docutils literal&#34;&gt;nil&lt;/tt&gt; if a todo item with the given id does not&amp;nbsp;exist.&lt;/p&gt;
 &lt;p&gt;These functions provide everything we need for our simple &lt;span class=&#34;caps&#34;&gt;CRUD&lt;/span&gt; interface, so let&amp;#8217;s hook up these queries to our Compojure route&amp;nbsp;handlers:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defroutes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defroutes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;get-todos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos/:id&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
@@ -576,33 +722,23 @@
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We need to parse our &lt;tt class=&#34;docutils literal&#34;&gt;id&lt;/tt&gt; parameters from strings to integers, since they&amp;#8217;re being passed in via the &lt;span class=&#34;caps&#34;&gt;URL&lt;/span&gt;, so type info is lost. The ring-json library we added earlier allows us to specify our desired &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; fields (like &lt;tt class=&#34;docutils literal&#34;&gt;title&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;is_complete&lt;/tt&gt;) as route parameters. We can also pass our native Clojure datastructures to the Ring response function, and &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; serialization is done&amp;nbsp;automatically.&lt;/p&gt;
 &lt;p&gt;We can use the command line tool &lt;tt class=&#34;docutils literal&#34;&gt;curl&lt;/tt&gt; to test out our&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; curl -X &lt;span class=&#34;caps&#34;&gt;POST&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;quot;title&amp;quot;:&amp;quot;remember the milk&amp;quot;}&amp;#39;&lt;/span&gt; -H &lt;span class=&#34;s2&#34;&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; http://localhost:3000/api/todos
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; curl -X &lt;span class=&#34;caps&#34;&gt;POST&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;quot;title&amp;quot;:&amp;quot;remember the milk&amp;quot;}&amp;#39;&lt;/span&gt; -H &lt;span class=&#34;s2&#34;&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; http://localhost:3000/api/todos
 &lt;span class=&#34;go&#34;&gt;{&amp;quot;is_complete&amp;quot;:false,&amp;quot;title&amp;quot;:&amp;quot;remember the milk&amp;quot;,&amp;quot;id&amp;quot;:1}&lt;/span&gt;
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; curl -X &lt;span class=&#34;caps&#34;&gt;PUT&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;quot;title&amp;quot;:&amp;quot;don&amp;#39;&lt;/span&gt;t forget the milk!&lt;span class=&#34;s2&#34;&gt;&amp;quot;, &amp;quot;&lt;/span&gt;is_complete&lt;span class=&#34;s2&#34;&gt;&amp;quot;:false}&amp;#39; -H &amp;quot;&lt;/span&gt;Content-Type: application/json&lt;span class=&#34;err&#34;&gt;&amp;quot;&lt;/span&gt; http://localhost:3000/api/todos/1
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; curl -X &lt;span class=&#34;caps&#34;&gt;PUT&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;quot;title&amp;quot;:&amp;quot;don&amp;#39;&lt;/span&gt;t forget the milk!&lt;span class=&#34;s2&#34;&gt;&amp;quot;, &amp;quot;&lt;/span&gt;is_complete&lt;span class=&#34;s2&#34;&gt;&amp;quot;:false}&amp;#39; -H &amp;quot;&lt;/span&gt;Content-Type: application/json&lt;span class=&#34;s2&#34;&gt;&amp;quot; http://localhost:3000/api/todos/1&lt;/span&gt;
 &lt;span class=&#34;go&#34;&gt;{&amp;quot;is_complete&amp;quot;:false,&amp;quot;title&amp;quot;:&amp;quot;don&amp;#39;t forget the milk!&amp;quot;,&amp;quot;id&amp;quot;:1}&lt;/span&gt;
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; curl -X &lt;span class=&#34;caps&#34;&gt;DELETE&lt;/span&gt; http://localhost:3000/api/todos/1
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We now have a simple &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; over a relational database. We can manage our database schema using Lobos migrations, and query our database using elegant, idiomatic Clojure via&amp;nbsp;Korma.&lt;/p&gt;
 &lt;/div&gt;
-</content>
-    </entry>
-    
-        <entry>
-        <title>Acrylamid with virtualenv and pip</title>
-        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2013/09/acrylamid-with-virtualenv-and-pip/" />
-        <id>tag:fuqua.io/blog,2013-09-10:/2013/09/acrylamid-with-virtualenv-and-pip</id>
-        <updated>2013-09-10T04:00:00Z</updated>
-        <category term="acrylamid" />
-        <category term="blog" />
-        <category term="python" />
-        <category term="virtualenv" />
+</description>
+        <pubDate>Wed, 04 Dec 2013 04:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2013-12-04:/2013/12/rest-apis-and-relational-databases-in-clojure</guid>
+    </item>
         
-        <author>
-            <name>Anonymous</name>
-            <uri>http://fuqua.io/blog/</uri>
-            <email>info@example.com</email>
-        </author>
-        <content type="html">&lt;p&gt;Every two years or so, I decide that I should probably have a tech blog, even if it&amp;#8217;s just a place for me to post notes on languages and systems I&amp;#8217;m experimenting with.
+            <item>
+        <title>Acrylamid with virtualenv and pip</title>
+        <link>http://fuqua.io/blog/2013/09/acrylamid-with-virtualenv-and-pip/</link>
+        <description>&lt;p&gt;Every two years or so, I decide that I should probably have a tech blog, even if it&amp;#8217;s just a place for me to post notes on languages and systems I&amp;#8217;m experimenting with.
 That time has rolled around again, so I spent some time playing with &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/&#34;&gt;Acrylamid&lt;/a&gt;, a &lt;em&gt;static blog generator&lt;/em&gt; written in Python. From Acrylamid&amp;#8217;s&amp;nbsp;website:&lt;/p&gt;
 &lt;blockquote&gt;
 With Acrylamid you can write your weblog entries with your editor of choice in Markdown, reStructuredText or textile. With several content filters you can pimp your &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; (typography, math, hyphenation). Acrylamid provides a very sophisticated &lt;span class=&#34;caps&#34;&gt;CLI&lt;/span&gt; and integrates perfectly with any DVCes. It generates completely static &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; you can host everywhere.&lt;/blockquote&gt;
@@ -611,17 +747,17 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 &lt;h3&gt;Up and&amp;nbsp;Running&lt;/h3&gt;
 &lt;p&gt;The first thing we need to do is install &lt;a class=&#34;reference external&#34; href=&#34;https://pypi.python.org/pypi/virtualenv&#34;&gt;virtualenv&lt;/a&gt;. You can find the virtualenv command in your &lt;span class=&#34;caps&#34;&gt;OS&lt;/span&gt;&amp;#8217;s repositories. Make sure you get the Python2 version, as Acrylamid is a Python2&amp;nbsp;application.&lt;/p&gt;
 &lt;p&gt;After we have virtualenv installed, let&amp;#8217;s use it to create our empty Python virtual&amp;nbsp;environment:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; virtualenv2 blog-project
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; virtualenv2 blog-project
 &lt;span class=&#34;go&#34;&gt;New python executable in blog-project/bin/python2&lt;/span&gt;
 &lt;span class=&#34;go&#34;&gt;Also creating executable in blog-project/bin/python&lt;/span&gt;
 &lt;span class=&#34;go&#34;&gt;Installing setuptools............done.&lt;/span&gt;
 &lt;span class=&#34;go&#34;&gt;Installing pip...............done.&lt;/span&gt;
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd &lt;/span&gt;blog-project
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;source &lt;/span&gt;bin/activate
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; blog-project
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; bin/activate
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;If you&amp;#8217;re not familiar with Python virtual environments, all we&amp;#8217;re doing here is creating a directory (called &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt;) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are installed into the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt; directory, and not system-wide. When we source the &lt;tt class=&#34;docutils literal&#34;&gt;bin/activate&lt;/tt&gt; script it modifies the &lt;tt class=&#34;docutils literal&#34;&gt;$&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;&lt;/tt&gt; variable to point to the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt; Python libraries. This &lt;tt class=&#34;docutils literal&#34;&gt;$&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;&lt;/tt&gt; modification only lasts for the duration of your terminal&amp;nbsp;session.&lt;/p&gt;
 &lt;p&gt;Now, let&amp;#8217;s install Acrylamid and create our blog. For more information on what&amp;#8217;s going on here, check out Acrylamid&amp;#8217;s &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/usage.html&#34;&gt;getting started guide&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install acrylamid
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install acrylamid
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; acrylamid init myblog
 &lt;span class=&#34;go&#34;&gt;create  myblog/content/sample-entry.txt&lt;/span&gt;
 &lt;span class=&#34;go&#34;&gt;create  myblog/theme/base.html&lt;/span&gt;
@@ -644,22 +780,22 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 &lt;div class=&#34;section&#34; id=&#34;restructuredtext&#34;&gt;
 &lt;h4&gt;reStructuredText&lt;/h4&gt;
 &lt;p&gt;Acrylamid uses Markdown by default for the authoring of blog posts. However, the &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Markdown&#34;&gt;reStructuredText&lt;/a&gt; filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to reStructuredText by installing the docutils&amp;nbsp;package:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install docutils
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install docutils
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now, find the filters list in &lt;tt class=&#34;docutils literal&#34;&gt;conf.py&lt;/tt&gt; and replace Markdown with&amp;nbsp;reStructuredText:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;n&#34;&gt;&lt;span class=&#34;caps&#34;&gt;FILTERS&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#39;reStructuredText&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;hyphenate&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;&lt;span class=&#34;caps&#34;&gt;FILTERS&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;reStructuredText&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;hyphenate&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;section&#34; id=&#34;syntax-highlighting&#34;&gt;
 &lt;h4&gt;Syntax&amp;nbsp;Highlighting&lt;/h4&gt;
 &lt;p&gt;We can add code syntax highlighting to our blog by installing &lt;a class=&#34;reference external&#34; href=&#34;http://pygments.org/&#34;&gt;Pygments&lt;/a&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install pygments
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install pygments
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; classes to individual tokens. To designate a code-block in reStructuredText, use the&amp;nbsp;syntax:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;.. code-block:: python
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;..&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;code-block&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;::&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;python&lt;/span&gt;
 
-    def foo():
-        return &amp;quot;foo&amp;quot;
+    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;foo&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We&amp;#8217;ll want to grab a Pygments theme, which is just a &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; file. Phil Tysoe has a good &lt;a class=&#34;reference external&#34; href=&#34;http://igniteflow.com/pygments/themes/&#34;&gt;list of themes&lt;/a&gt; on his blog, though we need to rename the wrapper class from &lt;tt class=&#34;docutils literal&#34;&gt;codehilite&lt;/tt&gt; to the class that Acrylamid uses, &lt;tt class=&#34;docutils literal&#34;&gt;highlight&lt;/tt&gt;. Include the &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; file in your Acrylamid&amp;nbsp;theme.&lt;/p&gt;
 &lt;/div&gt;
@@ -667,9 +803,9 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 &lt;h4&gt;Advanced&amp;nbsp;Typography&lt;/h4&gt;
 &lt;p&gt;Since we&amp;#8217;re authoring our blog in a text editor, it can be challenging to include proper punctuation like em/en dashes and ellipses. To fix this we can enable the &amp;#8216;typography&amp;#8217; filter, which will add these typographical flares to our text. For example, it replaces three periods with an ellipsis, and replaces two hyphens with an en&amp;nbsp;dash.&lt;/p&gt;
 &lt;p&gt;All we have to do is install the smartypants module, and add the filter to our &lt;tt class=&#34;docutils literal&#34;&gt;conf.py&lt;/tt&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install smartypants
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install smartypants
 &lt;/pre&gt;&lt;/div&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;n&#34;&gt;&lt;span class=&#34;caps&#34;&gt;FILTERS&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#39;reStructuredText&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;hyphenate&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;typography&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;&lt;span class=&#34;caps&#34;&gt;FILTERS&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;reStructuredText&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;hyphenate&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;typography&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -677,6 +813,9 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 &lt;h3&gt;What&amp;#8217;s&amp;nbsp;next?&lt;/h3&gt;
 &lt;p&gt;I&amp;#8217;ve covered a few of the more interesting Acrylamid customization options and Python modules, but there are many, many more. Take a look at the &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/filters.html&#34;&gt;Acrylamid filter documentation&lt;/a&gt; for an exhaustive&amp;nbsp;list!&lt;/p&gt;
 &lt;/div&gt;
-</content>
-    </entry>
-    </feed>
+</description>
+        <pubDate>Tue, 10 Sep 2013 04:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2013-09-10:/2013/09/acrylamid-with-virtualenv-and-pip</guid>
+    </item>
+        </channel>
+</rss>
