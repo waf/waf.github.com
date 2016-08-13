@@ -19,6 +19,10 @@
 {% block content %}
     {%- if env.route == "/" %}
         {% include 'articles.html' %}
+    {%- elif env.route.startswith("/tag/") %}
+        {% for entry in env.entrylist %}
+            {% include 'entry.html' %}
+        {% endfor %}
     {%- else %}
         {% set entry = env.entrylist|first %}
         {% include 'entry.html' %}
