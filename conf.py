@@ -5,6 +5,7 @@
 SITENAME = 'Blog - Will Fuqua'
 WWW_ROOT = 'http://fuqua.io/blog/'
 OUTPUT_DIR = '.'
+AUTHOR = 'Will Fuqua'
 
 FILTERS = ['reStructuredText', 'typography', 'h1']
 VIEWS = {

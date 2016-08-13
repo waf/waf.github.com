@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
     <author>
-        <name>Anonymous</name>
+        <name>Will Fuqua</name>
         <uri>http://fuqua.io/blog/</uri>
         <email>info@example.com</email>
     </author>
@@ -23,7 +23,7 @@
         <category term="opencover" />
         
         <author>
-            <name>Anonymous</name>
+            <name>Will Fuqua</name>
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
@@ -109,7 +109,7 @@
         <category term="sonarqube" />
         
         <author>
-            <name>Anonymous</name>
+            <name>Will Fuqua</name>
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
@@ -127,7 +127,7 @@
         <category term="presentation" />
         
         <author>
-            <name>Anonymous</name>
+            <name>Will Fuqua</name>
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
@@ -144,7 +144,7 @@
         <category term="tools" />
         
         <author>
-            <name>Anonymous</name>
+            <name>Will Fuqua</name>
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
@@ -167,7 +167,7 @@
         <category term="dates" />
         
         <author>
-            <name>Anonymous</name>
+            <name>Will Fuqua</name>
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
@@ -193,7 +193,7 @@
         <category term="web" />
         
         <author>
-            <name>Anonymous</name>
+            <name>Will Fuqua</name>
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
@@ -389,7 +389,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
         <category term="functional" />
         
         <author>
-            <name>Anonymous</name>
+            <name>Will Fuqua</name>
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
@@ -571,7 +571,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
         <category term="web" />
         
         <author>
-            <name>Anonymous</name>
+            <name>Will Fuqua</name>
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
@@ -755,7 +755,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
         <category term="lobos" />
         
         <author>
-            <name>Anonymous</name>
+            <name>Will Fuqua</name>
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
@@ -963,7 +963,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
         <category term="virtualenv" />
         
         <author>
-            <name>Anonymous</name>
+            <name>Will Fuqua</name>
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
