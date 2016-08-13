@@ -3,7 +3,7 @@ Haskell's Elegant Fibonacci Implementation in C#
 
 :date: 2014-03-11
 :permalink: /2014/03/haskells-elegant-fibonacci-in-csharp/
-:tags: [haskell, c#, fibonacci, functional]
+:tags: [haskell, csharp, fibonacci, functional]
 
 Haskell_ is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the `Fibonacci series`_ algorithm:
 

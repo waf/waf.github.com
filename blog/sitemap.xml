@@ -113,6 +113,12 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>http://fuqua.io/blog//2013/12/rest-apis-and-relational-databases-in-clojure/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
     <loc>http://fuqua.io/blog//2016/08/finding-dead-csharp-code-in-aspnet/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>never</changefreq>
@@ -138,11 +144,6 @@
     <lastmod>2016-08-13</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>http://fuqua.io/blog//tag/c/</loc>
-    <lastmod>2016-08-13</lastmod>
-    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog//tag/haskell/</loc>
@@ -181,10 +182,9 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog//2013/12/rest-apis-and-relational-databases-in-clojure/</loc>
+    <loc>http://fuqua.io/blog//tag/csharp/</loc>
     <lastmod>2016-08-13</lastmod>
-    <changefreq>never</changefreq>
-    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>http://fuqua.io/blog//tag/korma/</loc>

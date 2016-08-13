@@ -18,7 +18,7 @@
         <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2016/08/finding-dead-csharp-code-in-aspnet/" />
         <id>tag:fuqua.io/blog,2016-08-13:/2016/08/finding-dead-csharp-code-in-aspnet</id>
         <updated>2016-08-13T04:00:00Z</updated>
-        <category term="c#" />
+        <category term="csharp" />
         <category term="analysis" />
         <category term="opencover" />
         
@@ -27,26 +27,31 @@
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
-        <content type="html">&lt;p&gt;Large, long-lasting codebases tend to accumulate unused code, or dead code, over time. This happens as features are added, changed and removed over&amp;nbsp;time.&lt;/p&gt;
-&lt;p&gt;Some dead code, like unreferenced methods, are easy to detect with Visual Studio&amp;#8217;s out-of-the-box static analysis. However, other dead code is only referenced by unit tests, or it&amp;#8217;s referenced under a condition that&amp;#8217;s never valid, like the&amp;nbsp;following:&lt;/p&gt;
+        <content type="html">&lt;p&gt;Large, long-lasting codebases tend to accumulate unused code, or dead code, over time. This happens as features are added, changed and&amp;nbsp;removed.&lt;/p&gt;
+&lt;p&gt;Some types of dead code, like unreferenced methods, are easy to detect with Visual Studio&amp;#8217;s out-of-the-box static analysis. However, other types of dead code are trickier; maybe there&amp;#8217;s a method that&amp;#8217;s only referenced by unit tests, or it&amp;#8217;s referenced under a condition that&amp;#8217;s never&amp;nbsp;valid:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Now&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1970&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;c1&#34;&gt;// some dead code&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;How can we detect this kind of dead code? Rather than using static analysis to detect it, we can use dynamic analysis &amp;#8211; the same technique used to measure unit test code&amp;nbsp;coverage.&lt;/p&gt;
-&lt;p&gt;We can use &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/OpenCover/opencover/&#34;&gt;OpenCover&lt;/a&gt;, an open source code coverage tool, to run the dynamic analysis. We will run our application under OpenCover, and then use &lt;a class=&#34;reference external&#34; href=&#34;http://danielpalme.github.io/ReportGenerator/&#34;&gt;ReportGenerator&lt;/a&gt; to visualize the results. Both these tools can be downloaded from their homepage, or through&amp;nbsp;Nuget.&lt;/p&gt;
-&lt;p&gt;First, let&amp;#8217;s create some dead code to detect. Here&amp;#8217;s a sample &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; application, with some hard-to-detect dead code that guards against time travel. The relevant portion is in&amp;nbsp;HomeController.cs:&lt;/p&gt;
+&lt;p&gt;How can we detect this type of dead code? Rather than using static analysis to detect it, we can use dynamic analysis&amp;#8212;the same technique used to measure unit test code&amp;nbsp;coverage.&lt;/p&gt;
+&lt;p&gt;One option is to use &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/OpenCover/opencover/&#34;&gt;OpenCover&lt;/a&gt;, an open source code coverage tool, to run the dynamic analysis. When we run our application under OpenCover, it will &lt;a class=&#34;reference external&#34; href=&#34;https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)&#34;&gt;instrument our code&lt;/a&gt; and record what lines were executed. It will then output a coverage report we can process with &lt;a class=&#34;reference external&#34; href=&#34;http://danielpalme.github.io/ReportGenerator/&#34;&gt;ReportGenerator&lt;/a&gt; to visualize the results. Both OpenCover and ReportGenerator can be downloaded from their respective homepages, or through&amp;nbsp;Nuget.&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;a-sample-application&#34;&gt;
+&lt;h3&gt;A Sample&amp;nbsp;Application&lt;/h3&gt;
+&lt;p&gt;Let&amp;#8217;s see this in action! Here&amp;#8217;s a sample &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; application, with some hard-to-detect dead code. The relevant portion is in&amp;nbsp;HomeController.cs:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;HomeController&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Controller&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
     &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ActionResult&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Index&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
         &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;model&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventViewModel&lt;/span&gt;
         &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-            &lt;span class=&#34;n&#34;&gt;DateDescription&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HasValue&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HumanFriendlyTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Empty&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;DateDescription&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HasValue&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;?&lt;/span&gt;
+                              &lt;span class=&#34;n&#34;&gt;HumanFriendlyTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+                              &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Empty&lt;/span&gt;
         &lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
         &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;View&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;model&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
     &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;HumanFriendlyTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
         &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;today&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Now&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Date&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
@@ -70,7 +75,7 @@
 &lt;p&gt;Our goal is to detect the &lt;tt class=&#34;docutils literal&#34;&gt;today &amp;gt; tomorrow&lt;/tt&gt; code block as dead code. Let&amp;#8217;s target OpenCover at the &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; application. We can use &lt;span class=&#34;caps&#34;&gt;IIS&lt;/span&gt; or&amp;nbsp;IISExpress:&lt;/p&gt;
 &lt;p&gt;Using&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;IIS&lt;/span&gt;:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; net stop w3svc /y
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; OpenCover.Console.exe -target:&lt;span class=&#34;s2&#34;&gt;&amp;quot;C:\Windows\System32\inetsrv\w3wp.exe&amp;quot;&lt;/span&gt; -targetargs:-debug -targetdir:&lt;span class=&#34;s2&#34;&gt;&amp;quot;C:\Path\To\WebApp\web\bin&amp;quot;&lt;/span&gt; -register:user
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; OpenCover.Console.exe -target:&lt;span class=&#34;s2&#34;&gt;&amp;quot;C:\Windows\System32\inetsrv\w3wp.exe&amp;quot;&lt;/span&gt; -targetdir:&lt;span class=&#34;s2&#34;&gt;&amp;quot;C:\Path\To\WebApp\web\bin&amp;quot;&lt;/span&gt; -targetargs:-debug -register:user
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Using&amp;nbsp;IISExpress:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; OpenCover.Console.exe -target:&lt;span class=&#34;s2&#34;&gt;&amp;quot;C:\Program Files (x86)\&lt;span class=&#34;caps&#34;&gt;IIS&lt;/span&gt; Express\iisexpress.exe&amp;quot;&lt;/span&gt; -targetdir:&lt;span class=&#34;s2&#34;&gt;&amp;quot;C:\Path\To\WebApp\Web\bin&amp;quot;&lt;/span&gt; -targetargs:&lt;span class=&#34;s2&#34;&gt;&amp;quot;/site:WebApp /config:\&amp;quot;C:\Path\To\WebApp\.vs\config\applicationhost.config\&amp;quot;&amp;quot;&lt;/span&gt; -register:user
@@ -90,6 +95,7 @@
 &lt;p&gt;And we&amp;#8217;re done! ReportGenerator will create a nice report for us, showing the lines of code that are unused (including Razor&amp;nbsp;files):&lt;/p&gt;
 &lt;img alt=&#34;/img/opencover-dead-code.png&#34; class=&#34;align-center&#34; src=&#34;http://fuqua.io/blog/img/opencover-dead-code.png&#34; style=&#34;width: 80%;&#34;/&gt;
 &lt;p&gt;This technique depends on us being able to fully exercise all parts of the web application. That could be the hardest part, depending on how large the application is. Tooling like OpenCover and ReportGenerator make the rest of it&amp;nbsp;easy!&lt;/p&gt;
+&lt;/div&gt;
 </content>
     </entry>
     
@@ -314,7 +320,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
         <id>tag:fuqua.io/blog,2014-03-11:/2014/03/haskells-elegant-fibonacci-in-csharp</id>
         <updated>2014-03-11T04:00:00Z</updated>
         <category term="haskell" />
-        <category term="c#" />
+        <category term="csharp" />
         <category term="fibonacci" />
         <category term="functional" />
         

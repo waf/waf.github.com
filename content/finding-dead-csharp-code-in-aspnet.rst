@@ -1,13 +1,13 @@
 Finding Dead C# Code in an ASP.NET application
-################################################
+##############################################
 
 :date: 2016-08-13
 :permalink: /2016/08/finding-dead-csharp-code-in-aspnet/
-:tags: [c#, analysis, opencover]
+:tags: [csharp, analysis, opencover]
 
-Large, long-lasting codebases tend to accumulate unused code, or dead code, over time. This happens as features are added, changed and removed over time.
+Large, long-lasting codebases tend to accumulate unused code, or dead code, over time. This happens as features are added, changed and removed.
 
-Some dead code, like unreferenced methods, are easy to detect with Visual Studio's out-of-the-box static analysis. However, other dead code is only referenced by unit tests, or it's referenced under a condition that's never valid, like the following:
+Some types of dead code, like unreferenced methods, are easy to detect with Visual Studio's out-of-the-box static analysis. However, other types of dead code are trickier; maybe there's a method that's only referenced by unit tests, or it's referenced under a condition that's never valid:
 
 .. code-block:: csharp
 
@@ -16,11 +16,14 @@ Some dead code, like unreferenced methods, are easy to detect with Visual Studio
         // some dead code
     }
 
-How can we detect this kind of dead code? Rather than using static analysis to detect it, we can use dynamic analysis -- the same technique used to measure unit test code coverage. 
+How can we detect this type of dead code? Rather than using static analysis to detect it, we can use dynamic analysis---the same technique used to measure unit test code coverage. 
 
-We can use OpenCover_, an open source code coverage tool, to run the dynamic analysis. We will run our application under OpenCover, and then use ReportGenerator_ to visualize the results. Both these tools can be downloaded from their homepage, or through Nuget.
+One option is to use OpenCover_, an open source code coverage tool, to run the dynamic analysis. When we run our application under OpenCover, it will `instrument our code`_ and record what lines were executed. It will then output a coverage report we can process with ReportGenerator_ to visualize the results. Both OpenCover and ReportGenerator can be downloaded from their respective homepages, or through Nuget.
 
-First, let's create some dead code to detect. Here's a sample ASP.NET application, with some hard-to-detect dead code that guards against time travel. The relevant portion is in HomeController.cs:
+A Sample Application
+####################
+
+Let's see this in action! Here's a sample ASP.NET application, with some hard-to-detect dead code. The relevant portion is in HomeController.cs:
 
 .. code-block:: csharp
 
@@ -30,10 +33,13 @@ First, let's create some dead code to detect. Here's a sample ASP.NET applicatio
         {
             var model = new EventViewModel
             {
-                DateDescription = eventDate.HasValue ? HumanFriendlyTime(eventDate.Value) : string.Empty
+                DateDescription = eventDate.HasValue ?
+                                  HumanFriendlyTime(eventDate.Value) :
+                                  string.Empty
             };
             return View(model);
         }
+
         private string HumanFriendlyTime(DateTime eventDate)
         {
             var today = DateTime.Now.Date;
@@ -61,7 +67,7 @@ Using IIS:
 .. code-block:: console
 
     > net stop w3svc /y
-    > OpenCover.Console.exe -target:"C:\Windows\System32\inetsrv\w3wp.exe" -targetargs:-debug -targetdir:"C:\Path\To\WebApp\web\bin" -register:user
+    > OpenCover.Console.exe -target:"C:\Windows\System32\inetsrv\w3wp.exe" -targetdir:"C:\Path\To\WebApp\web\bin" -targetargs:-debug -register:user
 
 Using IISExpress:
 
@@ -99,3 +105,4 @@ This technique depends on us being able to fully exercise all parts of the web a
 .. _OpenCover: https://github.com/OpenCover/opencover/
 .. _ReportGenerator: http://danielpalme.github.io/ReportGenerator/ 
 .. _many configuration options: https://github.com/OpenCover/opencover/wiki/Usage/
+.. _instrument our code: https://en.wikipedia.org/wiki/Instrumentation_(computer_programming)
