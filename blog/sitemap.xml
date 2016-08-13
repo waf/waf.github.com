@@ -79,11 +79,6 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog//tag/tool/</loc>
-    <lastmod>2016-08-13</lastmod>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
     <loc>http://fuqua.io/blog//2016/06/increasing-code-quality-with-sonarqube/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>never</changefreq>
@@ -127,6 +122,11 @@
   </url>
   <url>
     <loc>http://fuqua.io/blog//tag/dates/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//tag/tools/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>

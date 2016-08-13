@@ -141,7 +141,7 @@
         <id>tag:fuqua.io/blog,2015-04-02:/2015/04/a-software-developer-learning-thai</id>
         <updated>2015-04-02T04:00:00Z</updated>
         <category term="thai" />
-        <category term="tool" />
+        <category term="tools" />
         
         <author>
             <name>Anonymous</name>
@@ -150,9 +150,9 @@
         </author>
         <content type="html">&lt;p&gt;I recently uprooted from the &lt;span class=&#34;caps&#34;&gt;USA&lt;/span&gt; and moved to Thailand! It&amp;#8217;s been an incredible experience so far. One of the more fascinating aspects of it has been learning the Thai language. I&amp;#8217;ve created a couple of basic tools to help myself learn. Developing the tools helps me learn new technologies, and the resulting product helps me learn the&amp;nbsp;language!&lt;/p&gt;
 &lt;ul class=&#34;simple&#34;&gt;
-&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/thai-characters&#34;&gt;Thai Characters&lt;/a&gt; - Simple flashcards to learn the characters and their low/middle/high class&amp;nbsp;association.&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/flash-cards&#34;&gt;Thai Vocabulary Flashcards&lt;/a&gt; - Vocabulary flashcards. Interesting from a React/Material Design technical&amp;nbsp;aspect.&lt;/li&gt;
-&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/ThaiRecog&#34;&gt;Thai &lt;span class=&#34;caps&#34;&gt;OCR&lt;/span&gt; Android App&lt;/a&gt; - Quick &lt;span class=&#34;caps&#34;&gt;POC&lt;/span&gt; android app for doing Thai language &lt;span class=&#34;caps&#34;&gt;OCR&lt;/span&gt; using the camera. It doesn&amp;#8217;t work very well right now, but I suspect a &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/tesseract-ocr/tesseract&#34;&gt;Tesseract&lt;/a&gt; upgrade might fix&amp;nbsp;that.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/thai-characters&#34;&gt;Thai Characters&lt;/a&gt; &amp;#8212; Simple flashcards to learn the characters and their low/middle/high class&amp;nbsp;association.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/flash-cards&#34;&gt;Thai Vocabulary Flashcards&lt;/a&gt; &amp;#8212; Vocabulary flashcards. Interesting from a React/Material Design technical&amp;nbsp;aspect.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/ThaiRecog&#34;&gt;Thai &lt;span class=&#34;caps&#34;&gt;OCR&lt;/span&gt; Android App&lt;/a&gt; &amp;#8212; Quick &lt;span class=&#34;caps&#34;&gt;POC&lt;/span&gt; android app for doing Thai language &lt;span class=&#34;caps&#34;&gt;OCR&lt;/span&gt; using the camera. It doesn&amp;#8217;t work very well right now, but I suspect a &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/tesseract-ocr/tesseract&#34;&gt;Tesseract&lt;/a&gt; upgrade might fix&amp;nbsp;that.&lt;/li&gt;
 &lt;/ul&gt;
 </content>
     </entry>
@@ -163,7 +163,7 @@
         <id>tag:fuqua.io/blog,2015-02-26:/2015/02/quick-tip-format-finder-for-net-date-strings</id>
         <updated>2015-02-26T04:00:00Z</updated>
         <category term="csharp" />
-        <category term="tool" />
+        <category term="tools" />
         <category term="dates" />
         
         <author>
@@ -173,9 +173,9 @@
         </author>
         <content type="html">&lt;p&gt;If you&amp;#8217;ve written C# for any length of time, chances are you&amp;#8217;ve become very familiar with the &lt;span class=&#34;caps&#34;&gt;MSDN&lt;/span&gt; documentation pages about &lt;a class=&#34;reference external&#34; href=&#34;https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx&#34;&gt;Standard Date and Time Format Strings&lt;/a&gt; and &lt;a class=&#34;reference external&#34; href=&#34;https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx&#34;&gt;Custom Date and Time Format Strings&lt;/a&gt;. Any time you need to format a &lt;tt class=&#34;docutils literal&#34;&gt;DateTime&lt;/tt&gt;, those pages are&amp;nbsp;invaluable.&lt;/p&gt;
 &lt;p&gt;I don&amp;#8217;t find myself reading those pages often enough to warrant memorizing the strings, but I do read them often enough that it&amp;#8217;s worth automating the lookup. So I wrote a simple webapp to do&amp;nbsp;it.&lt;/p&gt;
-&lt;img alt=&#34;http://imgs.xkcd.com/comics/automation.png&#34; class=&#34;align-center&#34; src=&#34;http://imgs.xkcd.com/comics/automation.png&#34; style=&#34;width: 80%;&#34;/&gt;
+&lt;img alt=&#34;http://imgs.xkcd.com/comics/automation.png&#34; class=&#34;align-center&#34; src=&#34;http://imgs.xkcd.com/comics/automation.png&#34; style=&#34;width: 50%;&#34;/&gt;
 &lt;p&gt;I plan on skewing those curves by sharing this tool. So, here it is: &lt;a class=&#34;reference external&#34; href=&#34;https://fuqua.io/format-finder/&#34;&gt;Format Finder&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Format Finder asks gives you a very specific point in time: Monday, March 1st, 2009 at 8:&lt;span class=&#34;caps&#34;&gt;04AM&lt;/span&gt;. You then provide the desired output of that date, and Format Finder will provide the formatting strings for you. For example, if you type in &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;2009-03-01&lt;/span&gt;&lt;/tt&gt;, Format Finder will return a custom format string of &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;yyyy-&lt;span class=&#34;caps&#34;&gt;MM&lt;/span&gt;-dd&lt;/span&gt;&lt;/tt&gt; along with a explanation of each part. Alternatively, if you type in &lt;tt class=&#34;docutils literal&#34;&gt;3/01/2009&lt;/tt&gt;, Format Finder will return the standard format string of &lt;tt class=&#34;docutils literal&#34;&gt;d&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;Format Finder presents you with a very specific point in time: Monday, March 1st, 2009 at 8:&lt;span class=&#34;caps&#34;&gt;04AM&lt;/span&gt;. You then provide the desired output of that date, and Format Finder will provide the formatting strings for you. For example, if you type in &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;2009-03-01&lt;/span&gt;&lt;/tt&gt;, Format Finder will return a custom format string of &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;yyyy-&lt;span class=&#34;caps&#34;&gt;MM&lt;/span&gt;-dd&lt;/span&gt;&lt;/tt&gt; along with a explanation of each part. Alternatively, if you type in &lt;tt class=&#34;docutils literal&#34;&gt;3/01/2009&lt;/tt&gt;, Format Finder will return the standard format string of &lt;tt class=&#34;docutils literal&#34;&gt;d&lt;/tt&gt;.&lt;/p&gt;
 &lt;p&gt;I hope other people find this as useful as I do. Let&amp;#8217;s skew that &lt;span class=&#34;caps&#34;&gt;XKCD&lt;/span&gt;&amp;nbsp;curve!&lt;/p&gt;
 </content>
     </entry>
