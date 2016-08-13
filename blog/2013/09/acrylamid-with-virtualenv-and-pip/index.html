@@ -50,17 +50,17 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <h2>Up and&nbsp;Running</h2>
 <p>The first thing we need to do is install <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">virtualenv</a>. You can find the virtualenv command in your <span class="caps">OS</span>&#8217;s repositories. Make sure you get the Python2 version, as Acrylamid is a Python2&nbsp;application.</p>
 <p>After we have virtualenv installed, let&#8217;s use it to create our empty Python virtual&nbsp;environment:</p>
-<div class="highlight"><pre><span class="gp">&gt;</span> virtualenv2 blog-project
+<div class="highlight"><pre><span></span><span class="gp">&gt;</span> virtualenv2 blog-project
 <span class="go">New python executable in blog-project/bin/python2</span>
 <span class="go">Also creating executable in blog-project/bin/python</span>
 <span class="go">Installing setuptools............done.</span>
 <span class="go">Installing pip...............done.</span>
-<span class="gp">&gt;</span> <span class="nb">cd </span>blog-project
-<span class="gp">&gt;</span> <span class="nb">source </span>bin/activate
+<span class="gp">&gt;</span> <span class="nb">cd</span> blog-project
+<span class="gp">&gt;</span> <span class="nb">source</span> bin/activate
 </pre></div>
 <p>If you&#8217;re not familiar with Python virtual environments, all we&#8217;re doing here is creating a directory (called <tt class="docutils literal"><span class="pre">blog-project</span></tt>) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are installed into the <tt class="docutils literal"><span class="pre">blog-project</span></tt> directory, and not system-wide. When we source the <tt class="docutils literal">bin/activate</tt> script it modifies the <tt class="docutils literal">$<span class="caps">PATH</span></tt> variable to point to the <tt class="docutils literal"><span class="pre">blog-project</span></tt> Python libraries. This <tt class="docutils literal">$<span class="caps">PATH</span></tt> modification only lasts for the duration of your terminal&nbsp;session.</p>
 <p>Now, let&#8217;s install Acrylamid and create our blog. For more information on what&#8217;s going on here, check out Acrylamid&#8217;s <a class="reference external" href="http://posativ.org/acrylamid/usage.html">getting started guide</a>.</p>
-<div class="highlight"><pre><span class="gp">&gt;</span> pip install acrylamid
+<div class="highlight"><pre><span></span><span class="gp">&gt;</span> pip install acrylamid
 <span class="gp">&gt;</span> acrylamid init myblog
 <span class="go">create  myblog/content/sample-entry.txt</span>
 <span class="go">create  myblog/theme/base.html</span>
@@ -83,22 +83,22 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <div class="section" id="restructuredtext">
 <h3>reStructuredText</h3>
 <p>Acrylamid uses Markdown by default for the authoring of blog posts. However, the <a class="reference external" href="http://en.wikipedia.org/wiki/Markdown">reStructuredText</a> filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to reStructuredText by installing the docutils&nbsp;package:</p>
-<div class="highlight"><pre><span class="gp">&gt;</span> pip install docutils
+<div class="highlight"><pre><span></span><span class="gp">&gt;</span> pip install docutils
 </pre></div>
 <p>Now, find the filters list in <tt class="docutils literal">conf.py</tt> and replace Markdown with&nbsp;reStructuredText:</p>
-<div class="highlight"><pre><span class="n"><span class="caps">FILTERS</span></span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s">&#39;h1&#39;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n"><span class="caps">FILTERS</span></span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s1">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s1">&#39;h1&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="section" id="syntax-highlighting">
 <h3>Syntax&nbsp;Highlighting</h3>
 <p>We can add code syntax highlighting to our blog by installing <a class="reference external" href="http://pygments.org/">Pygments</a>:</p>
-<div class="highlight"><pre><span class="gp">&gt;</span> pip install pygments
+<div class="highlight"><pre><span></span><span class="gp">&gt;</span> pip install pygments
 </pre></div>
 <p>Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add <span class="caps">CSS</span> classes to individual tokens. To designate a code-block in reStructuredText, use the&nbsp;syntax:</p>
-<div class="highlight"><pre>.. code-block:: python
+<div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">code-block</span><span class="p">::</span> <span class="k">python</span>
 
-    def foo():
-        return &quot;foo&quot;
+    <span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;foo&quot;</span>
 </pre></div>
 <p>We&#8217;ll want to grab a Pygments theme, which is just a <span class="caps">CSS</span> file. Phil Tysoe has a good <a class="reference external" href="http://igniteflow.com/pygments/themes/">list of themes</a> on his blog, though we need to rename the wrapper class from <tt class="docutils literal">codehilite</tt> to the class that Acrylamid uses, <tt class="docutils literal">highlight</tt>. Include the <span class="caps">CSS</span> file in your Acrylamid&nbsp;theme.</p>
 </div>
@@ -106,9 +106,9 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <h3>Advanced&nbsp;Typography</h3>
 <p>Since we&#8217;re authoring our blog in a text editor, it can be challenging to include proper punctuation like em/en dashes and ellipses. To fix this we can enable the &#8216;typography&#8217; filter, which will add these typographical flares to our text. For example, it replaces three periods with an ellipsis, and replaces two hyphens with an en&nbsp;dash.</p>
 <p>All we have to do is install the smartypants module, and add the filter to our <tt class="docutils literal">conf.py</tt>.</p>
-<div class="highlight"><pre><span class="gp">&gt;</span> pip install smartypants
+<div class="highlight"><pre><span></span><span class="gp">&gt;</span> pip install smartypants
 </pre></div>
-<div class="highlight"><pre><span class="n"><span class="caps">FILTERS</span></span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s">&#39;typography&#39;</span><span class="p">,</span> <span class="s">&#39;h1&#39;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n"><span class="caps">FILTERS</span></span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s1">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s1">&#39;typography&#39;</span><span class="p">,</span> <span class="s1">&#39;h1&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
