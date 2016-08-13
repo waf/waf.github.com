@@ -1,142 +1,168 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://fuqua.io/blog/tag/fibonacci/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/acrylamid/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/acrylamid/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/reagent/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/articles/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//articles/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/promise/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/lobos/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/virtualenv/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/virtualenv/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/web/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/web/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/html5/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/html5/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/2014/03/haskells-elegant-fibonacci-in-csharp/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//2014/03/haskells-elegant-fibonacci-in-csharp/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/database/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/fibonacci/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/sql/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/database/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/ring/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/sql/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/rss/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/ring/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/compojure/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//atom.xml</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/lobos/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/compojure/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/python/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/websockets/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/functional/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/sente/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/promise/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag//</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/python/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/2014/02/native-javascript-promises-and-browser-apis/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//rss.xml</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//tag/functional/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//tag/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//2014/02/native-javascript-promises-and-browser-apis/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/c/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/c/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/haskell/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/haskell/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/clojure/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/datomic/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/javascript/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/clojure/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/2013/12/rest-apis-and-relational-databases-in-clojure/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/javascript/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//2014/05/pushing-database-changes-to-the-web-with-datomic/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/atom/</loc>
-    <lastmod>2014-05-17</lastmod>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>http://fuqua.io/blog/2013/09/acrylamid-with-virtualenv-and-pip/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//2013/12/rest-apis-and-relational-databases-in-clojure/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://fuqua.io/blog/tag/korma/</loc>
-    <lastmod>2014-05-17</lastmod>
+    <loc>http://fuqua.io/blog//tag/korma/</loc>
+    <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//2013/09/acrylamid-with-virtualenv-and-pip/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
   </url>
 </urlset>

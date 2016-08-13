@@ -38,18 +38,20 @@
     </ul>
 </nav>
 <article>
-    <h1>Native JavaScript Promises and Browser APIs</h1>
-    <p>One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of <a class="reference external" href="http://en.wikipedia.org/wiki/Promise_(programming)">Promises</a>. Promises simplify asynchronous code. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is&nbsp;everywhere.</p>
-<div class="section" id="the-problem-with-asynchronicity">
-<h2>The Problem with&nbsp;Asynchronicity</h2>
-<p>Asynchronous patterns are great for keeping UIs responsive and non-blocking, but they have a cost: asynchronous JavaScript code tends to be highly nested, which hurts readability. Additionally, because you can&#8217;t catch errors that are thrown inside callbacks from outside those callbacks, error handling needs to be spread throughout every level of&nbsp;nesting.</p>
-<p>When we use Promises, our code structure is flattened, and our error handling code can be <span>&#8230;<a href="/blog/2014/02/native-javascript-promises-and-browser-apis/" class="continue">continue</a>.</span></p></div>
+    <h1>Pushing Database Changes to the Web with Datomic</h1>
+    <p>Lately I&#8217;ve been playing around with <a class="reference external" href="http://www.datomic.com">Datomic</a>, a database invented by Rich Hickey, the creator of Clojure.
+Datomic feels like a natural extension of Clojure&#8217;s immutable, persistent datastructures. From Datomic&#8217;s <a class="reference external" href="http://docs.datomic.com/architecture.html">architecture documentation</a>:</p>
+<blockquote>
+A Datomic database stores a collection of facts. The facts in a database are immutable; once stored, they do not change. However, old facts can be superseded by new facts over time. The state of the database is a value defined by the set of facts in effect at a given moment in time.</blockquote>
+<p>Daniel Higginbotham wrote a great tutorial on the basics of Datomic called <a class="reference external" href="http://www.flyingmachinestudios.com/programming/datomic-for-five-year-olds/">Datomic for Five Year Olds</a>, <span>&#8230;<a href="/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
-                <a href="/blog/tag/html5/" rel="tag">html5</a>,
-                <a href="/blog/tag/javascript/" rel="tag">javascript</a>,
-                <a href="/blog/tag/promise/" rel="tag">promise</a>
+                <a href="/blog/tag/clojure/" rel="tag">clojure</a>,
+                <a href="/blog/tag/datomic/" rel="tag">datomic</a>,
+                <a href="/blog/tag/reagent/" rel="tag">reagent</a>,
+                <a href="/blog/tag/sente/" rel="tag">sente</a>,
+                <a href="/blog/tag/websockets/" rel="tag">websockets</a>
                     and
                     
                 <a href="/blog/tag/web/" rel="tag">web</a>
@@ -60,7 +62,7 @@
     </script>
     <div id="comments">
         <div class="g-comments"
-            data-href="http://fuqua.io/blog/2014/02/native-javascript-promises-and-browser-apis/"
+            data-href="http://fuqua.io/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/"
             data-width="642"
             data-first_party_property="BLOGGER"
             data-view_type="FILTERED_POSTMOD">

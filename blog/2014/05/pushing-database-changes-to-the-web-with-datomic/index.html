@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>Pushing Database Changes to the Web with Datomic</title>
+        <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
+        <link media="all" href="/blog/style/main.css" rel="stylesheet" />
+        <link href="/favicon.ico" rel="shortcut icon" />
+        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
+        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
+        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-38553935-1']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    <meta name="description" content="Lately I&#39;ve been playing around with Datomic_, a d..." />
+    <meta name="keywords" content="clojure, datomic, reagent, sente, websockets, web" />
+    </head>
+    <body>
+        <header>
+            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        </header>
+        
+        <nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="http://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+<article>
+    <h1>Pushing Database Changes to the Web with Datomic</h1>
+    <p>Lately I&#8217;ve been playing around with <a class="reference external" href="http://www.datomic.com">Datomic</a>, a database invented by Rich Hickey, the creator of Clojure.
+Datomic feels like a natural extension of Clojure&#8217;s immutable, persistent datastructures. From Datomic&#8217;s <a class="reference external" href="http://docs.datomic.com/architecture.html">architecture documentation</a>:</p>
+<blockquote>
+A Datomic database stores a collection of facts. The facts in a database are immutable; once stored, they do not change. However, old facts can be superseded by new facts over time. The state of the database is a value defined by the set of facts in effect at a given moment in time.</blockquote>
+<p>Daniel Higginbotham wrote a great tutorial on the basics of Datomic called <a class="reference external" href="http://www.flyingmachinestudios.com/programming/datomic-for-five-year-olds/">Datomic for Five Year Olds</a>, which I highly recommend (even if you are older than&nbsp;five).</p>
+<p>We&#8217;re going to focus on one aspect of Datomic in this post: the <a class="reference external" href="http://blog.datomic.com/2013/10/the-transaction-report-queue.html">Transaction Report Queue</a>, and how we can use it to push database changes to a web client using websockets. We&#8217;ll assume some basic Clojure web application&nbsp;experience.</p>
+<p>At this point, most blog posts would explain that the web is becomingly increasingly real-time, that users expect this sort of thing, yadda yadda. Instead, let&#8217;s jump right into what we&#8217;re building. Hover over or tap the image for a&nbsp;demo:</p>
+<img alt="/img/datomic-pushing-changes-demo.gif" class="freezeframe" src="/img/datomic-pushing-changes-demo.gif" style="width: 100%;" />
+<p>What&#8217;s going on here? As users connect to our web application, they&#8217;re assigned a random username (such as &quot;Merry Frog&quot; or &quot;Cheerful Aardvark&quot;). This username is then inserted into a Datomic database, and the change is pushed from the database to all the connected users. The source for this application is <a class="reference external" href="https://github.com/waf/push-demo">on GitHub</a>. We&#8217;ll walk through how it all works for the rest of this blog&nbsp;post.</p>
+<div class="section" id="application-design">
+<h2>Application&nbsp;Design</h2>
+<p>Here&#8217;s the basic layout of the&nbsp;application:</p>
+<img alt="/img/datomic-push-architecture.png" src="/img/datomic-push-architecture.png" style="width: 100%;" />
+<p>The core piece here is the Transaction Report Queue that resides in our Clojure backend. This blocking queue will provide us with the all of the database transactions that happen against Datomic. Our application reads from this queue in a background thread, and whenever it&#8217;s notified of a change, it will send it to the connected&nbsp;clients.</p>
+<p>The <span class="caps">HTTP</span> server is powered by <a class="reference external" href="http://http-kit.org/index.html"><span class="caps">HTTP</span> Kit</a> and <a class="reference external" href="https://github.com/weavejester/compojure">Compojure</a>. This is not much different than the typical Ring/Compojure Clojure web application stack; we&#8217;ve simply swapped out the standard Jetty Ring adapter for <span class="caps">HTTP</span> Kit. This allows us to handle asynchronous requests and websocket&nbsp;connections.</p>
+<p><a class="reference external" href="https://github.com/ptaoussanis/sente">Sente</a> is similar to socket.io from the Node.js world. It&#8217;s an abstraction layer that provides real-time communication over websockets, with an <span class="caps">AJAX</span> long-polling fallback. This library has both Clojure and ClojureScript&nbsp;components.</p>
+<p>On the client, we&#8217;ll render the list of users using the ClojureScript library  <a class="reference external" href="https://github.com/holmsand/reagent">Reagent</a>, which wraps Facebook&#8217;s React library. It&#8217;s similar in concept to&nbsp;Om.</p>
+<p>All communication to Datomic is handled via Datomic&#8217;s <a class="reference external" href="http://docs.datomic.com/integrating-peer-lib.html">peer library</a>. We&#8217;ll use this library to both query the database and monitor the transaction report&nbsp;queue.</p>
+<p>We pull in all these libraries via Leiningen, plus some logging&nbsp;libraries:</p>
+<div class="highlight"><pre><span></span><span class="ss">:dependencies</span> <span class="p">[[</span><span class="nv">org.clojure/clojure</span> <span class="s">&quot;1.6.0&quot;</span><span class="p">]</span>
+               <span class="p">[</span><span class="nv">org.clojure/clojurescript</span> <span class="s">&quot;0.0-2202&quot;</span><span class="p">]</span>
+               <span class="p">[</span><span class="nv">http-kit</span> <span class="s">&quot;2.1.18&quot;</span><span class="p">]</span>
+               <span class="p">[</span><span class="nv">ring</span> <span class="s">&quot;1.2.2&quot;</span><span class="p">]</span>
+               <span class="p">[</span><span class="nv">compojure</span> <span class="s">&quot;1.1.8&quot;</span><span class="p">]</span>
+               <span class="p">[</span><span class="nv">com.taoensso/sente</span> <span class="s">&quot;0.14.0&quot;</span><span class="p">]</span>
+               <span class="p">[</span><span class="nv">reagent</span> <span class="s">&quot;0.4.2&quot;</span><span class="p">]</span>
+               <span class="p">[</span><span class="nv">org.clojure/tools.logging</span> <span class="s">&quot;0.2.6&quot;</span><span class="p">]</span>
+               <span class="p">[</span><span class="nv">ch.qos.logback/logback-classic</span> <span class="s">&quot;1.1.2&quot;</span><span class="p">]</span>
+               <span class="p">[</span><span class="nv">org.clojure/core.async</span> <span class="s">&quot;0.1.303.0-886421-alpha&quot;</span><span class="p">]</span>
+               <span class="p">[</span><span class="nv">com.datomic/datomic-free</span> <span class="s">&quot;0.9.4755&quot;</span>
+                   <span class="ss">:exclusions</span> <span class="p">[</span><span class="nv">org.slf4j/slf4j-nop</span> <span class="c1">; exclude datomic&#39;s conflicting log libs</span>
+                                <span class="nv">org.slf4j/slf4j-log4j12</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<div class="section" id="the-backend-clojure-code">
+<h2>The Backend Clojure&nbsp;Code</h2>
+<p>Let&#8217;s start with our standard Compojure routing setup. The only change we&#8217;ve made here is to use the httpkit server. Let&#8217;s also import the Sente websocket and Datomic libraries, which we&#8217;ll use in a&nbsp;bit:</p>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">userlist.server</span>
+  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">org.httpkit.server</span> <span class="ss">:as</span> <span class="nv">server</span><span class="p">]</span>
+            <span class="p">[</span><span class="nv">ring.util.response</span> <span class="ss">:as</span> <span class="nv">response</span><span class="p">]</span>
+            <span class="p">[</span><span class="nv">compojure.core</span> <span class="ss">:refer</span> <span class="ss">:all</span><span class="p">]</span>
+            <span class="p">[</span><span class="nv">compojure.handler</span> <span class="ss">:as</span> <span class="nv">handler</span><span class="p">]</span>
+            <span class="p">[</span><span class="nv">compojure.route</span> <span class="ss">:as</span> <span class="nv">route</span><span class="p">]</span>
+            <span class="p">[</span><span class="nv">taoensso.sente</span> <span class="ss">:as</span> <span class="nv">sente</span><span class="p">]</span>
+            <span class="p">[</span><span class="nv">datomic.api</span> <span class="ss">:as</span> <span class="nv">d</span><span class="p">]))</span>
+
+<span class="p">(</span><span class="nf">defroutes</span> <span class="nv">app-routes</span>
+  <span class="p">(</span><span class="nf"><span class="caps">GET</span></span> <span class="s">&quot;/&quot;</span> <span class="p">[]</span> <span class="p">(</span><span class="nf">response/resource-response</span> <span class="s">&quot;public/index.html&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">route/resources</span> <span class="s">&quot;/&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">route/not-found</span> <span class="s">&quot;404! :(&quot;</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">app</span>
+  <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">app-routes</span>
+      <span class="p">(</span><span class="nf">handler/site</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">-main</span> <span class="p">[</span><span class="o">&amp;</span> <span class="nv">args</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">server/run-server</span> <span class="nv">app</span> <span class="p">{</span><span class="ss">:port</span> <span class="mi">3000</span><span class="p">}))</span> <span class="c1">; replace jetty with http-kit</span>
+</pre></div>
+<p>Now that we&#8217;re using <span class="caps">HTTP</span> kit, we have websocket support. We just need to add an endpoint for the websocket connection. The Sente library has some prebuilt functions that will handle the websocket connections, and also fall back to <span class="caps">AJAX</span> long-polling. We can retrieve references to these functions by calling Sente&#8217;s <tt class="docutils literal"><span class="pre">make-channel-socket!</span></tt>, and passing in a <tt class="docutils literal"><span class="pre">:user-id-fn</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">:user-id-fn</span></tt> is a way for Sente to associate a connection with a specific user, so if a user connects with multiple devices, a message can be sent to all of that user&#8217;s devices. In a Real World Application this would be some application-specific user identity. For our demo application, however, we won&#8217;t worry about this, and just generate a random <span class="caps">UUID</span> for the user&nbsp;<span class="caps">ID</span>:</p>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defn- </span><span class="nv">get-user-id</span> <span class="p">[</span><span class="nv">request</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">str </span><span class="p">(</span><span class="nf">java.util.<span class="caps">UUID</span>/randomUUID</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">ws-connection</span> <span class="p">(</span><span class="nf">sente/make-channel-socket!</span> <span class="p">{</span><span class="ss">:user-id-fn</span> <span class="nv">get-user-id</span><span class="p">}))</span>
+
+<span class="p">(</span><span class="k">let </span><span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">ch-recv</span> <span class="nv">send-fn</span> <span class="nv">ajax-post-fn</span> <span class="nv">ajax-get-or-ws-handshake-fn</span>
+              <span class="nv">connected-uids</span><span class="p">]}</span>
+      <span class="nv">ws-connection</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">ring-ws-post</span> <span class="nv">ajax-post-fn</span><span class="p">)</span> <span class="c1">; ring handler for POSTs</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">ring-ws-handoff</span> <span class="nv">ajax-get-or-ws-handshake-fn</span><span class="p">)</span> <span class="c1">; ring handler for GETs</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">receive-channel</span> <span class="nv">ch-recv</span><span class="p">)</span> <span class="c1">; receives inbound messages from clients</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">channel-send!</span> <span class="nv">send-fn</span><span class="p">)</span> <span class="c1">; send message to a client</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">connected-uids</span> <span class="nv">connected-uids</span><span class="p">))</span> <span class="c1">; all connected clients</span>
+</pre></div>
+<p>And now, we can reference the endpoint functions in our Compojure&nbsp;routes:</p>
+<div class="highlight"><pre><span></span><span class="c1">;; compojure routes</span>
+<span class="p">(</span><span class="nf"><span class="caps">POST</span></span> <span class="s">&quot;/channel&quot;</span> <span class="nv">req</span> <span class="p">(</span><span class="nf">ring-ws-post</span> <span class="nv">req</span><span class="p">))</span>
+<span class="p">(</span><span class="nf"><span class="caps">GET</span></span>  <span class="s">&quot;/channel&quot;</span> <span class="nv">req</span> <span class="p">(</span><span class="nf">ring-ws-handoff</span> <span class="nv">req</span><span class="p">))</span>
+</pre></div>
+<p>Now that we have the basic <span class="caps">HTTP</span> endpoints set up, let&#8217;s focus on setting up the Datomic database. After that, we&#8217;ll hook up the datomic database to our websocket&nbsp;endpoints.</p>
+</div>
+<div class="section" id="datomic-setup">
+<h2>Datomic&nbsp;Setup</h2>
+<p>The first thing we&#8217;ll need for our Datomic setup is a schema. Schemas in Datomic are defined in <a class="reference external" href="https://github.com/edn-format/edn"><span class="caps">EDN</span></a>, a standard Clojure data-transfer format. Our schema will be very simple, as we just need to store a list of usernames. In <tt class="docutils literal">resources/userlist.edn</tt>:</p>
+<div class="highlight"><pre><span></span><span class="p">[{</span><span class="ss">:db/id</span> <span class="o">#</span><span class="nv">db/id</span><span class="p">[</span><span class="ss">:db.part/db</span><span class="p">]</span>
+  <span class="ss">:db/ident</span> <span class="ss">:user/name</span>
+  <span class="ss">:db/valueType</span> <span class="ss">:db.type/string</span>
+  <span class="ss">:db/cardinality</span> <span class="ss">:db.cardinality/one</span>
+  <span class="ss">:db/doc</span> <span class="s">&quot;A user&#39;s name&quot;</span>
+  <span class="ss">:db.install/_attribute</span> <span class="ss">:db.part/db</span><span class="p">}]</span>
+</pre></div>
+<p>This datastructure represents a <tt class="docutils literal">:user/name</tt> property with a corresponding <tt class="docutils literal">id</tt> property. In the future, we could conceivably add other user-related properties, such as <tt class="docutils literal">:user/email</tt> or <tt class="docutils literal"><span class="pre">:user/password-hash</span></tt>.</p>
+<p>In order to load our schema into Datomic, we simply send the above datastructure to Datomic. Let&#8217;s create an in-memory database, set up the schema, and return a reference to the connection so we can use it for further&nbsp;queries:</p>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">create-db</span> <span class="p">[</span><span class="nv">url</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">d/create-database</span> <span class="nv">url</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">schema</span> <span class="p">(</span><span class="nf">read-string</span> <span class="p">(</span><span class="nb">slurp </span><span class="s">&quot;resources/roomlist.edn&quot;</span><span class="p">))</span>
+        <span class="nv">conn</span> <span class="p">(</span><span class="nf">d/connect</span> <span class="nv">url</span><span class="p">)]</span>
+    <span class="p">(</span><span class="nf">d/transact</span> <span class="nv">conn</span> <span class="nv">schema</span><span class="p">)</span> <span class="c1">; install the schema in the db</span>
+    <span class="nv">conn</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nf">create-db</span> <span class="s">&quot;datomic:mem://roomlist&quot;</span><span class="p">)</span> <span class="c1">; create an in-memory db called &#39;roomlist&#39;</span>
+</pre></div>
+<p>The last thing we&#8217;ll need to do is set up the transaction report queue. We can obtain this queue from the Datomic connection&nbsp;object:</p>
+<div class="highlight"><pre><span></span><span class="c1">; given a report from the tx-report-queue, read the changed values</span>
+<span class="p">(</span><span class="kd">defn- </span><span class="nv">read-changes</span> <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">db-after</span> <span class="nv">tx-data</span><span class="p">]</span> <span class="ss">:as</span> <span class="nv">report</span><span class="p">}]</span>
+  <span class="p">(</span><span class="nf">d/q</span> <span class="o">&#39;</span><span class="p">[</span><span class="ss">:find</span> <span class="nv">?aname</span> <span class="nv">?v</span>
+         <span class="ss">:in</span> <span class="nv">$</span> <span class="p">[[</span><span class="nv">_</span> <span class="nv">?a</span> <span class="nv">?v</span><span class="p">]]</span>
+         <span class="ss">:where</span> <span class="p">[</span><span class="nv">?a</span> <span class="ss">:db/ident</span> <span class="nv">?aname</span><span class="p">]]</span>
+       <span class="nv">db-after</span>
+       <span class="nv">tx-data</span><span class="p">))</span>
+
+<span class="c1">; set up a monitor loop using the tx-report-queue</span>
+<span class="p">(</span><span class="kd">defn </span><span class="nv">change-monitor</span> <span class="p">[</span><span class="nv">conn</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">report-queue</span> <span class="p">(</span><span class="nf">d/tx-report-queue</span> <span class="nv">conn</span><span class="p">)]</span>
+    <span class="p">(</span><span class="nf">while</span> <span class="nv">true</span>
+      <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">report</span> <span class="p">(</span><span class="nf">.take</span> <span class="nv">report-queue</span><span class="p">)</span>
+            <span class="nv">changes</span> <span class="p">(</span><span class="nb">into </span><span class="p">{}</span> <span class="p">(</span><span class="nf">read-changes</span> <span class="nv">report</span><span class="p">))]</span>
+        <span class="p">(</span><span class="nb">doseq </span><span class="p">[</span><span class="nv">uid</span> <span class="p">(</span><span class="ss">:any</span> <span class="o">@</span><span class="nv">connected-uids</span><span class="p">)]</span>
+          <span class="p">(</span><span class="nf">channel-send!</span> <span class="nv">uid</span> <span class="p">[</span><span class="ss">:room/join</span> <span class="nv">changes</span><span class="p">]))))))</span>
+</pre></div>
+<p>And the server-side is done! <tt class="docutils literal"><span class="pre">read-changes</span></tt> will get the changes from the report queue, and these changes are passed to <tt class="docutils literal"><span class="pre">channel-send!</span></tt> to send it to our connected&nbsp;clients.</p>
+</div>
+<div class="section" id="the-frontend-clojurescript-code">
+<h2>The Frontend ClojureScript&nbsp;Code</h2>
+<p>The clojurescript code is actually pretty boring. It&#8217;s a standard reagent app that re-renders based on the <tt class="docutils literal">&#64;push/events</tt> reactive&nbsp;atom:</p>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">roomlist.client</span>
+  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">reagent.core</span> <span class="ss">:as</span> <span class="nv">r</span><span class="p">]</span>
+            <span class="p">[</span><span class="nv">roomlist.push</span> <span class="ss">:as</span> <span class="nv">push</span><span class="p">]))</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">user-item</span> <span class="p">[</span><span class="nv">join-event</span><span class="p">]</span>
+  <span class="p">[</span><span class="ss">:li</span> <span class="p">(</span><span class="nb">str </span><span class="p">(</span><span class="ss">:user/name</span> <span class="nv">join-event</span><span class="p">)</span> <span class="s">&quot; joined at &quot;</span> <span class="p">(</span><span class="ss">:db/txInstant</span> <span class="nv">join-event</span><span class="p">))])</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">users-list</span> <span class="p">[]</span>
+  <span class="p">[</span><span class="ss">:ul</span>
+   <span class="p">(</span><span class="nb">for </span><span class="p">[</span><span class="nv">join-event</span> <span class="o">@</span><span class="nv">push/events</span><span class="p">]</span>
+     <span class="p">[</span><span class="nv">user-item</span> <span class="nv">join-event</span><span class="p">])])</span>
+
+<span class="p">(</span><span class="nf">r/render-component</span>
+  <span class="p">[</span><span class="nv">users-list</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">.getElementById</span> <span class="nv">js/document</span> <span class="s">&quot;entry-list&quot;</span><span class="p">))</span>
+</pre></div>
+<p>And here&#8217;s the clojurescript code that populates the <tt class="docutils literal">&#64;push/events</tt> reactive&nbsp;atom:</p>
+<div class="highlight"><pre><span></span><span class="c1">; sente js setup</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">ws-connection</span> <span class="p">(</span><span class="nf">sente/make-channel-socket!</span> <span class="s">&quot;/channel&quot;</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:auto</span><span class="p">}))</span>
+<span class="p">(</span><span class="k">let </span><span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">ch-recv</span> <span class="nv">send-fn</span><span class="p">]}</span>
+      <span class="nv">ws-connection</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">receive-channel</span> <span class="p">(</span><span class="ss">:ch-recv</span> <span class="nv">ws-connection</span><span class="p">))</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">send-channel!</span> <span class="p">(</span><span class="ss">:send-fn</span> <span class="nv">ws-connection</span><span class="p">)))</span>
+
+<span class="c1">; reactive atom that manages our application state</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">events</span>
+  <span class="p">(</span><span class="nf">r/atom</span> <span class="p">[]))</span>
+
+<span class="c1">; handle application-specific events</span>
+<span class="p">(</span><span class="kd">defn- </span><span class="nv">app-message-received</span> <span class="p">[[</span><span class="nv">msgType</span> <span class="nv">data</span><span class="p">]]</span>
+  <span class="p">(</span><span class="nf">case</span> <span class="nv">msgType</span>
+    <span class="ss">:room/join</span> <span class="p">(</span><span class="nf">swap!</span> <span class="nv">events</span> <span class="nb">conj </span><span class="nv">data</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">.log</span> <span class="nv">js/console</span> <span class="s">&quot;Unmatched application event&quot;</span><span class="p">)))</span>
+
+<span class="c1">; handle websocket-connection-specific events</span>
+<span class="c1">; `possible-usernames` is just a sequence of string usernames</span>
+<span class="p">(</span><span class="kd">defn- </span><span class="nv">channel-state-message-received</span> <span class="p">[</span><span class="nv">state</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="ss">:first-open?</span> <span class="nv">state</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">send-channel!</span> <span class="p">[</span><span class="ss">:room/ident</span> <span class="p">{</span><span class="ss">:name</span> <span class="p">(</span><span class="nf">rand-nth</span> <span class="nv">possible-usernames</span><span class="p">)}])))</span>
+
+<span class="c1">; main router for websocket events</span>
+<span class="p">(</span><span class="kd">defn- </span><span class="nv">event-handler</span> <span class="p">[[</span><span class="nv">id</span> <span class="nv">data</span><span class="p">]</span> <span class="nv">_</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">.log</span> <span class="nv">js/console</span> <span class="s">&quot;received message&quot;</span> <span class="nv">data</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">case</span> <span class="nv">id</span>
+    <span class="ss">:chsk/state</span> <span class="p">(</span><span class="nf">channel-state-message-received</span> <span class="nv">data</span><span class="p">)</span>
+    <span class="ss">:chsk/recv</span> <span class="p">(</span><span class="nf">app-message-received</span> <span class="nv">data</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">.log</span> <span class="nv">js/console</span> <span class="s">&quot;Unmatched connection event&quot;</span><span class="p">)))</span>
+
+<span class="c1">; and off we go!</span>
+<span class="p">(</span><span class="nf">sente/start-chsk-router-loop!</span> <span class="nv">event-handler</span> <span class="nv">receive-channel</span><span class="p">)</span>
+</pre></div>
+<p>A full, working demo is available <a class="reference external" href="https://github.com/waf/push-demo">on GitHub</a>.</p>
+</div>
+
+    <div class="tags">
+        
+            tagged as
+                <a href="/blog/tag/clojure/" rel="tag">clojure</a>,
+                <a href="/blog/tag/datomic/" rel="tag">datomic</a>,
+                <a href="/blog/tag/reagent/" rel="tag">reagent</a>,
+                <a href="/blog/tag/sente/" rel="tag">sente</a>,
+                <a href="/blog/tag/websockets/" rel="tag">websockets</a>
+                    and
+                    
+                <a href="/blog/tag/web/" rel="tag">web</a>
+                
+        
+    </div>
+    <script src="https://apis.google.com/js/plusone.js">
+    </script>
+    <div id="comments">
+        <div class="g-comments"
+            data-href="http://fuqua.io/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/"
+            data-width="642"
+            data-first_party_property="BLOGGER"
+            data-view_type="FILTERED_POSTMOD">
+        </div>
+    </div>
+</article><div class="pager">
+    
+        <a href="/blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="prev">
+        Haskell's Elegant Fibonacci Implementation in C# &#x21DD;
+        </a>
+    
+    
+    </div>
+<script src="/blog/script/list.min.js"></script>
+    </body>
+</html>

@@ -166,6 +166,71 @@ The last thing we'll need to do is set up the transaction report queue. We can o
             (doseq [uid (:any @connected-uids)]
               (channel-send! uid [:room/join changes]))))))
 
+And the server-side is done! ``read-changes`` will get the changes from the report queue, and these changes are passed to ``channel-send!`` to send it to our connected clients.
+
+The Frontend ClojureScript Code
+===============================
+
+The clojurescript code is actually pretty boring. It's a standard reagent app that re-renders based on the ``@push/events`` reactive atom:
+
+.. code-block:: clojure
+
+    (ns roomlist.client
+      (:require [reagent.core :as r]
+                [roomlist.push :as push]))
+
+    (defn user-item [join-event]
+      [:li (str (:user/name join-event) " joined at " (:db/txInstant join-event))])
+
+    (defn users-list []
+      [:ul
+       (for [join-event @push/events]
+         [user-item join-event])])
+
+    (r/render-component 
+      [users-list]
+      (.getElementById js/document "entry-list"))
+
+And here's the clojurescript code that populates the ``@push/events`` reactive atom: 
+
+.. code-block:: clojure
+
+    ; sente js setup
+    (def ws-connection (sente/make-channel-socket! "/channel" {:type :auto}))
+    (let [{:keys [ch-recv send-fn]}
+          ws-connection] 
+      (def receive-channel (:ch-recv ws-connection))
+      (def send-channel! (:send-fn ws-connection)))
+
+    ; reactive atom that manages our application state
+    (def events 
+      (r/atom []))
+
+    ; handle application-specific events
+    (defn- app-message-received [[msgType data]]
+      (case msgType
+        :room/join (swap! events conj data)
+        (.log js/console "Unmatched application event")))
+
+    ; handle websocket-connection-specific events
+    ; `possible-usernames` is just a sequence of string usernames
+    (defn- channel-state-message-received [state]
+      (if (:first-open? state)
+        (send-channel! [:room/ident {:name (rand-nth possible-usernames)}])))
+
+    ; main router for websocket events
+    (defn- event-handler [[id data] _]
+      (.log js/console "received message" data)
+      (case id
+        :chsk/state (channel-state-message-received data)
+        :chsk/recv (app-message-received data)
+        (.log js/console "Unmatched connection event")))
+
+    ; and off we go!
+    (sente/start-chsk-router-loop! event-handler receive-channel)
+
+A full, working demo is available `on GitHub`_.
+
 .. _Datomic: http://www.datomic.com
 .. _architecture documentation: http://docs.datomic.com/architecture.html
 .. _`Datomic for Five Year Olds`: http://www.flyingmachinestudios.com/programming/datomic-for-five-year-olds/
