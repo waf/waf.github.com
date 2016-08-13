@@ -4,7 +4,7 @@ Vim Presentation
 :date: 2016-06-13
 :tags: [vim, presentation]
 
-I recently gave a presentation on thinking in vim, which tries to bring people that "Aha!" moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is useful!
+I recently gave a presentation on thinking in vim, which tries to bring people to that "Aha!" moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is useful!
 
 .. raw:: html
 

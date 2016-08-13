@@ -100,6 +100,25 @@
     </entry>
     
         <entry>
+        <title>Increasing Code Quality with SonarQube</title>
+        <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2016/06/increasing-code-quality-with-sonarqube/" />
+        <id>tag:fuqua.io/blog,2016-06-27:/2016/06/increasing-code-quality-with-sonarqube</id>
+        <updated>2016-06-27T04:00:00Z</updated>
+        <category term="csharp" />
+        <category term="analysis" />
+        <category term="sonarqube" />
+        
+        <author>
+            <name>Anonymous</name>
+            <uri>http://fuqua.io/blog/</uri>
+            <email>info@example.com</email>
+        </author>
+        <content type="html">&lt;p&gt;I just posted an article about SonarQube, an open source static analysis tool, and how we set it up to scan every incoming GitHub pull request at&amp;nbsp;work.&lt;/p&gt;
+&lt;p&gt;You can &lt;a class=&#34;reference external&#34; href=&#34;http://techblog.jetabroad.com/2016/06/increasing-code-quality-with-sonarqube.html&#34;&gt;read it at the Jetabroad Tech Blog&lt;/a&gt;.&lt;/p&gt;
+</content>
+    </entry>
+    
+        <entry>
         <title>Vim Presentation</title>
         <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2016/06/vim-presentation/" />
         <id>tag:fuqua.io/blog,2016-06-13:/2016/06/vim-presentation</id>
@@ -112,7 +131,7 @@
             <uri>http://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
-        <content type="html">&lt;p&gt;I recently gave a presentation on thinking in vim, which tries to bring people that &amp;quot;Aha!&amp;quot; moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is&amp;nbsp;useful!&lt;/p&gt;
+        <content type="html">&lt;p&gt;I recently gave a presentation on thinking in vim, which tries to bring people to that &amp;quot;Aha!&amp;quot; moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is&amp;nbsp;useful!&lt;/p&gt;
 &lt;iframe style=&#34;width:100%&#34; src=&#34;https://docs.google.com/presentation/d/1WzjWgKrrlN0BRnP0a99jomsnNX2xRUhvCSVLVWFfpyw/embed?start=false&amp;amp;loop=false&amp;amp;delayms=60000&#34; frameborder=&#34;0&#34; width=&#34;960&#34; height=&#34;569&#34; allowfullscreen=&#34;true&#34; mozallowfullscreen=&#34;true&#34; webkitallowfullscreen=&#34;true&#34;&gt;&lt;/iframe&gt;</content>
     </entry>
     
