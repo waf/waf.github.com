@@ -47,8 +47,8 @@ Datomic feels like a natural extension of Clojure&#8217;s immutable, persistent 
 A Datomic database stores a collection of facts. The facts in a database are immutable; once stored, they do not change. However, old facts can be superseded by new facts over time. The state of the database is a value defined by the set of facts in effect at a given moment in time.</blockquote>
 <p>Daniel Higginbotham wrote a great tutorial on the basics of Datomic called <a class="reference external" href="http://www.flyingmachinestudios.com/programming/datomic-for-five-year-olds/">Datomic for Five Year Olds</a>, which I highly recommend (even if you are older than&nbsp;five).</p>
 <p>We&#8217;re going to focus on one aspect of Datomic in this post: the <a class="reference external" href="http://blog.datomic.com/2013/10/the-transaction-report-queue.html">Transaction Report Queue</a>, and how we can use it to push database changes to a web client using websockets. We&#8217;ll assume some basic Clojure web application&nbsp;experience.</p>
-<p>At this point, most blog posts would explain that the web is becomingly increasingly real-time, that users expect this sort of thing, yadda yadda. Instead, let&#8217;s jump right into what we&#8217;re building. Hover over or tap the image for a&nbsp;demo:</p>
-<img alt="/img/datomic-pushing-changes-demo.gif" class="freezeframe" src="/img/datomic-pushing-changes-demo.gif" style="width: 100%;" />
+<p>At this point, most blog posts would explain that the web is becomingly increasingly real-time, that users expect this sort of thing, yadda yadda. Instead, let&#8217;s jump right into what we&#8217;re building &#8211; a simple &quot;connected users&quot;&nbsp;application:</p>
+<img alt="/img/datomic-pushing-changes-demo.gif" src="/img/datomic-pushing-changes-demo.gif" style="width: 100%;" />
 <p>What&#8217;s going on here? As users connect to our web application, they&#8217;re assigned a random username (such as &quot;Merry Frog&quot; or &quot;Cheerful Aardvark&quot;). This username is then inserted into a Datomic database, and the change is pushed from the database to all the connected users. The source for this application is <a class="reference external" href="https://github.com/waf/push-demo">on GitHub</a>. We&#8217;ll walk through how it all works for the rest of this blog&nbsp;post.</p>
 <div class="section" id="application-design">
 <h2>Application&nbsp;Design</h2>
@@ -218,7 +218,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 <span class="p">(</span><span class="nf">sente/start-chsk-router-loop!</span> <span class="nv">event-handler</span> <span class="nv">receive-channel</span><span class="p">)</span>
 </pre></div>
 <p>A full, working demo is available <a class="reference external" href="https://github.com/waf/push-demo">on GitHub</a>.</p>
-</div>
+<script src="/blog/script/freezeframe.min.js"></script></div>
 
     <div class="tags">
         

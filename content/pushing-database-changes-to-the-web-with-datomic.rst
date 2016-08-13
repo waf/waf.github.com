@@ -13,9 +13,8 @@ Daniel Higginbotham wrote a great tutorial on the basics of Datomic called `Dato
 
 We're going to focus on one aspect of Datomic in this post: the `Transaction Report Queue`_, and how we can use it to push database changes to a web client using websockets. We'll assume some basic Clojure web application experience.
 
-At this point, most blog posts would explain that the web is becomingly increasingly real-time, that users expect this sort of thing, yadda yadda. Instead, let's jump right into what we're building. Hover over or tap the image for a demo:
+At this point, most blog posts would explain that the web is becomingly increasingly real-time, that users expect this sort of thing, yadda yadda. Instead, let's jump right into what we're building -- a simple "connected users" application: 
 
-.. class:: freezeframe
 .. image:: /img/datomic-pushing-changes-demo.gif
     :width: 100%
 
