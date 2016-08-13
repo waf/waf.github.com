@@ -42,27 +42,27 @@
 <article>
     <h1>Haskell's Elegant Fibonacci Implementation in C#</h1>
     <p><a class="reference external" href="http://www.haskell.org/haskellwiki/Introduction">Haskell</a> is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the <a class="reference external" href="http://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci series</a>&nbsp;algorithm:</p>
-<div class="highlight"><pre><span class="kr">let</span> <span class="n">fib</span> <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="n">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fib</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">fib</span> <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="n">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fib</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span>
 </pre></div>
 <p>This creates a variable called <tt class="docutils literal">fib</tt> that contains an infinite sequence of Fibonacci numbers. We could print this variable, but our program would start trying to print an infinite number of elements,  rendering it useless. A much better approach is to choose a finite number of elements from the&nbsp;series:</p>
-<div class="highlight"><pre><span class="nf">take</span> <span class="mi">10</span> <span class="n">fib</span>
+<div class="highlight"><pre><span></span><span class="nf">take</span> <span class="mi">10</span> <span class="n">fib</span>
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="mi">55</span><span class="p">]</span>
 </pre></div>
 <p>The above implementation of <tt class="docutils literal">fib</tt> fascinates me, so I decided to try my hand at implementing it in another, less-functional language:&nbsp;C#.</p>
 <div class="section" id="algorithm-explanation">
 <h2>Algorithm&nbsp;Explanation</h2>
 <p>First, before we can implement this Fibonacci algorithm in C#, we need to know how the algorithm works. Here&#8217;s the Haskell version&nbsp;again:</p>
-<div class="highlight"><pre><span class="kr">let</span> <span class="n">fib</span> <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="n">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fib</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">fib</span> <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="n">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fib</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span>
 </pre></div>
 <p>We provide the first two numbers to start off the series. As we request additional elements, Haskell will calculate them <a class="reference external" href="http://en.wikipedia.org/wiki/Corecursion">corecursively</a>, using the <tt class="docutils literal">zipWith</tt> function. <tt class="docutils literal">zipWith</tt> takes a function as a parameter, in this case the addition function <tt class="docutils literal">(+)</tt>, and two sequences. It feeds pairs of elements, one from each sequence, into the addition function. The result is a single sequence made from combining or &quot;zipping together&quot; the input&nbsp;sequences.</p>
 <p>The other function in play is <tt class="docutils literal">tail</tt>, which returns everything but the first element of the list. The <tt class="docutils literal">tail</tt> of <tt class="docutils literal">[1, 2, 3, 4]</tt> would be <tt class="docutils literal">[2, 3, 4]</tt>.</p>
 <p>We combine these two functions to calculate the Fibonacci numbers on demand. Here&#8217;s a snapshot of the program&#8217;s state when we calculate the third element, the number&nbsp;2:</p>
-<div class="highlight"><pre><span class="nf">fib</span>                        <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span>
+<div class="highlight"><pre><span></span><span class="nf">fib</span>                        <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span>
 <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span>                 <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span>
 <span class="nf">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fib</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span> <span class="ow">=</span> <span class="mi">2</span> <span class="kt">:</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span>
 </pre></div>
 <p>Once we have the third element, we can calculate the fourth element, the number&nbsp;3:</p>
-<div class="highlight"><pre><span class="nf">fib</span>                        <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">2</span> <span class="kt">:</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span>
+<div class="highlight"><pre><span></span><span class="nf">fib</span>                        <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">2</span> <span class="kt">:</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span>
 <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span>                 <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">2</span> <span class="kt">:</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span>
 <span class="nf">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fib</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span> <span class="ow">=</span> <span class="mi">2</span> <span class="kt">:</span> <span class="mi">3</span> <span class="kt">:</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span>
 </pre></div>
@@ -71,7 +71,7 @@
 <div class="section" id="idiomatic-c-version">
 <h2>Idiomatic C#&nbsp;Version</h2>
 <p>In our initial C# implementation we&#8217;ll rely on IEnumerables and IEnumerators. An IEnumerable represents a lazy sequence, and it has an associated IEnumerator that knows how to get the next value for the sequence. The <tt class="docutils literal">yield return</tt> keyword is a shortcut for setting up this relationship. For example, here is how we could create a method that returns a lazy sequence of the numbers 1, 2, and&nbsp;3:</p>
-<div class="highlight"><pre><span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Lazy</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Lazy</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="k">yield</span> <span class="k">return</span> <span class="m">1</span><span class="p">;</span>
     <span class="k">yield</span> <span class="k">return</span> <span class="m">2</span><span class="p">;</span>
@@ -79,7 +79,7 @@
 <span class="p">}</span>
 </pre></div>
 <p>IEnumerables come with a rich library of higher-order functions out of the box. We&#8217;ll be using IEnumerable&#8217;s <tt class="docutils literal">Zip</tt> method for Haskell&#8217;s <tt class="docutils literal">zipWith</tt> function, and the <tt class="docutils literal">Skip</tt> method for Haskell&#8217;s <tt class="docutils literal">tail</tt> function. Here&#8217;s a first&nbsp;pass:</p>
-<div class="highlight"><pre><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">var</span> <span class="n">fibonacci</span> <span class="p">=</span> <span class="n">Fib</span><span class="p">();</span>
     <span class="kt">var</span> <span class="n">first10</span> <span class="p">=</span> <span class="n">fibonacci</span><span class="p">.</span><span class="n">Take</span><span class="p">(</span><span class="m">10</span><span class="p">);</span>
@@ -107,7 +107,7 @@
 </ol>
 <p>We can get lazy behavior in C# by wrapping our operations in a 0-argument lambda expression, then evaluating the lambda expression when we need the value. This &quot;lazy operation&quot; is called a <a class="reference external" href="http://www.haskell.org/haskellwiki/Thunk">thunk</a>. Haskell uses thunks to defer evaluation, too (the actual Haskell thunk implementation is more involved, but a 0-argument lambda expression captures the essence of the&nbsp;idea).</p>
 <p>Let&#8217;s thunk-ify our two arguments to <tt class="docutils literal">Concat()</tt>. Since each thunk is a 0-argument lambda that resolves to an IEnumerable of integers, both thunks will have the type signature <tt class="docutils literal">Func&lt;IEnumerable&lt;int&gt;&gt;</tt>.</p>
-<div class="highlight"><pre><span class="k">public</span> <span class="k">static</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Fib</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Fib</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">Func</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;</span> <span class="n">seedThunk</span> <span class="p">=</span>
         <span class="p">()</span> <span class="p">=&gt;</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">1</span> <span class="p">};</span>
@@ -121,7 +121,7 @@
 <span class="p">}</span>
 </pre></div>
 <p>Uh-oh, this doesn&#8217;t compile! All of the IEnumerable methods, including <tt class="docutils literal">Concat()</tt>, expect IEnumerables, not thunks. Luckily, we can use C#&#8217;s extension method system to add thunk&nbsp;support:</p>
-<div class="highlight"><pre><span class="k">public</span> <span class="k">static</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">Concat</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span>
+<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">Concat</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span>
     <span class="k">this</span> <span class="n">Func</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;&gt;</span> <span class="n">first</span><span class="p">,</span>
     <span class="n">Func</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;&gt;</span> <span class="n">second</span><span class="p">)</span>
 <span class="p">{</span>
@@ -132,7 +132,7 @@
 <span class="p">}</span>
 </pre></div>
 <p>Our <tt class="docutils literal">Fib()</tt> method is quite a bit harder to read, so what did it gain us? With our arguments being lazily evaluated, we can remove the function recursion and <tt class="docutils literal">yield return</tt> statements, and replace them with a neat trick that simulates recursive variable&nbsp;definitions:</p>
-<div class="highlight"><pre><span class="k">public</span> <span class="k">static</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Fib</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Fib</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">fib</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
 
@@ -149,7 +149,7 @@
 <p>Isn&#8217;t that cool (or is it terrifying)? Our thunks, which are closures, capture the reference to the <tt class="docutils literal">fib</tt> variable, which is initially null. Then, we assign the result of the expression back to <tt class="docutils literal">fib</tt>, changing the implementation to which the captured <tt class="docutils literal">fib</tt> refers. This is how we can use lazy evaluation to fake recursive data&nbsp;definitions.</p>
 <p>Finally, now that we&#8217;re just dealing with an IEnumerable, it&#8217;s easy to memoize&nbsp;it.</p>
 <p>Rather than writing our own memoizing IEnumerable code, let&#8217;s use the one available in <a class="reference external" href="http://www.nuget.org/packages/ix_experimental-main">Interactive Extensions</a>, part of the <a class="reference external" href="https://rx.codeplex.com/">Rx Project</a>. We can pass our Enumerable into the library&#8217;s <tt class="docutils literal">Memoize</tt> function:</p>
-<div class="highlight"><pre><span class="k">public</span> <span class="k">static</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Fib</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Fib</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">fib</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
 
@@ -163,7 +163,7 @@
 <span class="p">}</span>
 </pre></div>
 <p>At this point we&#8217;re done! We have a lazily-evaluated, infinite Fibonacci sequence that is defined in terms of itself. Here&#8217;s the full working&nbsp;code!</p>
-<div class="highlight"><pre><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
 <span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
 <span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
@@ -235,6 +235,9 @@
         </a>
     
     
+        <a href="/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" class="next">
+        &#x21DC; Pushing Database Changes to the Web with Datomic
+        </a>
     </div>
 <script src="/blog/script/list.min.js"></script>
     </body>

@@ -62,7 +62,7 @@
 <div class="section" id="promises-and-the-geolocation-api">
 <h2>Promises and the Geolocation&nbsp;<span class="caps">API</span></h2>
 <p>As an example, let&#8217;s add promise support to the Geolocation <span class="caps">API</span>. The Geolocation <span class="caps">API</span> exposes the <tt class="docutils literal">getCurrentPosition</tt> function, which makes a request for the user&#8217;s geographical position. The function takes an success callback and an error callback. If everything goes well, the success callback is called with the user&#8217;s coordinates as a parameter. If the user denies our request, or we can&#8217;t determine the user&#8217;s position, the error callback is called. A invocation of this function <cite>without</cite> Promises might look something&nbsp;like:</p>
-<div class="highlight"><pre><span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
 <span class="p">}</span>
 
@@ -77,14 +77,14 @@
 </pre></div>
 <p>The code is kind of inside-out; we have to wrap up the core of what we want to do (get the user&#8217;s position) in a function and pass it deep into the program. Let&#8217;s fix this by using&nbsp;Promises.</p>
 <p>Remember that a Promise can either <strong>resolve</strong> or <strong>reject</strong>. The mapping from resolve to the success callback and from reject to the error callback is pretty clear. It&#8217;s simple to wrap this browser <span class="caps">API</span> in a&nbsp;Promise:</p>
-<div class="highlight"><pre><span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">);</span>
     <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
 <p>We can invoke the function to get our promise, and then specify success and failure callbacks using the <tt class="docutils literal">then()</tt> method on our Promise&nbsp;object:</p>
-<div class="highlight"><pre><span class="nx">getUserPosition</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="nx">getUserPosition</span><span class="p">()</span>
     <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// we have the user&#39;s position!</span>
     <span class="p">})</span>
@@ -98,7 +98,7 @@
 <div class="section" id="promises-and-the-html5-notification-api">
 <h2>Promises and the <span class="caps">HTML5</span> Notification&nbsp;<span class="caps">API</span></h2>
 <p>The <span class="caps">HTML5</span> Notification <span class="caps">API</span> is also callback-based, but in a different way than the Geolocation <span class="caps">API</span>: it uses a single <tt class="docutils literal">handleStatus</tt> callback, rather than separate callbacks for success and errors. The callback-based code might look like&nbsp;this:</p>
-<div class="highlight"><pre><span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">(</span><span class="nx">handleStatus</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">(</span><span class="nx">handleStatus</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="nx">handleStatus</span><span class="p">);</span>
 <span class="p">}</span>
 
@@ -111,8 +111,8 @@
 <span class="p">});</span>
 </pre></div>
 <p>For this conversion, we&#8217;ll manually call the <tt class="docutils literal">resolve</tt> and <tt class="docutils literal">reject</tt> handlers:</p>
-<div class="highlight"><pre><span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span><span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="s2">&quot;granted&quot;</span><span class="p">)</span> <span class="p">{</span>
                 <span class="nx">resolve</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span>
@@ -143,7 +143,7 @@
 <li>Handle all of the failure points in the above&nbsp;steps.</li>
 </ol>
 <p>We can reuse our <tt class="docutils literal">getNotificationPermission</tt> and <tt class="docutils literal">getUserPosition</tt> functions we defined earlier. Here is the code, in its&nbsp;entirety:</p>
-<div class="highlight"><pre><span class="nx">getNotificationPermission</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="nx">getNotificationPermission</span><span class="p">()</span>
     <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">getUserPosition</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displayNotification</span><span class="p">)</span>
     <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
@@ -152,7 +152,7 @@
 
 <span class="c1">// we defined this function earlier</span>
 <span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span><span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="s2">&quot;granted&quot;</span><span class="p">)</span> <span class="p">{</span>
                 <span class="nx">resolve</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span>
@@ -165,7 +165,7 @@
 
 <span class="c1">// we defined this function earlier</span>
 <span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">);</span>
     <span class="p">});</span>
 <span class="p">}</span>
@@ -182,7 +182,7 @@
 <h2>Altering the Program&nbsp;Flow</h2>
 <p>Right now we&#8217;re chaining all of our functions together, one after the other. This causes some inefficiency and a poor user experience: We request permission for notifications and wait to receive it, and then we request the user&#8217;s position and wait to receive it. Since these requests don&#8217;t depend on each other, ideally we would issue both of these requests at once, and then wait until both of the requests were&nbsp;successful.</p>
 <p>The Promise <span class="caps">API</span> has a solution. The static function <tt class="docutils literal">Promise.All()</tt> converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for our desired&nbsp;behavior:</p>
-<div class="highlight"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+<div class="highlight"><pre><span></span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
     <span class="nx">requestNotificationPermission</span><span class="p">(),</span>
     <span class="nx">getUserPosition</span><span class="p">()</span>
 <span class="p">])</span>
