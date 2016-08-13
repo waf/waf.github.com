@@ -221,3 +221,9 @@ nav a:hover {
     display:block !important;
     margin:20px auto !important;
 }
+
+img.align-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
