@@ -106,6 +106,20 @@
     </item>
         
             <item>
+        <title>A Software Developer Learning Thai</title>
+        <link>http://fuqua.io/blog/2015/04/a-software-developer-learning-thai/</link>
+        <description>&lt;p&gt;I recently uprooted from the &lt;span class=&#34;caps&#34;&gt;USA&lt;/span&gt; and moved to Thailand! It&amp;#8217;s been an incredible experience so far. One of the more fascinating aspects of it has been learning the Thai language. I&amp;#8217;ve created a couple of basic tools to help myself learn. Developing the tools helps me learn new technologies, and the resulting product helps me learn the&amp;nbsp;language!&lt;/p&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/thai-characters&#34;&gt;Thai Characters&lt;/a&gt; - Simple flashcards to learn the characters and their low/middle/high class&amp;nbsp;association.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/flash-cards&#34;&gt;Thai Vocabulary Flashcards&lt;/a&gt; - Vocabulary flashcards. Interesting from a React/Material Design technical&amp;nbsp;aspect.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/ThaiRecog&#34;&gt;Thai &lt;span class=&#34;caps&#34;&gt;OCR&lt;/span&gt; Android App&lt;/a&gt; - Quick &lt;span class=&#34;caps&#34;&gt;POC&lt;/span&gt; android app for doing Thai language &lt;span class=&#34;caps&#34;&gt;OCR&lt;/span&gt; using the camera. It doesn&amp;#8217;t work very well right now, but I suspect a &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/tesseract-ocr/tesseract&#34;&gt;Tesseract&lt;/a&gt; upgrade might fix&amp;nbsp;that.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Thu, 02 Apr 2015 04:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2015-04-02:/2015/04/a-software-developer-learning-thai</guid>
+    </item>
+        
+            <item>
         <title>Quick Tip: Format Finder for .NET date strings</title>
         <link>http://fuqua.io/blog/2015/02/quick-tip-format-finder-for-net-date-strings/</link>
         <description>&lt;p&gt;If you&amp;#8217;ve written C# for any length of time, chances are you&amp;#8217;ve become very familiar with the &lt;span class=&#34;caps&#34;&gt;MSDN&lt;/span&gt; documentation pages about &lt;a class=&#34;reference external&#34; href=&#34;https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx&#34;&gt;Standard Date and Time Format Strings&lt;/a&gt; and &lt;a class=&#34;reference external&#34; href=&#34;https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx&#34;&gt;Custom Date and Time Format Strings&lt;/a&gt;. Any time you need to format a &lt;tt class=&#34;docutils literal&#34;&gt;DateTime&lt;/tt&gt;, those pages are&amp;nbsp;invaluable.&lt;/p&gt;
