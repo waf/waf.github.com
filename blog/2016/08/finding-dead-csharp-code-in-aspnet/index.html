@@ -102,18 +102,7 @@
 <div class="highlight"><pre><span></span><span class="gp">&gt;</span> ReportGenerator.exe -reports:<span class="s2">&quot;.\results.xml&quot;</span> -targetdir:report
 </pre></div>
 <p>And we&#8217;re done! ReportGenerator will create a nice report for us, showing the lines of code that are unused (including Razor&nbsp;files):</p>
-<div class="system-message">
-<p class="system-message-title">System Message: <span class="caps">ERROR</span>/3 (<tt class="docutils">&lt;string&gt;</tt>, line&nbsp;86)</p>
-<p>Error in &quot;image&quot; directive:
-unknown option:&nbsp;&quot;display&quot;.</p>
-<pre class="literal-block">
-.. image:: /img/opencover-dead-code.png
-    :width: 80%
-    :display: block
-    :margin: 20px auto
-
-</pre>
-</div>
+<img alt="/img/opencover-dead-code.png" class="align-center" src="/img/opencover-dead-code.png" style="width: 80%;" />
 <p>This technique depends on us being able to fully exercise all parts of the web application. That could be the hardest part, depending on how large the application is. Tooling like OpenCover and ReportGenerator make the rest of it&nbsp;easy!</p>
 
     <div class="tags">

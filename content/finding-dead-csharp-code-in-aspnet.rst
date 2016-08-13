@@ -92,8 +92,7 @@ And we're done! ReportGenerator will create a nice report for us, showing the li
 
 .. image:: /img/opencover-dead-code.png
     :width: 80%
-    :display: block
-    :margin: 20px auto
+    :align: center
 
 This technique depends on us being able to fully exercise all parts of the web application. That could be the hardest part, depending on how large the application is. Tooling like OpenCover and ReportGenerator make the rest of it easy!
 
