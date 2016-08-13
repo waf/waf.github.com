@@ -81,6 +81,15 @@
     </item>
         
             <item>
+        <title>Vim Presentation</title>
+        <link>http://fuqua.io/blog/2016/06/vim-presentation/</link>
+        <description>&lt;p&gt;I recently gave a presentation on thinking in vim, which tries to bring people that &amp;quot;Aha!&amp;quot; moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is&amp;nbsp;useful!&lt;/p&gt;
+&lt;iframe style=&#34;width:100%&#34; src=&#34;https://docs.google.com/presentation/d/1WzjWgKrrlN0BRnP0a99jomsnNX2xRUhvCSVLVWFfpyw/embed?start=false&amp;amp;loop=false&amp;amp;delayms=60000&#34; frameborder=&#34;0&#34; width=&#34;960&#34; height=&#34;569&#34; allowfullscreen=&#34;true&#34; mozallowfullscreen=&#34;true&#34; webkitallowfullscreen=&#34;true&#34;&gt;&lt;/iframe&gt;</description>
+        <pubDate>Mon, 13 Jun 2016 04:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2016-06-13:/2016/06/vim-presentation</guid>
+    </item>
+        
+            <item>
         <title>Pushing Database Changes to the Web with Datomic</title>
         <link>http://fuqua.io/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/</link>
         <description>&lt;p&gt;Lately I&amp;#8217;ve been playing around with &lt;a class=&#34;reference external&#34; href=&#34;http://www.datomic.com&#34;&gt;Datomic&lt;/a&gt;, a database invented by Rich Hickey, the creator of Clojure.

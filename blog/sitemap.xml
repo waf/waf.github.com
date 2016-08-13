@@ -6,7 +6,7 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog//tag/acrylamid/</loc>
+    <loc>http://fuqua.io/blog//tag/fibonacci/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
@@ -36,6 +36,11 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>http://fuqua.io/blog//tag/acrylamid/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>http://fuqua.io/blog//tag/html5/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -52,14 +57,15 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog//tag/fibonacci/</loc>
+    <loc>http://fuqua.io/blog//tag/database/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>http://fuqua.io/blog//tag/database/</loc>
+    <loc>http://fuqua.io/blog//2016/06/vim-presentation/</loc>
     <lastmod>2016-08-13</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>http://fuqua.io/blog//tag/sql/</loc>
@@ -93,6 +99,11 @@
   </url>
   <url>
     <loc>http://fuqua.io/blog//tag/promise/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//tag/presentation/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
@@ -135,6 +146,11 @@
   </url>
   <url>
     <loc>http://fuqua.io/blog//tag/haskell/</loc>
+    <lastmod>2016-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>http://fuqua.io/blog//tag/vim/</loc>
     <lastmod>2016-08-13</lastmod>
     <changefreq>weekly</changefreq>
   </url>
