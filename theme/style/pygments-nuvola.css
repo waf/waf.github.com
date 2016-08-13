@@ -30,7 +30,7 @@
 .highlight .kt { color: #8a2be2} /* Keyword.Type */
 .highlight .ld { color: #222222} /* Literal.Date */
 .highlight .m { color: #00C226} /* Literal.Number */
-.highlight .s { color: #1DBB30; font-weight:bold;} /* Literal.String */
+.highlight .s { color: #1DBB30} /* Literal.String */
 .highlight .na { color: #222222} /* Name.Attribute */
 .highlight .nb { color: #222222} /* Name.Builtin */
 .highlight .nc { color: #222222} /* Name.Class */
