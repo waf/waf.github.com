@@ -27,7 +27,7 @@
 .highlight .kn { color: #F56017; font-weight: bold} /* Keyword.Namespace */
 .highlight .kp { color: #F56017; font-weight: bold} /* Keyword.Pseudo */
 .highlight .kr { color: #F56017; font-weight: bold} /* Keyword.Reserved */
-.highlight .kt { color: #8a2be2} /* Keyword.Type */
+.highlight .kt { color: #0182A0} /* Keyword.Type */
 .highlight .ld { color: #222222} /* Literal.Date */
 .highlight .m { color: #00C226} /* Literal.Number */
 .highlight .s { color: #1DBB30} /* Literal.String */
@@ -54,7 +54,7 @@
 .highlight .sb { color: #222222} /* Literal.String.Backtick */
 .highlight .sc { color: #222222} /* Literal.String.Char */
 .highlight .sd { color: #222222} /* Literal.String.Doc */
-.highlight .s2 { color: #1DBB30; font-weight:bold;} /* Literal.String.Double */
+.highlight .s2 { color: #1DBB30} /* Literal.String.Double */
 .highlight .se { color: #222222} /* Literal.String.Escape */
 .highlight .sh { color: #222222} /* Literal.String.Heredoc */
 .highlight .si { color: #222222} /* Literal.String.Interpol */
