@@ -18,7 +18,7 @@ Some types of dead code, like unreferenced methods, are easy to detect with Visu
 
 How can we detect this type of dead code? Rather than using static analysis to detect it, we can use dynamic analysis---the same technique used to measure unit test code coverage. 
 
-One option is to use OpenCover_, an open source code coverage tool, to run the dynamic analysis. When we run our application under OpenCover, it will `instrument our code`_ and record what lines were executed. It will then output a coverage report we can process with ReportGenerator_ to visualize the results. Both OpenCover and ReportGenerator can be downloaded from their respective homepages, or through Nuget.
+In this post we will use OpenCover_, an open source code coverage tool, to run the dynamic analysis. When we run our application under OpenCover, it will `instrument our code`_ and record what lines were executed. It will then output a coverage report we can process with ReportGenerator_ to visualize the results. Both OpenCover and ReportGenerator can be downloaded from their respective homepages, or through Nuget.
 
 A Sample Application
 ####################
