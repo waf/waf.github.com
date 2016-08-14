@@ -161,6 +161,9 @@ tt, code, kbd, samp {
         width:98%;
         padding:0 1%;
     }
+    article {
+        text-align:left;
+    }
     article h1 {
         width:100%;
         text-align:center;
