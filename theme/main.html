@@ -27,18 +27,22 @@
         {% set entry = env.entrylist|first %}
         {% include 'entry.html' %}
     {%- endif -%}
-    <div class="pager">
-    {% if env.prev is not none %}
-        <a href="{{ env.path ~ env.prev }}" class="prev">
-        {{ env.prev.title }} &#x21DD;
-        </a>
-    {% endif %}
-    {% if env.next is not none %}
-        <a href="{{ env.path ~ env.next }}" class="next">
-        &#x21DC; {{ env.next.title }}
-        </a>
+    {#
+    {% if (env.prev is not none) or (env.next is not none) %}
+        <div class="pager">
+        {% if env.prev is not none %}
+            <a href="{{ env.path ~ env.prev }}" class="prev">
+            {{ env.prev.title }} &#x21DD;
+            </a>
+        {% endif %}
+        {% if env.next is not none %}
+            <a href="{{ env.path ~ env.next }}" class="next">
+            &#x21DC; {{ env.next.title }}
+            </a>
+        {%- endif  %}
+        </div>
     {%- endif  %}
-    </div>
+    #}
 {% endblock %}
 
 {% block footer %}
