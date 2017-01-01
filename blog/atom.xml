@@ -11,13 +11,13 @@
     <link rel="self" type="application/atom+xml" href="http://fuqua.io/blog/atom.xml" />
     <icon>http://fuqua.io/blog/favicon.ico</icon>
     <logo>http://fuqua.io/blog/feed-logo.png</logo>
-    <updated>2017-01-01T05:00:00Z</updated>
+    <updated>2017-01-02T05:00:00Z</updated>
     <generator uri="https://github.com/posativ/acrylamid/" version="0.7.10">acrylamid</generator>
         <entry>
         <title>Solving the Zebra Puzzle with LINQ and C# 7</title>
         <link rel="alternate" type="text/html" href="http://fuqua.io/blog/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7/" />
-        <id>tag:fuqua.io/blog,2017-01-01:/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7</id>
-        <updated>2017-01-01T05:00:00Z</updated>
+        <id>tag:fuqua.io/blog,2017-01-02:/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7</id>
+        <updated>2017-01-02T05:00:00Z</updated>
         <category term="csharp" />
         
         <author>

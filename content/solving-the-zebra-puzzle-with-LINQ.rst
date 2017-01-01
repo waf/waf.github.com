@@ -1,7 +1,7 @@
 Solving the Zebra Puzzle with LINQ and C# 7
 ###########################################
 
-:date: 2017-01-01
+:date: 2017-01-02
 :tags: [csharp]
 
 I recently ran across `the Zebra Puzzle`_, a logic puzzle from about 50 years ago:
