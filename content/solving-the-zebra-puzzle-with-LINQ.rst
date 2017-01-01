@@ -145,7 +145,7 @@ In our initial permutation list, we won't name the tuple members:
 .. code-block:: csharp
 
     var orderings =
-        // generates List<List<int>>
+        // generates List<List<int>> using the Combinatorics nuget package
         new Permutations<int>(houses)
         // creates List<System.ValueTuple<int, int, int, int, int>>
         .Select(p => (p[0], p[1], p[2], p[3], p[4])).ToList();
@@ -217,7 +217,6 @@ Overall, I feel like this LINQ implementation is fairly faithful to the original
 .. _a long list of programs available to solve it: http://rosettacode.org/wiki/Zebra_puzzle
 .. _Peter Norvig: https://en.wikipedia.org/wiki/Peter_Norvig
 .. _Udacity CS212: https://www.udacity.com/wiki/cs212/unit-2
-.. _Combinatorics: https://www.nuget.org/packages/Combinatorics/
 .. _in this gist: https://gist.github.com/waf/280152ab42aa92a85b79d6dbc812e68a
 .. _issue tracking it: https://github.com/dotnet/roslyn/issues/13964
 .. _new deconstruction feature: https://github.com/dotnet/roslyn/blob/master/docs/features/deconstruction.md
