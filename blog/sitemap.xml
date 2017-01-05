@@ -53,7 +53,7 @@
   </url>
   <url>
     <loc>http://fuqua.io/blog//rss.xml</loc>
-    <lastmod>2017-01-01</lastmod>
+    <lastmod>2017-01-05</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -91,7 +91,7 @@
   </url>
   <url>
     <loc>http://fuqua.io/blog//2017/01/solving-the-zebra-puzzle-with-linq-and-c-7/</loc>
-    <lastmod>2017-01-01</lastmod>
+    <lastmod>2017-01-05</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
@@ -102,7 +102,7 @@
   </url>
   <url>
     <loc>http://fuqua.io/blog//atom.xml</loc>
-    <lastmod>2017-01-01</lastmod>
+    <lastmod>2017-01-05</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
