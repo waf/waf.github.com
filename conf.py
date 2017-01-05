@@ -3,7 +3,7 @@
 # See http://posativ.org/acrylamid/conf.py.html
 
 SITENAME = 'Blog - Will Fuqua'
-WWW_ROOT = 'http://fuqua.io/blog/'
+WWW_ROOT = 'https://fuqua.io/blog/'
 OUTPUT_DIR = '.'
 AUTHOR = 'Will Fuqua'
 

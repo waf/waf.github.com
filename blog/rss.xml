@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Blog - Will Fuqua</title>
-        <link>http://fuqua.io/blog/</link>
+        <link>https://fuqua.io/blog/</link>
         <description></description>
         <language>en</language>
         <pubDate>Mon, 02 Jan 2017 05:00:00 GMT</pubDate>
-        <docs>http://fuqua.io/blog/rss.xml</docs>
+        <docs>https://fuqua.io/blog/rss.xml</docs>
         <generator>acrylamid 0.7.10</generator>
         
             <item>
         <title>Solving the Zebra Puzzle with LINQ and C# 7</title>
-        <link>http://fuqua.io/blog/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7/</link>
+        <link>https://fuqua.io/blog/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7/</link>
         <description>&lt;p&gt;I recently ran across &lt;a class=&#34;reference external&#34; href=&#34;https://en.wikipedia.org/wiki/Zebra_Puzzle&#34;&gt;the Zebra Puzzle&lt;/a&gt;, a logic puzzle from about 50 years&amp;nbsp;ago:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ol class=&#34;arabic simple&#34;&gt;
@@ -192,7 +192,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
         
             <item>
         <title>Finding Dead C# Code in an ASP.NET application</title>
-        <link>http://fuqua.io/blog/2016/08/finding-dead-csharp-code-in-aspnet/</link>
+        <link>https://fuqua.io/blog/2016/08/finding-dead-csharp-code-in-aspnet/</link>
         <description>&lt;p&gt;Large, long-lasting codebases tend to accumulate unused code, or dead code, over time. This happens as features are added, changed and&amp;nbsp;removed.&lt;/p&gt;
 &lt;p&gt;Some types of dead code, like unreferenced methods, are easy to detect with Visual Studio&amp;#8217;s out-of-the-box static analysis. However, other types of dead code are trickier; maybe there&amp;#8217;s a method that&amp;#8217;s only referenced by unit tests, or it&amp;#8217;s referenced under a condition that&amp;#8217;s never&amp;nbsp;valid:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Now&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1970&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
@@ -259,7 +259,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; ReportGenerator.exe -reports:&lt;span class=&#34;s2&#34;&gt;&amp;quot;.\results.xml&amp;quot;&lt;/span&gt; -targetdir:report
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And we&amp;#8217;re done! ReportGenerator will create a nice report for us, showing the lines of code that are unused (including Razor&amp;nbsp;files):&lt;/p&gt;
-&lt;img alt=&#34;/img/opencover-dead-code.png&#34; class=&#34;align-center&#34; src=&#34;http://fuqua.io/blog/img/opencover-dead-code.png&#34; style=&#34;width: 80%;&#34;/&gt;
+&lt;img alt=&#34;/img/opencover-dead-code.png&#34; class=&#34;align-center&#34; src=&#34;https://fuqua.io/blog/img/opencover-dead-code.png&#34; style=&#34;width: 80%;&#34;/&gt;
 &lt;p&gt;This technique depends on us being able to fully exercise all parts of the web application. That could be the hardest part, depending on how large the application is. Tooling like OpenCover and ReportGenerator make the rest of it&amp;nbsp;easy!&lt;/p&gt;
 &lt;/div&gt;
 </description>
@@ -269,7 +269,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
         
             <item>
         <title>Increasing Code Quality with SonarQube</title>
-        <link>http://fuqua.io/blog/2016/06/increasing-code-quality-with-sonarqube/</link>
+        <link>https://fuqua.io/blog/2016/06/increasing-code-quality-with-sonarqube/</link>
         <description>&lt;p&gt;I just posted an article about SonarQube, an open source static analysis tool, and how we set it up to scan every incoming GitHub pull request at&amp;nbsp;work.&lt;/p&gt;
 &lt;p&gt;You can &lt;a class=&#34;reference external&#34; href=&#34;http://techblog.jetabroad.com/2016/06/increasing-code-quality-with-sonarqube.html&#34;&gt;read it at the Jetabroad Tech Blog&lt;/a&gt;.&lt;/p&gt;
 </description>
@@ -279,7 +279,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
         
             <item>
         <title>Vim Presentation</title>
-        <link>http://fuqua.io/blog/2016/06/vim-presentation/</link>
+        <link>https://fuqua.io/blog/2016/06/vim-presentation/</link>
         <description>&lt;p&gt;I recently gave a presentation on thinking in vim, which tries to bring people to that &amp;quot;Aha!&amp;quot; moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is&amp;nbsp;useful!&lt;/p&gt;
 &lt;iframe style=&#34;width:100%&#34; src=&#34;https://docs.google.com/presentation/d/1WzjWgKrrlN0BRnP0a99jomsnNX2xRUhvCSVLVWFfpyw/embed?start=false&amp;amp;loop=false&amp;amp;delayms=60000&#34; frameborder=&#34;0&#34; width=&#34;960&#34; height=&#34;569&#34; allowfullscreen=&#34;true&#34; mozallowfullscreen=&#34;true&#34; webkitallowfullscreen=&#34;true&#34;&gt;&lt;/iframe&gt;</description>
         <pubDate>Mon, 13 Jun 2016 05:00:00 GMT</pubDate>
@@ -288,7 +288,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
         
             <item>
         <title>A Software Developer Learning Thai</title>
-        <link>http://fuqua.io/blog/2015/04/a-software-developer-learning-thai/</link>
+        <link>https://fuqua.io/blog/2015/04/a-software-developer-learning-thai/</link>
         <description>&lt;p&gt;I recently uprooted from the &lt;span class=&#34;caps&#34;&gt;USA&lt;/span&gt; and moved to Thailand! It&amp;#8217;s been an incredible experience so far. One of the more fascinating aspects of it has been learning the Thai language. I&amp;#8217;ve created a couple of basic tools to help myself learn. Developing the tools helps me learn new technologies, and the resulting product helps me learn the&amp;nbsp;language!&lt;/p&gt;
 &lt;ul class=&#34;simple&#34;&gt;
 &lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/thai-characters&#34;&gt;Thai Characters&lt;/a&gt; &amp;#8211; Simple flashcards to learn the characters and their low/middle/high class&amp;nbsp;association.&lt;/li&gt;
@@ -302,7 +302,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
         
             <item>
         <title>Quick Tip: Format Finder for .NET date strings</title>
-        <link>http://fuqua.io/blog/2015/02/quick-tip-format-finder-for-net-date-strings/</link>
+        <link>https://fuqua.io/blog/2015/02/quick-tip-format-finder-for-net-date-strings/</link>
         <description>&lt;p&gt;If you&amp;#8217;ve written C# for any length of time, chances are you&amp;#8217;ve become very familiar with the &lt;span class=&#34;caps&#34;&gt;MSDN&lt;/span&gt; documentation pages about &lt;a class=&#34;reference external&#34; href=&#34;https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx&#34;&gt;Standard Date and Time Format Strings&lt;/a&gt; and &lt;a class=&#34;reference external&#34; href=&#34;https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx&#34;&gt;Custom Date and Time Format Strings&lt;/a&gt;. Any time you need to format a &lt;tt class=&#34;docutils literal&#34;&gt;DateTime&lt;/tt&gt;, those pages are&amp;nbsp;invaluable.&lt;/p&gt;
 &lt;p&gt;I don&amp;#8217;t find myself reading those pages often enough to warrant memorizing the strings, but I do read them often enough that it&amp;#8217;s worth automating the lookup. So I wrote a simple webapp to do&amp;nbsp;it.&lt;/p&gt;
 &lt;img alt=&#34;http://imgs.xkcd.com/comics/automation.png&#34; class=&#34;align-center&#34; src=&#34;http://imgs.xkcd.com/comics/automation.png&#34; style=&#34;width: 50%;&#34;/&gt;
@@ -316,7 +316,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
         
             <item>
         <title>Pushing Database Changes to the Web with Datomic</title>
-        <link>http://fuqua.io/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/</link>
+        <link>https://fuqua.io/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/</link>
         <description>&lt;p&gt;Lately I&amp;#8217;ve been playing around with &lt;a class=&#34;reference external&#34; href=&#34;http://www.datomic.com&#34;&gt;Datomic&lt;/a&gt;, a database invented by Rich Hickey, the creator of Clojure.
 Datomic feels like a natural extension of Clojure&amp;#8217;s immutable, persistent datastructures. From Datomic&amp;#8217;s &lt;a class=&#34;reference external&#34; href=&#34;http://docs.datomic.com/architecture.html&#34;&gt;architecture documentation&lt;/a&gt;:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -324,12 +324,12 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 &lt;p&gt;Daniel Higginbotham wrote a great tutorial on the basics of Datomic called &lt;a class=&#34;reference external&#34; href=&#34;http://www.flyingmachinestudios.com/programming/datomic-for-five-year-olds/&#34;&gt;Datomic for Five Year Olds&lt;/a&gt;, which I highly recommend (even if you are older than&amp;nbsp;five).&lt;/p&gt;
 &lt;p&gt;We&amp;#8217;re going to focus on one aspect of Datomic in this post: the &lt;a class=&#34;reference external&#34; href=&#34;http://blog.datomic.com/2013/10/the-transaction-report-queue.html&#34;&gt;Transaction Report Queue&lt;/a&gt;, and how we can use it to push database changes to a web client using websockets. We&amp;#8217;ll assume some basic Clojure web application&amp;nbsp;experience.&lt;/p&gt;
 &lt;p&gt;At this point, most blog posts would explain that the web is becomingly increasingly real-time, that users expect this sort of thing, yadda yadda. Instead, let&amp;#8217;s jump right into what we&amp;#8217;re building &amp;#8211; a simple &amp;quot;connected users&amp;quot;&amp;nbsp;application:&lt;/p&gt;
-&lt;img alt=&#34;/img/datomic-pushing-changes-demo.gif&#34; src=&#34;http://fuqua.io/blog/img/datomic-pushing-changes-demo.gif&#34; style=&#34;width: 100%;&#34;/&gt;
+&lt;img alt=&#34;/img/datomic-pushing-changes-demo.gif&#34; src=&#34;https://fuqua.io/blog/img/datomic-pushing-changes-demo.gif&#34; style=&#34;width: 100%;&#34;/&gt;
 &lt;p&gt;What&amp;#8217;s going on here? As users connect to our web application, they&amp;#8217;re assigned a random username (such as &amp;quot;Merry Frog&amp;quot; or &amp;quot;Cheerful Aardvark&amp;quot;). This username is then inserted into a Datomic database, and the change is pushed from the database to all the connected users. The source for this application is &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/push-demo&#34;&gt;on GitHub&lt;/a&gt;. We&amp;#8217;ll walk through how it all works for the rest of this blog&amp;nbsp;post.&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;application-design&#34;&gt;
 &lt;h3&gt;Application&amp;nbsp;Design&lt;/h3&gt;
 &lt;p&gt;Here&amp;#8217;s the basic layout of the&amp;nbsp;application:&lt;/p&gt;
-&lt;img alt=&#34;/img/datomic-push-architecture.png&#34; src=&#34;http://fuqua.io/blog/img/datomic-push-architecture.png&#34; style=&#34;width: 100%;&#34;/&gt;
+&lt;img alt=&#34;/img/datomic-push-architecture.png&#34; src=&#34;https://fuqua.io/blog/img/datomic-push-architecture.png&#34; style=&#34;width: 100%;&#34;/&gt;
 &lt;p&gt;The core piece here is the Transaction Report Queue that resides in our Clojure backend. This blocking queue will provide us with the all of the database transactions that happen against Datomic. Our application reads from this queue in a background thread, and whenever it&amp;#8217;s notified of a change, it will send it to the connected&amp;nbsp;clients.&lt;/p&gt;
 &lt;p&gt;The &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; server is powered by &lt;a class=&#34;reference external&#34; href=&#34;http://http-kit.org/index.html&#34;&gt;&lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; Kit&lt;/a&gt; and &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure&#34;&gt;Compojure&lt;/a&gt;. This is not much different than the typical Ring/Compojure Clojure web application stack; we&amp;#8217;ve simply swapped out the standard Jetty Ring adapter for &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; Kit. This allows us to handle asynchronous requests and websocket&amp;nbsp;connections.&lt;/p&gt;
 &lt;p&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/ptaoussanis/sente&#34;&gt;Sente&lt;/a&gt; is similar to socket.io from the Node.js world. It&amp;#8217;s an abstraction layer that provides real-time communication over websockets, with an &lt;span class=&#34;caps&#34;&gt;AJAX&lt;/span&gt; long-polling fallback. This library has both Clojure and ClojureScript&amp;nbsp;components.&lt;/p&gt;
@@ -502,7 +502,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
         
             <item>
         <title>Haskell&#39;s Elegant Fibonacci Implementation in C#</title>
-        <link>http://fuqua.io/blog/2014/03/haskells-elegant-fibonacci-in-csharp/</link>
+        <link>https://fuqua.io/blog/2014/03/haskells-elegant-fibonacci-in-csharp/</link>
         <description>&lt;p&gt;&lt;a class=&#34;reference external&#34; href=&#34;http://www.haskell.org/haskellwiki/Introduction&#34;&gt;Haskell&lt;/a&gt; is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Fibonacci_number&#34;&gt;Fibonacci series&lt;/a&gt;&amp;nbsp;algorithm:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kr&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;zipWith&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tail&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -674,7 +674,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
         
             <item>
         <title>Native JavaScript Promises and Browser APIs</title>
-        <link>http://fuqua.io/blog/2014/02/native-javascript-promises-and-browser-apis/</link>
+        <link>https://fuqua.io/blog/2014/02/native-javascript-promises-and-browser-apis/</link>
         <description>&lt;p&gt;One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Promise_(programming)&#34;&gt;Promises&lt;/a&gt;. Promises simplify asynchronous code. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is&amp;nbsp;everywhere.&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;the-problem-with-asynchronicity&#34;&gt;
 &lt;h3&gt;The Problem with&amp;nbsp;Asynchronicity&lt;/h3&gt;
@@ -844,7 +844,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
         
             <item>
         <title>REST APIs and Relational Databases in Clojure</title>
-        <link>http://fuqua.io/blog/2013/12/rest-apis-and-relational-databases-in-clojure/</link>
+        <link>https://fuqua.io/blog/2013/12/rest-apis-and-relational-databases-in-clojure/</link>
         <description>&lt;p&gt;I&amp;#8217;ve found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational&amp;nbsp;databases.&lt;/p&gt;
 &lt;p&gt;In this post we&amp;#8217;ll create a simple &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; for a todo list web application. We&amp;#8217;ll use &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure&#34;&gt;Compojure&lt;/a&gt; to create a &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;, &lt;a class=&#34;reference external&#34; href=&#34;http://budu.github.io/lobos/&#34;&gt;Lobos&lt;/a&gt; to create and manage our database tables, and &lt;a class=&#34;reference external&#34; href=&#34;http://sqlkorma.com/&#34;&gt;Korma&lt;/a&gt; to query a PostgreSQL&amp;nbsp;database.&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;generating-a-compojure-application&#34;&gt;
@@ -1042,7 +1042,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
         
             <item>
         <title>Acrylamid with virtualenv and pip</title>
-        <link>http://fuqua.io/blog/2013/09/acrylamid-with-virtualenv-and-pip/</link>
+        <link>https://fuqua.io/blog/2013/09/acrylamid-with-virtualenv-and-pip/</link>
         <description>&lt;p&gt;Every two years or so, I decide that I should probably have a tech blog, even if it&amp;#8217;s just a place for me to post notes on languages and systems I&amp;#8217;m experimenting with.
 That time has rolled around again, so I spent some time playing with &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/&#34;&gt;Acrylamid&lt;/a&gt;, a &lt;em&gt;static blog generator&lt;/em&gt; written in Python. From Acrylamid&amp;#8217;s&amp;nbsp;website:&lt;/p&gt;
 &lt;blockquote&gt;
