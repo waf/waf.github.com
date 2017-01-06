@@ -117,7 +117,7 @@ However, if we write that exact code, it won't compile! C# doesn't know how to d
         second = array[1];
         third = array[2];
         fourth = array[3];
-        rest = array.Skip(1).ToArray();
+        rest = array.Skip(4).ToArray();
     }
 
 Any type can implement ``Deconstruct`` as a method or extension method, and it will then be able to take part in the new C# 7 deconstruction syntax. This method we just wrote only works for deconstructing into 5 variables, but that's all we need right now. Additional extension methods for array deconstruction can be found `in this gist`_.

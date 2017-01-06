@@ -138,7 +138,7 @@
     <span class="n">second</span> <span class="p">=</span> <span class="n">array</span><span class="p">[</span><span class="m">1</span><span class="p">];</span>
     <span class="n">third</span> <span class="p">=</span> <span class="n">array</span><span class="p">[</span><span class="m">2</span><span class="p">];</span>
     <span class="n">fourth</span> <span class="p">=</span> <span class="n">array</span><span class="p">[</span><span class="m">3</span><span class="p">];</span>
-    <span class="n">rest</span> <span class="p">=</span> <span class="n">array</span><span class="p">.</span><span class="n">Skip</span><span class="p">(</span><span class="m">1</span><span class="p">).</span><span class="n">ToArray</span><span class="p">();</span>
+    <span class="n">rest</span> <span class="p">=</span> <span class="n">array</span><span class="p">.</span><span class="n">Skip</span><span class="p">(</span><span class="m">4</span><span class="p">).</span><span class="n">ToArray</span><span class="p">();</span>
 <span class="p">}</span>
 </pre></div>
 <p>Any type can implement <tt class="docutils literal">Deconstruct</tt> as a method or extension method, and it will then be able to take part in the new C# 7 deconstruction syntax. This method we just wrote only works for deconstructing into 5 variables, but that&#8217;s all we need right now. Additional extension methods for array deconstruction can be found <a class="reference external" href="https://gist.github.com/waf/280152ab42aa92a85b79d6dbc812e68a">in this gist</a>.</p>
