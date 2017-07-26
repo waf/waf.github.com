@@ -11,13 +11,24 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>https://fuqua.io/blog//2017/07/the-implementation-of-csharp-local-functions/</loc>
+    <lastmod>2017-07-26</lastmod>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
     <loc>https://fuqua.io/blog//tag/reagent/</loc>
     <lastmod>2017-01-05</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>https://fuqua.io/blog//tag/language/</loc>
+    <lastmod>2017-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>https://fuqua.io/blog//articles/</loc>
-    <lastmod>2017-01-01</lastmod>
+    <lastmod>2017-07-26</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -53,7 +64,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//rss.xml</loc>
-    <lastmod>2017-01-06</lastmod>
+    <lastmod>2017-07-26</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -102,7 +113,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//atom.xml</loc>
-    <lastmod>2017-01-06</lastmod>
+    <lastmod>2017-07-26</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -134,11 +145,6 @@
   <url>
     <loc>https://fuqua.io/blog//tag/tools/</loc>
     <lastmod>2017-01-05</lastmod>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://fuqua.io/blog//page/2/</loc>
-    <lastmod>2017-01-01</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -175,7 +181,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//</loc>
-    <lastmod>2017-01-01</lastmod>
+    <lastmod>2017-07-26</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -232,7 +238,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/csharp/</loc>
-    <lastmod>2017-01-05</lastmod>
+    <lastmod>2017-07-26</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>

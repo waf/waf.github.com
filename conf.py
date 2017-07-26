@@ -9,8 +9,7 @@ AUTHOR = 'Will Fuqua'
 
 FILTERS = ['reStructuredText', 'typography', 'h1']
 VIEWS = {
-    '/': {'filters': 'summarize', 'view': 'index',
-          'pagination': '/page/:num/'},
+    '/': {'filters': 'summarize', 'view': 'index', 'items_per_page': 1000},
     '/:year/:month/:slug/': {'views': ['entry', 'draft']},
     '/tag/:name/': {'filters': 'summarize', 'view':'tag',
                     'pagination': '/tag/:name/:num/'},

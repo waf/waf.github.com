@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>The Implementation of C# Local Functions</title>
+        <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
+        <link media="all" href="/blog/style/main.css" rel="stylesheet" />
+        <link href="/favicon.ico" rel="shortcut icon" />
+        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
+        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
+        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-38553935-1']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    <meta name="description" content="One of C# 7&#39;s new features is local functions. It..." />
+    <meta name="keywords" content="csharp, language" />
+    </head>
+    <body>
+        <header>
+            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        </header>
+        
+        <nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+<article>
+    <h1>The Implementation of C# Local Functions</h1>
+    <p>One of C# 7&#8217;s new features is local functions. It provides a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (it supports ref and out parameters, async, generic, etc). I also read that it compiles down to normal methods, thus reducing <span class="caps">GC</span> allocations, because it isn&#8217;t constructing the System.Func each time the method was&nbsp;called.</p>
+<p>I was curious about that last part. How does it work? Let&#8217;s open up the dotPeek compiler and find&nbsp;out!</p>
+<p>First, here&#8217;s a simple test program using a local&nbsp;function:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">AddFive</span><span class="p">(</span><span class="m">7</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="kt">int</span> <span class="nf">AddFive</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// the local function declaration</span>
+        <span class="kt">int</span> <span class="nf">InnerAdd</span><span class="p">(</span><span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">a</span> <span class="p">+</span> <span class="n">b</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="nf">InnerAdd</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>Admittedly, the above local function is not really needed in this case, but it&#8217;s simple enough code that the decompilation won&#8217;t be&nbsp;scary!</p>
+<p>After decompiling the above program, we get the following for the <tt class="docutils literal">AddFive</tt> method:</p>
+<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">AddFive</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// object of a compiler-generated type is created</span>
+    <span class="c1">// reference to a compiler-generated method</span>
+    <span class="k">return</span> <span class="n">Program</span><span class="p">.&lt;</span><span class="n">AddFive</span><span class="p">&gt;</span><span class="n">g__InnerAdd1_0</span><span class="p">(</span><span class="m">5</span><span class="p">,</span> <span class="k">ref</span> <span class="k">new</span> <span class="n">Program</span><span class="p">.&lt;&gt;</span><span class="n">c__DisplayClass1_0</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">a</span> <span class="p">=</span> <span class="n">a</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+<p>The above comments are helpfully added by the decompiler. As we can see, the compiler created the following for&nbsp;us:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Program.&lt;AddFive&gt;g__InnerAdd1_0</span></tt> &#8211; this our InnerAdd function, converted to a normal static function in the Program class. <tt class="docutils literal">&lt;AddFive&gt;</tt> is simply part of the name, it&#8217;s not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance&nbsp;method.</li>
+<li><tt class="docutils literal"><span class="pre">Program.&lt;&gt;c__DisplayClass1_0</span></tt> &#8211; This is a generated class. It captures the <tt class="docutils literal">a</tt> parameter, and is passed by reference into our function as a&nbsp;parameter.</li>
+</ul>
+<p>In order to look into the generated class and function, we need to look at the <span class="caps">IL</span> code. First, let&#8217;s look at the generated class that captures the <tt class="docutils literal">a</tt> parameter:</p>
+<div class="highlight"><pre><span></span><span class="p">.</span><span class="k">class</span> <span class="nc">nested</span> <span class="k">private</span> <span class="k">sealed</span> <span class="n">auto</span> <span class="n">ansi</span> <span class="n">beforefieldinit</span>
+  <span class="err">&#39;</span><span class="p">&lt;&gt;</span><span class="n">c__DisplayClass1_0</span><span class="err">&#39;</span>
+    <span class="n">extends</span> <span class="p">[</span><span class="n">mscorlib</span><span class="p">]</span><span class="n">System</span><span class="p">.</span><span class="n">ValueType</span>
+<span class="p">{</span>
+  <span class="p">.</span><span class="n">custom</span> <span class="n">instance</span> <span class="k">void</span>
+<span class="na">    [mscorlib]</span><span class="n">System</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">CompilerServices</span><span class="p">.</span><span class="n">CompilerGeneratedAttribute</span><span class="p">::.</span><span class="n">ctor</span><span class="p">()</span>
+    <span class="p">=</span> <span class="p">(</span><span class="m">01</span> <span class="m">00</span> <span class="m">00</span> <span class="m">00</span> <span class="p">)</span>
+
+  <span class="p">.</span><span class="n">field</span> <span class="k">public</span> <span class="n">int32</span> <span class="n">a</span>
+<span class="p">}</span>
+</pre></div>
+<p>Two interesting things about this are that it only has one field, the <tt class="docutils literal">int32 a</tt> that is used to pass our <tt class="docutils literal">a</tt> parameter to the function, and that the class extends from <a class="reference external" href="https://msdn.microsoft.com/en-us/library/system.valuetype(v=vs.110).aspx#Anchor_4">System.ValueType</a>. System.ValueType is the base class for all value types, so the generated value type will not cause heap allocations. The C# compiler prevents user code from extending&nbsp;System.ValueType.</p>
+<p>Next, let&#8217;s look at the generated&nbsp;method:</p>
+<div class="highlight"><pre><span></span><span class="p">.</span><span class="n">method</span> <span class="n">assembly</span> <span class="n">hidebysig</span> <span class="k">static</span> <span class="n">int32</span>
+    <span class="err">&#39;</span><span class="p">&lt;</span><span class="n">AddFive</span><span class="p">&gt;</span><span class="n">g__InnerAdd1_0</span><span class="err">&#39;</span><span class="p">(</span>
+      <span class="n">int32</span> <span class="n">b</span><span class="p">,</span>
+<span class="na">      [in]</span> <span class="n">valuetype</span> <span class="n">Demo</span><span class="p">.</span><span class="n">Program</span><span class="p">/</span><span class="err">&#39;</span><span class="p">&lt;&gt;</span><span class="n">c__DisplayClass1_0</span><span class="err">&#39;</span><span class="p">&amp;</span> <span class="n">obj1</span>
+    <span class="p">)</span> <span class="n">cil</span> <span class="n">managed</span>
+  <span class="p">{</span>
+    <span class="p">.</span><span class="n">custom</span> <span class="n">instance</span> <span class="k">void</span>
+<span class="na">      [mscorlib]</span><span class="n">System</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">CompilerServices</span><span class="p">.</span><span class="n">CompilerGeneratedAttribute</span><span class="p">::.</span><span class="n">ctor</span><span class="p">()</span>
+      <span class="p">=</span> <span class="p">(</span><span class="m">01</span> <span class="m">00</span> <span class="m">00</span> <span class="m">00</span> <span class="p">)</span>
+    <span class="p">.</span><span class="n">maxstack</span> <span class="m">8</span>
+
+    <span class="n">IL_0000</span><span class="p">:</span> <span class="n">ldarg</span><span class="p">.</span><span class="m">1</span>      <span class="c1">// obj1</span>
+    <span class="n">IL_0001</span><span class="p">:</span> <span class="n">ldfld</span>        <span class="n">int32</span> <span class="n">Demo</span><span class="p">.</span><span class="n">Program</span><span class="p">/</span><span class="err">&#39;</span><span class="p">&lt;&gt;</span><span class="n">c__DisplayClass1_0</span><span class="err">&#39;</span><span class="p">::</span><span class="n">a</span>
+    <span class="n">IL_0006</span><span class="p">:</span> <span class="n">ldarg</span><span class="p">.</span><span class="m">0</span>      <span class="c1">// b</span>
+    <span class="n">IL_0007</span><span class="p">:</span> <span class="k">add</span>
+    <span class="n">IL_0008</span><span class="p">:</span> <span class="n">ret</span>
+
+  <span class="p">}</span> <span class="c1">// end of method Program::&#39;&lt;AddFive&gt;g__InnerAdd1_0&#39;</span>
+<span class="p">}</span> <span class="c1">// end of class Demo.Program</span>
+</pre></div>
+<p>Despite being a bit long, this is pretty straight-forward. It&#8217;s a static function that takes two parameters, <tt class="docutils literal">int b</tt> and our generated <tt class="docutils literal">obj1</tt>. It loads our argument obj1 onto the stack, then loads field <tt class="docutils literal">obj1.a</tt>, then loads our argument <tt class="docutils literal">b</tt>. Next, it calls add, which pops the top two values off the stack and adds them, then pushes the result back on the stack. Finally, it calls <tt class="docutils literal">ret</tt> to return that&nbsp;result.</p>
+<p>Let&#8217;s make things a bit more interesting. What if our nested function mutates (<em>gasp</em>)?</p>
+<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">AddFive</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">InnerAdd</span><span class="p">(</span><span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">a</span> <span class="p">+=</span> <span class="n">b</span><span class="p">;</span>
+
+    <span class="n">InnerAdd</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>The <tt class="docutils literal">InnerAdd</tt> function is now a <tt class="docutils literal">void</tt> function, that mutates <tt class="docutils literal">a</tt> in the outer scope. In this case, our decompiled AddFive function looks like&nbsp;this:</p>
+<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">AddFive</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="c1">// object of a compiler-generated type is created</span>
+   <span class="n">Program</span><span class="p">.&lt;&gt;</span><span class="n">c__DisplayClass1_0</span> <span class="n">cDisplayClass10</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Program</span><span class="p">.&lt;&gt;</span><span class="n">c__DisplayClass1_0</span><span class="p">();</span>
+   <span class="c1">// reference to a compiler-generated field</span>
+   <span class="n">cDisplayClass10</span><span class="p">.</span><span class="n">a</span> <span class="p">=</span> <span class="n">a</span><span class="p">;</span>
+   <span class="c1">// reference to a compiler-generated method</span>
+   <span class="n">Program</span><span class="p">.&lt;</span><span class="n">AddFive</span><span class="p">&gt;</span><span class="n">g__InnerAdd1_0</span><span class="p">(</span><span class="m">5</span><span class="p">,</span> <span class="k">ref</span> <span class="n">cDisplayClass10</span><span class="p">);</span>
+   <span class="c1">// reference to a compiler-generated field</span>
+   <span class="k">return</span> <span class="n">cDisplayClass10</span><span class="p">.</span><span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>This is more interesting than the first case. We can see that our generated class is set up ahead of time, then passed into the generated static function, and then all subsequent references to the parameter <tt class="docutils literal">a</tt> are turned into references to the generated field!&nbsp;Fascinating.</p>
+
+    <div class="tags">
+        
+            tagged as
+                <a href="/blog/tag/csharp/" rel="tag">csharp</a>
+                    and
+                    
+                <a href="/blog/tag/language/" rel="tag">language</a>
+                
+        
+    </div>
+    <script src="https://apis.google.com/js/plusone.js">
+    </script>
+    <div id="comments">
+        <div class="g-comments"
+            data-href="https://fuqua.io/blog/2017/07/the-implementation-of-csharp-local-functions/"
+            data-width="642"
+            data-first_party_property="BLOGGER"
+            data-view_type="FILTERED_POSTMOD">
+        </div>
+    </div>
+</article>
+<script src="/blog/script/list.min.js"></script>
+    </body>
+</html>

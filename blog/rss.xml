@@ -5,9 +5,112 @@
         <link>https://fuqua.io/blog/</link>
         <description></description>
         <language>en</language>
-        <pubDate>Mon, 02 Jan 2017 05:00:00 GMT</pubDate>
+        <pubDate>Wed, 26 Jul 2017 04:00:00 GMT</pubDate>
         <docs>https://fuqua.io/blog/rss.xml</docs>
         <generator>acrylamid 0.7.10</generator>
+        
+            <item>
+        <title>The Implementation of C# Local Functions</title>
+        <link>https://fuqua.io/blog/2017/07/the-implementation-of-csharp-local-functions/</link>
+        <description>&lt;p&gt;One of C# 7&amp;#8217;s new features is local functions. It provides a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (it supports ref and out parameters, async, generic, etc). I also read that it compiles down to normal methods, thus reducing &lt;span class=&#34;caps&#34;&gt;GC&lt;/span&gt; allocations, because it isn&amp;#8217;t constructing the System.Func each time the method was&amp;nbsp;called.&lt;/p&gt;
+&lt;p&gt;I was curious about that last part. How does it work? Let&amp;#8217;s open up the dotPeek compiler and find&amp;nbsp;out!&lt;/p&gt;
+&lt;p&gt;First, here&amp;#8217;s a simple test program using a local&amp;nbsp;function:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Program&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;Console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WriteLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AddFive&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;AddFive&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// the local function declaration&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;InnerAdd&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;InnerAdd&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Admittedly, the above local function is not really needed in this case, but it&amp;#8217;s simple enough code that the decompilation won&amp;#8217;t be&amp;nbsp;scary!&lt;/p&gt;
+&lt;p&gt;After decompiling the above program, we get the following for the &lt;tt class=&#34;docutils literal&#34;&gt;AddFive&lt;/tt&gt; method:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;AddFive&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// object of a compiler-generated type is created&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// reference to a compiler-generated method&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Program&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AddFive&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;g__InnerAdd1_0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;ref&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Program&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&amp;lt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c__DisplayClass1_0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The above comments are helpfully added by the decompiler. As we can see, the compiler created the following for&amp;nbsp;us:&lt;/p&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Program.&amp;lt;AddFive&amp;gt;g__InnerAdd1_0&lt;/span&gt;&lt;/tt&gt; &amp;#8211; this our InnerAdd function, converted to a normal static function in the Program class. &lt;tt class=&#34;docutils literal&#34;&gt;&amp;lt;AddFive&amp;gt;&lt;/tt&gt; is simply part of the name, it&amp;#8217;s not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance&amp;nbsp;method.&lt;/li&gt;
+&lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Program.&amp;lt;&amp;gt;c__DisplayClass1_0&lt;/span&gt;&lt;/tt&gt; &amp;#8211; This is a generated class. It captures the &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; parameter, and is passed by reference into our function as a&amp;nbsp;parameter.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In order to look into the generated class and function, we need to look at the &lt;span class=&#34;caps&#34;&gt;IL&lt;/span&gt; code. First, let&amp;#8217;s look at the generated class that captures the &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; parameter:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;nested&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;sealed&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;auto&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ansi&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;beforefieldinit&lt;/span&gt;
+  &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c__DisplayClass1_0&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;mscorlib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ValueType&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;custom&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt;
+&lt;span class=&#34;na&#34;&gt;    [mscorlib]&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Runtime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CompilerServices&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CompilerGeneratedAttribute&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;::.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ctor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;01&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;00&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;00&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;00&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+  &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;field&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;int32&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Two interesting things about this are that it only has one field, the &lt;tt class=&#34;docutils literal&#34;&gt;int32 a&lt;/tt&gt; that is used to pass our &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; parameter to the function, and that the class extends from &lt;a class=&#34;reference external&#34; href=&#34;https://msdn.microsoft.com/en-us/library/system.valuetype(v=vs.110).aspx#Anchor_4&#34;&gt;System.ValueType&lt;/a&gt;. System.ValueType is the base class for all value types, so the generated value type will not cause heap allocations. The C# compiler prevents user code from extending&amp;nbsp;System.ValueType.&lt;/p&gt;
+&lt;p&gt;Next, let&amp;#8217;s look at the generated&amp;nbsp;method:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;method&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;assembly&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;hidebysig&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;int32&lt;/span&gt;
+    &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AddFive&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;g__InnerAdd1_0&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+      &lt;span class=&#34;n&#34;&gt;int32&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;na&#34;&gt;      [in]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;valuetype&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Demo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Program&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c__DisplayClass1_0&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;obj1&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cil&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;managed&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;custom&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt;
+&lt;span class=&#34;na&#34;&gt;      [mscorlib]&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Runtime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CompilerServices&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CompilerGeneratedAttribute&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;::.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ctor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+      &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;01&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;00&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;00&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;00&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;maxstack&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;IL_0000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ldarg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;      &lt;span class=&#34;c1&#34;&gt;// obj1&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;IL_0001&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ldfld&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;int32&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Demo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Program&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c__DisplayClass1_0&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;IL_0006&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ldarg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;      &lt;span class=&#34;c1&#34;&gt;// b&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;IL_0007&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;add&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;IL_0008&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ret&lt;/span&gt;
+
+  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// end of method Program::&amp;#39;&amp;lt;AddFive&amp;gt;g__InnerAdd1_0&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// end of class Demo.Program&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Despite being a bit long, this is pretty straight-forward. It&amp;#8217;s a static function that takes two parameters, &lt;tt class=&#34;docutils literal&#34;&gt;int b&lt;/tt&gt; and our generated &lt;tt class=&#34;docutils literal&#34;&gt;obj1&lt;/tt&gt;. It loads our argument obj1 onto the stack, then loads field &lt;tt class=&#34;docutils literal&#34;&gt;obj1.a&lt;/tt&gt;, then loads our argument &lt;tt class=&#34;docutils literal&#34;&gt;b&lt;/tt&gt;. Next, it calls add, which pops the top two values off the stack and adds them, then pushes the result back on the stack. Finally, it calls &lt;tt class=&#34;docutils literal&#34;&gt;ret&lt;/tt&gt; to return that&amp;nbsp;result.&lt;/p&gt;
+&lt;p&gt;Let&amp;#8217;s make things a bit more interesting. What if our nested function mutates (&lt;em&gt;gasp&lt;/em&gt;)?&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;AddFive&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;InnerAdd&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;InnerAdd&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;tt class=&#34;docutils literal&#34;&gt;InnerAdd&lt;/tt&gt; function is now a &lt;tt class=&#34;docutils literal&#34;&gt;void&lt;/tt&gt; function, that mutates &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; in the outer scope. In this case, our decompiled AddFive function looks like&amp;nbsp;this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;AddFive&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;c1&#34;&gt;// object of a compiler-generated type is created&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;Program&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&amp;lt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c__DisplayClass1_0&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cDisplayClass10&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Program&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&amp;lt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c__DisplayClass1_0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+   &lt;span class=&#34;c1&#34;&gt;// reference to a compiler-generated field&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;cDisplayClass10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+   &lt;span class=&#34;c1&#34;&gt;// reference to a compiler-generated method&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;Program&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AddFive&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;g__InnerAdd1_0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;ref&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cDisplayClass10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+   &lt;span class=&#34;c1&#34;&gt;// reference to a compiler-generated field&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cDisplayClass10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is more interesting than the first case. We can see that our generated class is set up ahead of time, then passed into the generated static function, and then all subsequent references to the parameter &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; are turned into references to the generated field!&amp;nbsp;Fascinating.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 26 Jul 2017 04:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2017-07-26:/2017/07/the-implementation-of-csharp-local-functions</guid>
+    </item>
         
             <item>
         <title>Solving the Zebra Puzzle with LINQ and C# 7</title>
@@ -186,7 +289,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
 &lt;p&gt;&lt;tt class=&#34;docutils literal&#34;&gt;System.ValueTuple&lt;/tt&gt; looks like a very useful feature &amp;#8211; but I&amp;#8217;ll need to be careful to balance this with code readability concerns. Sometimes it might be better to break a &lt;tt class=&#34;docutils literal&#34;&gt;System.ValueTuple&lt;/tt&gt; into a named class with documentation. For cases like this blog post though, where the types are only ever used inside a single method or class, I think it&amp;#8217;s a valuable&amp;nbsp;feature.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Mon, 02 Jan 2017 05:00:00 GMT</pubDate>
+        <pubDate>Mon, 02 Jan 2017 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2017-01-02:/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7</guid>
     </item>
         
@@ -263,7 +366,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
 &lt;p&gt;This technique depends on us being able to fully exercise all parts of the web application. That could be the hardest part, depending on how large the application is. Tooling like OpenCover and ReportGenerator make the rest of it&amp;nbsp;easy!&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sat, 13 Aug 2016 05:00:00 GMT</pubDate>
+        <pubDate>Sat, 13 Aug 2016 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2016-08-13:/2016/08/finding-dead-csharp-code-in-aspnet</guid>
     </item>
         
@@ -273,7 +376,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
         <description>&lt;p&gt;I just posted an article about SonarQube, an open source static analysis tool, and how we set it up to scan every incoming GitHub pull request at&amp;nbsp;work.&lt;/p&gt;
 &lt;p&gt;You can &lt;a class=&#34;reference external&#34; href=&#34;http://techblog.jetabroad.com/2016/06/increasing-code-quality-with-sonarqube.html&#34;&gt;read it at the Jetabroad Tech Blog&lt;/a&gt;.&lt;/p&gt;
 </description>
-        <pubDate>Mon, 27 Jun 2016 05:00:00 GMT</pubDate>
+        <pubDate>Mon, 27 Jun 2016 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2016-06-27:/2016/06/increasing-code-quality-with-sonarqube</guid>
     </item>
         
@@ -282,7 +385,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
         <link>https://fuqua.io/blog/2016/06/vim-presentation/</link>
         <description>&lt;p&gt;I recently gave a presentation on thinking in vim, which tries to bring people to that &amp;quot;Aha!&amp;quot; moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is&amp;nbsp;useful!&lt;/p&gt;
 &lt;iframe style=&#34;width:100%&#34; src=&#34;https://docs.google.com/presentation/d/1WzjWgKrrlN0BRnP0a99jomsnNX2xRUhvCSVLVWFfpyw/embed?start=false&amp;amp;loop=false&amp;amp;delayms=60000&#34; frameborder=&#34;0&#34; width=&#34;960&#34; height=&#34;569&#34; allowfullscreen=&#34;true&#34; mozallowfullscreen=&#34;true&#34; webkitallowfullscreen=&#34;true&#34;&gt;&lt;/iframe&gt;</description>
-        <pubDate>Mon, 13 Jun 2016 05:00:00 GMT</pubDate>
+        <pubDate>Mon, 13 Jun 2016 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2016-06-13:/2016/06/vim-presentation</guid>
     </item>
         
@@ -296,7 +399,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
 &lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/ThaiRecog&#34;&gt;Thai &lt;span class=&#34;caps&#34;&gt;OCR&lt;/span&gt; Android App&lt;/a&gt; &amp;#8211; Quick &lt;span class=&#34;caps&#34;&gt;POC&lt;/span&gt; android app for doing Thai language &lt;span class=&#34;caps&#34;&gt;OCR&lt;/span&gt; using the camera. It doesn&amp;#8217;t work very well right now, but I suspect a &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/tesseract-ocr/tesseract&#34;&gt;Tesseract&lt;/a&gt; upgrade might fix&amp;nbsp;that.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Thu, 02 Apr 2015 05:00:00 GMT</pubDate>
+        <pubDate>Thu, 02 Apr 2015 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2015-04-02:/2015/04/a-software-developer-learning-thai</guid>
     </item>
         
@@ -310,7 +413,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
 &lt;p&gt;Format Finder presents you with a very specific point in time: Monday, March 1st, 2009 at 8:&lt;span class=&#34;caps&#34;&gt;04AM&lt;/span&gt;. You then provide the desired output of that date, and Format Finder will provide the formatting strings for you. For example, if you type in &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;2009-03-01&lt;/span&gt;&lt;/tt&gt;, Format Finder will return a custom format string of &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;yyyy-&lt;span class=&#34;caps&#34;&gt;MM&lt;/span&gt;-dd&lt;/span&gt;&lt;/tt&gt; along with a explanation of each part. Alternatively, if you type in &lt;tt class=&#34;docutils literal&#34;&gt;3/01/2009&lt;/tt&gt;, Format Finder will return the standard format string of &lt;tt class=&#34;docutils literal&#34;&gt;d&lt;/tt&gt;.&lt;/p&gt;
 &lt;p&gt;I hope other people find this as useful as I do. Let&amp;#8217;s skew that &lt;span class=&#34;caps&#34;&gt;XKCD&lt;/span&gt;&amp;nbsp;curve!&lt;/p&gt;
 </description>
-        <pubDate>Thu, 26 Feb 2015 05:00:00 GMT</pubDate>
+        <pubDate>Thu, 26 Feb 2015 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2015-02-26:/2015/02/quick-tip-format-finder-for-net-date-strings</guid>
     </item>
         
@@ -496,7 +599,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 &lt;p&gt;A full, working demo is available &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/push-demo&#34;&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sun, 25 May 2014 05:00:00 GMT</pubDate>
+        <pubDate>Sun, 25 May 2014 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2014-05-25:/2014/05/pushing-database-changes-to-the-web-with-datomic</guid>
     </item>
         
@@ -668,7 +771,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Tue, 11 Mar 2014 05:00:00 GMT</pubDate>
+        <pubDate>Tue, 11 Mar 2014 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2014-03-11:/2014/03/haskells-elegant-fibonacci-in-csharp</guid>
     </item>
         
@@ -838,7 +941,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 &lt;p&gt;It&amp;#8217;s worth noting that the need to wrap Browser APIs in compatibility layers will hopefully be a short-term pain. There are plans to add Promise support to existing browser APIs where possible. We&amp;#8217;re not there yet, though, so we need these wrappers for&amp;nbsp;now.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sat, 22 Feb 2014 05:00:00 GMT</pubDate>
+        <pubDate>Sat, 22 Feb 2014 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2014-02-22:/2014/02/native-javascript-promises-and-browser-apis</guid>
     </item>
         
@@ -1036,7 +1139,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 &lt;p&gt;We now have a simple &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; over a relational database. We can manage our database schema using Lobos migrations, and query our database using elegant, idiomatic Clojure via&amp;nbsp;Korma.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Wed, 04 Dec 2013 05:00:00 GMT</pubDate>
+        <pubDate>Wed, 04 Dec 2013 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2013-12-04:/2013/12/rest-apis-and-relational-databases-in-clojure</guid>
     </item>
         
@@ -1119,7 +1222,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 &lt;p&gt;I&amp;#8217;ve covered a few of the more interesting Acrylamid customization options and Python modules, but there are many, many more. Take a look at the &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/filters.html&#34;&gt;Acrylamid filter documentation&lt;/a&gt; for an exhaustive&amp;nbsp;list!&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Tue, 10 Sep 2013 05:00:00 GMT</pubDate>
+        <pubDate>Tue, 10 Sep 2013 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2013-09-10:/2013/09/acrylamid-with-virtualenv-and-pip</guid>
     </item>
         </channel>
