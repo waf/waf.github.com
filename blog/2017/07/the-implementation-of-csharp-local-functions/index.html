@@ -24,7 +24,7 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="One of C# 7&#39;s new features is local functions. It..." />
+    <meta name="description" content="One of the new features in C# 7 is local functions..." />
     <meta name="keywords" content="csharp, language" />
     </head>
     <body>
@@ -41,7 +41,7 @@
 </nav>
 <article>
     <h1>The Implementation of C# Local Functions</h1>
-    <p>One of C# 7&#8217;s new features is local functions. It provides a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (it supports ref and out parameters, async, generic, etc). I also read that it compiles down to normal methods, thus reducing <span class="caps">GC</span> allocations, because it isn&#8217;t constructing the System.Func each time the method was&nbsp;called.</p>
+    <p>One of the new features in C# 7 is local functions. They provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). I also read that local functions compile down to normal methods, thus reducing <span class="caps">GC</span> allocations when compared to&nbsp;System.Func.</p>
 <p>I was curious about that last part. How does it work? Let&#8217;s open up the dotPeek compiler and find&nbsp;out!</p>
 <p>First, here&#8217;s a simple test program using a local&nbsp;function:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Program</span>
@@ -74,10 +74,10 @@
 </pre></div>
 <p>The above comments are helpfully added by the decompiler. As we can see, the compiler created the following for&nbsp;us:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">Program.&lt;AddFive&gt;g__InnerAdd1_0</span></tt> &#8211; this our InnerAdd function, converted to a normal static function in the Program class. <tt class="docutils literal">&lt;AddFive&gt;</tt> is simply part of the name, it&#8217;s not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance&nbsp;method.</li>
-<li><tt class="docutils literal"><span class="pre">Program.&lt;&gt;c__DisplayClass1_0</span></tt> &#8211; This is a generated class. It captures the <tt class="docutils literal">a</tt> parameter, and is passed by reference into our function as a&nbsp;parameter.</li>
+<li><tt class="docutils literal"><span class="pre">Program.&lt;AddFive&gt;g__InnerAdd1_0</span></tt> &#8211; this is our InnerAdd function, converted to a normal static function in the Program class.  &lt;AddFive&gt; is simply part of the name, it&#8217;s not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance&nbsp;method.</li>
+<li><tt class="docutils literal"><span class="pre">Program.&lt;&gt;c__DisplayClass1_0</span></tt> &#8211; This is a generated class. It captures the <tt class="docutils literal">a</tt> parameter, and is passed by reference into our&nbsp;function.</li>
 </ul>
-<p>In order to look into the generated class and function, we need to look at the <span class="caps">IL</span> code. First, let&#8217;s look at the generated class that captures the <tt class="docutils literal">a</tt> parameter:</p>
+<p>In order to look into the generated class and function, we need to inspect the <span class="caps">IL</span> code. Here is the <span class="caps">IL</span> code for the generated class that captures the <tt class="docutils literal">a</tt> parameter:</p>
 <div class="highlight"><pre><span></span><span class="p">.</span><span class="k">class</span> <span class="nc">nested</span> <span class="k">private</span> <span class="k">sealed</span> <span class="n">auto</span> <span class="n">ansi</span> <span class="n">beforefieldinit</span>
   <span class="err">&#39;</span><span class="p">&lt;&gt;</span><span class="n">c__DisplayClass1_0</span><span class="err">&#39;</span>
     <span class="n">extends</span> <span class="p">[</span><span class="n">mscorlib</span><span class="p">]</span><span class="n">System</span><span class="p">.</span><span class="n">ValueType</span>
@@ -89,7 +89,7 @@
   <span class="p">.</span><span class="n">field</span> <span class="k">public</span> <span class="n">int32</span> <span class="n">a</span>
 <span class="p">}</span>
 </pre></div>
-<p>Two interesting things about this are that it only has one field, the <tt class="docutils literal">int32 a</tt> that is used to pass our <tt class="docutils literal">a</tt> parameter to the function, and that the class extends from <a class="reference external" href="https://msdn.microsoft.com/en-us/library/system.valuetype(v=vs.110).aspx#Anchor_4">System.ValueType</a>. System.ValueType is the base class for all value types, so the generated value type will not cause heap allocations. The C# compiler prevents user code from extending&nbsp;System.ValueType.</p>
+<p>Two interesting things about this are that it only has one field, <tt class="docutils literal">int32 a</tt>, that is used to pass our <tt class="docutils literal">a</tt> parameter to the function, and that the class extends from <a class="reference external" href="https://msdn.microsoft.com/en-us/library/system.valuetype(v=vs.110).aspx#Anchor_4">System.ValueType</a>. System.ValueType is the base class for all value types, so the generated value type will not cause heap allocations. The C# compiler prevents user code from extending&nbsp;System.ValueType.</p>
 <p>Next, let&#8217;s look at the generated&nbsp;method:</p>
 <div class="highlight"><pre><span></span><span class="p">.</span><span class="n">method</span> <span class="n">assembly</span> <span class="n">hidebysig</span> <span class="k">static</span> <span class="n">int32</span>
     <span class="err">&#39;</span><span class="p">&lt;</span><span class="n">AddFive</span><span class="p">&gt;</span><span class="n">g__InnerAdd1_0</span><span class="err">&#39;</span><span class="p">(</span>
@@ -135,7 +135,7 @@
    <span class="k">return</span> <span class="n">cDisplayClass10</span><span class="p">.</span><span class="n">a</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
-<p>This is more interesting than the first case. We can see that our generated class is set up ahead of time, then passed into the generated static function, and then all subsequent references to the parameter <tt class="docutils literal">a</tt> are turned into references to the generated field!&nbsp;Fascinating.</p>
+<p>This is more interesting than the first case. We can see that our generated class is set up ahead of time, then passed into the generated static function, and then all subsequent references to the parameter <tt class="docutils literal">a</tt> are rewritten into references to the generated field!&nbsp;Fascinating.</p>
 
     <div class="tags">
         

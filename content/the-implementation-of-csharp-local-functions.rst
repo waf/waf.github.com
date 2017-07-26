@@ -5,7 +5,7 @@ The Implementation of C# Local Functions
 :permalink: /2017/07/the-implementation-of-csharp-local-functions/
 :tags: [csharp, language]
 
-One of C# 7's new features is local functions. It provides a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (it supports ref and out parameters, async, generic, etc). I also read that it compiles down to normal methods, thus reducing GC allocations, because it isn't constructing the System.Func each time the method was called.
+One of the new features in C# 7 is local functions. They provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). I also read that local functions compile down to normal methods, thus reducing GC allocations when compared to System.Func.
 
 I was curious about that last part. How does it work? Let's open up the dotPeek compiler and find out!
 
@@ -47,10 +47,10 @@ After decompiling the above program, we get the following for the ``AddFive`` me
 
 The above comments are helpfully added by the decompiler. As we can see, the compiler created the following for us:
 
-- ``Program.<AddFive>g__InnerAdd1_0`` -- this our InnerAdd function, converted to a normal static function in the Program class. ``<AddFive>`` is simply part of the name, it's not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance method.
-- ``Program.<>c__DisplayClass1_0`` -- This is a generated class. It captures the ``a`` parameter, and is passed by reference into our function as a parameter.
+- ``Program.<AddFive>g__InnerAdd1_0`` -- this is our InnerAdd function, converted to a normal static function in the Program class.  <AddFive> is simply part of the name, it's not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance method.
+- ``Program.<>c__DisplayClass1_0`` -- This is a generated class. It captures the ``a`` parameter, and is passed by reference into our function.
 
-In order to look into the generated class and function, we need to look at the IL code. First, let's look at the generated class that captures the ``a`` parameter:
+In order to look into the generated class and function, we need to inspect the IL code. Here is the IL code for the generated class that captures the ``a`` parameter:
 
 .. code-block:: csharp
 
@@ -65,7 +65,7 @@ In order to look into the generated class and function, we need to look at the I
       .field public int32 a
     }
 
-Two interesting things about this are that it only has one field, the ``int32 a`` that is used to pass our ``a`` parameter to the function, and that the class extends from System.ValueType_. System.ValueType is the base class for all value types, so the generated value type will not cause heap allocations. The C# compiler prevents user code from extending System.ValueType.
+Two interesting things about this are that it only has one field, ``int32 a``, that is used to pass our ``a`` parameter to the function, and that the class extends from System.ValueType_. System.ValueType is the base class for all value types, so the generated value type will not cause heap allocations. The C# compiler prevents user code from extending System.ValueType.
 
 Next, let's look at the generated method:
 
@@ -122,7 +122,7 @@ The ``InnerAdd`` function is now a ``void`` function, that mutates ``a`` in the 
        return cDisplayClass10.a;
     }
 
-This is more interesting than the first case. We can see that our generated class is set up ahead of time, then passed into the generated static function, and then all subsequent references to the parameter ``a`` are turned into references to the generated field! Fascinating.
+This is more interesting than the first case. We can see that our generated class is set up ahead of time, then passed into the generated static function, and then all subsequent references to the parameter ``a`` are rewritten into references to the generated field! Fascinating.
 
 
 .. _System.ValueType: https://msdn.microsoft.com/en-us/library/system.valuetype(v=vs.110).aspx#Anchor_4

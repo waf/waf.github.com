@@ -39,14 +39,14 @@
 </nav>
 <article>
     <h1>The Implementation of C# Local Functions</h1>
-    <p>One of C# 7&#8217;s new features is local functions. It provides a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (it supports ref and out parameters, async, generic, etc). I also read that it compiles down to normal methods, thus reducing <span class="caps">GC</span> allocations, because it isn&#8217;t constructing the System.Func each time the method was&nbsp;called.</p>
+    <p>One of the new features in C# 7 is local functions. They provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). I also read that local functions compile down to normal methods, thus reducing <span class="caps">GC</span> allocations when compared to&nbsp;System.Func.</p>
 <p>I was curious about that last part. How does it work? Let&#8217;s open up the dotPeek compiler and find&nbsp;out!</p>
 <p>First, here&#8217;s a simple test program using a local&nbsp;function:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Program</span>
 <span class="p">{</span>
     <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
     <span class="p">{</span>
-   </pre><span>&#8230;<a href="/blog/2017/07/the-implementation-of-csharp-local-functions/" class="continue">continue</a>.</span></div>
+        </pre><span>&#8230;<a href="/blog/2017/07/the-implementation-of-csharp-local-functions/" class="continue">continue</a>.</span></div>
     <div class="tags">
         
             tagged as
