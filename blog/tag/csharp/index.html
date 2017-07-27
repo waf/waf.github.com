@@ -40,7 +40,7 @@
 <article>
     <h1>The Implementation of C# Local Functions</h1>
     <p>One of the new features in C# 7 is local functions. They provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). I also read that local functions compile down to normal methods, thus reducing <span class="caps">GC</span> allocations when compared to&nbsp;System.Func.</p>
-<p>I was curious about that last part. How does it work? Let&#8217;s open up the dotPeek compiler and find&nbsp;out!</p>
+<p>I was curious about that last part. How does it work? Let&#8217;s open up the dotPeek decompiler and find&nbsp;out!</p>
 <p>First, here&#8217;s a simple test program using a local&nbsp;function:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Program</span>
 <span class="p">{</span>

@@ -7,7 +7,7 @@ The Implementation of C# Local Functions
 
 One of the new features in C# 7 is local functions. They provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). I also read that local functions compile down to normal methods, thus reducing GC allocations when compared to System.Func.
 
-I was curious about that last part. How does it work? Let's open up the dotPeek compiler and find out!
+I was curious about that last part. How does it work? Let's open up the dotPeek decompiler and find out!
 
 First, here's a simple test program using a local function:
 
@@ -45,7 +45,7 @@ After decompiling the above program, we get the following for the ``AddFive`` me
         });
     }
 
-The above comments are helpfully added by the decompiler. As we can see, the compiler created the following for us:
+The above comments are helpfully added by the decompiler. As we can see, the C# compiler created the following for us:
 
 - ``Program.<AddFive>g__InnerAdd1_0`` -- this is our InnerAdd function, converted to a normal static function in the Program class.  <AddFive> is simply part of the name, it's not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance method.
 - ``Program.<>c__DisplayClass1_0`` -- This is a generated class. It captures the ``a`` parameter, and is passed by reference into our function.

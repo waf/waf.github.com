@@ -27,7 +27,7 @@
             <email>info@example.com</email>
         </author>
         <content type="html">&lt;p&gt;One of the new features in C# 7 is local functions. They provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). I also read that local functions compile down to normal methods, thus reducing &lt;span class=&#34;caps&#34;&gt;GC&lt;/span&gt; allocations when compared to&amp;nbsp;System.Func.&lt;/p&gt;
-&lt;p&gt;I was curious about that last part. How does it work? Let&amp;#8217;s open up the dotPeek compiler and find&amp;nbsp;out!&lt;/p&gt;
+&lt;p&gt;I was curious about that last part. How does it work? Let&amp;#8217;s open up the dotPeek decompiler and find&amp;nbsp;out!&lt;/p&gt;
 &lt;p&gt;First, here&amp;#8217;s a simple test program using a local&amp;nbsp;function:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Program&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
@@ -57,7 +57,7 @@
     &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The above comments are helpfully added by the decompiler. As we can see, the compiler created the following for&amp;nbsp;us:&lt;/p&gt;
+&lt;p&gt;The above comments are helpfully added by the decompiler. As we can see, the C# compiler created the following for&amp;nbsp;us:&lt;/p&gt;
 &lt;ul class=&#34;simple&#34;&gt;
 &lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Program.&amp;lt;AddFive&amp;gt;g__InnerAdd1_0&lt;/span&gt;&lt;/tt&gt; &amp;#8211; this is our InnerAdd function, converted to a normal static function in the Program class.  &amp;lt;AddFive&amp;gt; is simply part of the name, it&amp;#8217;s not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance&amp;nbsp;method.&lt;/li&gt;
 &lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Program.&amp;lt;&amp;gt;c__DisplayClass1_0&lt;/span&gt;&lt;/tt&gt; &amp;#8211; This is a generated class. It captures the &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; parameter, and is passed by reference into our&amp;nbsp;function.&lt;/li&gt;

@@ -42,7 +42,7 @@
 <article>
     <h1>The Implementation of C# Local Functions</h1>
     <p>One of the new features in C# 7 is local functions. They provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). I also read that local functions compile down to normal methods, thus reducing <span class="caps">GC</span> allocations when compared to&nbsp;System.Func.</p>
-<p>I was curious about that last part. How does it work? Let&#8217;s open up the dotPeek compiler and find&nbsp;out!</p>
+<p>I was curious about that last part. How does it work? Let&#8217;s open up the dotPeek decompiler and find&nbsp;out!</p>
 <p>First, here&#8217;s a simple test program using a local&nbsp;function:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Program</span>
 <span class="p">{</span>
@@ -72,7 +72,7 @@
     <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
-<p>The above comments are helpfully added by the decompiler. As we can see, the compiler created the following for&nbsp;us:</p>
+<p>The above comments are helpfully added by the decompiler. As we can see, the C# compiler created the following for&nbsp;us:</p>
 <ul class="simple">
 <li><tt class="docutils literal"><span class="pre">Program.&lt;AddFive&gt;g__InnerAdd1_0</span></tt> &#8211; this is our InnerAdd function, converted to a normal static function in the Program class.  &lt;AddFive&gt; is simply part of the name, it&#8217;s not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance&nbsp;method.</li>
 <li><tt class="docutils literal"><span class="pre">Program.&lt;&gt;c__DisplayClass1_0</span></tt> &#8211; This is a generated class. It captures the <tt class="docutils literal">a</tt> parameter, and is passed by reference into our&nbsp;function.</li>
