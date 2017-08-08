@@ -5,14 +5,77 @@
         <link>https://fuqua.io/blog/</link>
         <description></description>
         <language>en</language>
-        <pubDate>Wed, 26 Jul 2017 04:00:00 GMT</pubDate>
+        <pubDate>Tue, 08 Aug 2017 04:00:00 GMT</pubDate>
         <docs>https://fuqua.io/blog/rss.xml</docs>
         <generator>acrylamid 0.7.10</generator>
         
             <item>
+        <title>Level up your VsVim</title>
+        <link>https://fuqua.io/blog/2017/08/level-up-your-vsvim/</link>
+        <description>&lt;!-- This data file has been placed in the public domain. --&gt;
+&lt;!-- Derived from the Unicode character mappings available from
+&lt;http://www.w3.org/2003/entities/xml/&gt;.
+Processed by unicode2rstsubs.py, part of Docutils:
+&lt;http://docutils.sourceforge.net&gt;. --&gt;
+&lt;p&gt;If you&amp;#8217;re like me, you installed Visual Studio, installed &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/jaredpar/VsVim&#34;&gt;VsVim&lt;/a&gt;, and then happily started coding. However, did you know that Visual Studio&amp;#8217;s semantic understanding and manipulation of your code is exposed to&amp;nbsp;VsVim?&lt;/p&gt;
+&lt;p&gt;For example, you might already know that pressing &lt;tt class=&#34;docutils literal&#34;&gt;gd&lt;/tt&gt; in VsVim will &amp;quot;go to the definition&amp;quot; of a method. But what if we want to &amp;quot;go to the implementation&amp;quot; e.g. through an interface to the underlying concrete method? The standard &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Ctrl-F12&lt;/span&gt;&lt;/tt&gt; requires some contortions, and maybe requires glancing down at your&amp;nbsp;keyboard.&lt;/p&gt;
+&lt;p&gt;It&amp;#8217;s easy to fix this; just add this mapping to your &lt;tt class=&#34;docutils literal&#34;&gt;~\_vsvimrc&lt;/tt&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;map gi :vsc Edit.GoToImplementation&amp;lt;&lt;span class=&#34;caps&#34;&gt;CR&lt;/span&gt;&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let&amp;#8217;s break this down. The overall command is just a standard &lt;a class=&#34;reference external&#34; href=&#34;http://learnvimscriptthehardway.stevelosh.com/chapters/03.html&#34;&gt;vim mapping&lt;/a&gt;, with the syntax &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;:map&amp;nbsp;{keys}&amp;nbsp;{action}&lt;/span&gt;&lt;/tt&gt;.&lt;/p&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;gi&lt;/tt&gt; is the key combo we want to&amp;nbsp;press.&lt;/li&gt;
+&lt;li&gt;Everything after that is the action that VsVim will execute:&lt;ul&gt;
+&lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;:vsc&lt;/tt&gt; is VsVim&amp;#8217;s &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/jaredpar/VsVim/wiki/VsVim-Nonstandard-Behavior#integration-with-visual-studio&#34;&gt;Visual Studio Command&lt;/a&gt;&amp;nbsp;runner&lt;/li&gt;
+&lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;Edit.GoToImplementation&lt;/tt&gt; is a command exposed by Visual&amp;nbsp;Studio.&lt;/li&gt;
+&lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;&amp;lt;&lt;span class=&#34;caps&#34;&gt;CR&lt;/span&gt;&amp;gt;&lt;/tt&gt; is a carriage return (i.e. pressing &amp;quot;Enter&amp;quot;), which executes the&amp;nbsp;command.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here are some similarly useful&amp;nbsp;mappings:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;map gr :vsc Edit.FindAllReferences&amp;lt;&lt;span class=&#34;caps&#34;&gt;CR&lt;/span&gt;&amp;gt;
+map gp :vsc Edit.PeekDefinition&amp;lt;&lt;span class=&#34;caps&#34;&gt;CR&lt;/span&gt;&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Adding your own mappings is&amp;nbsp;easy:&lt;/p&gt;
+&lt;ol class=&#34;arabic simple&#34;&gt;
+&lt;li&gt;Find a Visual Studio command you want to execute. You can explore the commands available in Visual Studio with the Command Window (View → Other Windows → Command Window), or by going to Tools → Options → Environment →&amp;nbsp;Keyboard.&lt;/li&gt;
+&lt;li&gt;Add that command mapping to your &lt;tt class=&#34;docutils literal&#34;&gt;~\_vsvimrc&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Reload the configuration by running &lt;tt class=&#34;docutils literal&#34;&gt;:source ~\_vsvimrc&lt;/tt&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;section&#34; id=&#34;more-useful-mappings&#34;&gt;
+&lt;h3&gt;More Useful&amp;nbsp;Mappings&lt;/h3&gt;
+&lt;p&gt;Here are some additional mappings I use. I&amp;#8217;m using the standard &lt;a class=&#34;reference external&#34; href=&#34;http://learnvimscriptthehardway.stevelosh.com/chapters/05.html#nonrecursive-mapping&#34;&gt;nnoremap&lt;/a&gt; for a normal mode non-recursive&amp;nbsp;map:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;let mapleader=&amp;quot;,&amp;quot;
+
+&amp;quot; break out of the tyranny of text! Navigate by method
+nnoremap &amp;lt;leader&amp;gt;m :vsc Edit.NextMethod&amp;lt;cr&amp;gt;
+nnoremap &amp;lt;leader&amp;gt;M :vsc Edit.PreviousMethod&amp;lt;cr&amp;gt;
+
+nnoremap R :vsc Refactor.Rename&amp;lt;cr&amp;gt;
+
+&amp;quot; jump between compilation errors
+nnoremap &amp;lt;leader&amp;gt;e :vsc View.NextError&amp;lt;cr&amp;gt;
+nnoremap &amp;lt;leader&amp;gt;E :vsc View.PreviousError&amp;lt;cr&amp;gt;
+
+&amp;quot; testing and debugging
+nnoremap &amp;lt;leader&amp;gt;b :vsc Debug.ToggleBreakpoint&amp;lt;cr&amp;gt;
+nnoremap &amp;lt;leader&amp;gt;r :vsc TestExplorer.RunAllTestsInContext&amp;lt;cr&amp;gt;
+nnoremap &amp;lt;leader&amp;gt;R :vsc TestExplorer.DebugAllTestsInContext&amp;lt;cr&amp;gt;
+
+&amp;quot; open the change parameter window, a bit fake because it&amp;#39;s not a text-object
+nnoremap cia :vsc Refactor.ReorderParameters&amp;lt;cr&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you find other useful mappings, feel free to share them&amp;nbsp;below!&lt;/p&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Tue, 08 Aug 2017 04:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2017-08-08:/2017/08/level-up-your-vsvim</guid>
+    </item>
+        
+            <item>
         <title>The Implementation of C# Local Functions</title>
         <link>https://fuqua.io/blog/2017/07/the-implementation-of-csharp-local-functions/</link>
-        <description>&lt;p&gt;One of the new features in C# 7 is local functions. They provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). I also read that local functions compile down to normal methods, thus reducing &lt;span class=&#34;caps&#34;&gt;GC&lt;/span&gt; allocations when compared to&amp;nbsp;System.Func.&lt;/p&gt;
+        <description>&lt;p&gt;C# 7 local functions provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). In addition, some articles have mentioned that local functions compile down to normal methods, thus reducing &lt;span class=&#34;caps&#34;&gt;GC&lt;/span&gt; allocations when compared to&amp;nbsp;System.Func.&lt;/p&gt;
 &lt;p&gt;I was curious about that last part. How does it work? Let&amp;#8217;s open up the dotPeek decompiler and find&amp;nbsp;out!&lt;/p&gt;
 &lt;p&gt;First, here&amp;#8217;s a simple test program using a local&amp;nbsp;function:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Program&lt;/span&gt;
@@ -32,6 +95,8 @@
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Admittedly, the above local function is not really needed in this case, but it&amp;#8217;s simple enough code that the decompilation won&amp;#8217;t be&amp;nbsp;scary!&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;decompiling-the-program&#34;&gt;
+&lt;h3&gt;Decompiling the&amp;nbsp;Program&lt;/h3&gt;
 &lt;p&gt;After decompiling the above program, we get the following for the &lt;tt class=&#34;docutils literal&#34;&gt;AddFive&lt;/tt&gt; method:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;AddFive&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
@@ -48,7 +113,10 @@
 &lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Program.&amp;lt;AddFive&amp;gt;g__InnerAdd1_0&lt;/span&gt;&lt;/tt&gt; &amp;#8211; this is our InnerAdd function, converted to a normal static function in the Program class.  &amp;lt;AddFive&amp;gt; is simply part of the name, it&amp;#8217;s not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance&amp;nbsp;method.&lt;/li&gt;
 &lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Program.&amp;lt;&amp;gt;c__DisplayClass1_0&lt;/span&gt;&lt;/tt&gt; &amp;#8211; This is a generated class. It captures the &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; parameter, and is passed by reference into our&amp;nbsp;function.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;In order to look into the generated class and function, we need to inspect the &lt;span class=&#34;caps&#34;&gt;IL&lt;/span&gt; code. Here is the &lt;span class=&#34;caps&#34;&gt;IL&lt;/span&gt; code for the generated class that captures the &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; parameter:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;inspecting-the-intermediate-language-il&#34;&gt;
+&lt;h3&gt;Inspecting the Intermediate Language&amp;nbsp;(&lt;span class=&#34;caps&#34;&gt;IL&lt;/span&gt;)&lt;/h3&gt;
+&lt;p&gt;In order to look into the generated class and function, we need to look at the &lt;span class=&#34;caps&#34;&gt;IL&lt;/span&gt; code. Here is the &lt;span class=&#34;caps&#34;&gt;IL&lt;/span&gt; code for the generated class that captures the &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; parameter:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;nested&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;sealed&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;auto&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ansi&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;beforefieldinit&lt;/span&gt;
   &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c__DisplayClass1_0&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;mscorlib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ValueType&lt;/span&gt;
@@ -83,6 +151,9 @@
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// end of class Demo.Program&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Despite being a bit long, this is pretty straight-forward. It&amp;#8217;s a static function that takes two parameters, &lt;tt class=&#34;docutils literal&#34;&gt;int b&lt;/tt&gt; and our generated &lt;tt class=&#34;docutils literal&#34;&gt;obj1&lt;/tt&gt;. It loads our argument obj1 onto the stack, then loads field &lt;tt class=&#34;docutils literal&#34;&gt;obj1.a&lt;/tt&gt;, then loads our argument &lt;tt class=&#34;docutils literal&#34;&gt;b&lt;/tt&gt;. Next, it calls add, which pops the top two values off the stack and adds them, then pushes the result back on the stack. Finally, it calls &lt;tt class=&#34;docutils literal&#34;&gt;ret&lt;/tt&gt; to return that&amp;nbsp;result.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;adding-more-complexity&#34;&gt;
+&lt;h3&gt;Adding More&amp;nbsp;Complexity&lt;/h3&gt;
 &lt;p&gt;Let&amp;#8217;s make things a bit more interesting. What if our nested function mutates (&lt;em&gt;gasp&lt;/em&gt;)?&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;AddFive&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
@@ -107,6 +178,7 @@
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This is more interesting than the first case. We can see that our generated class is set up ahead of time, then passed into the generated static function, and then all subsequent references to the parameter &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; are rewritten into references to the generated field!&amp;nbsp;Fascinating.&lt;/p&gt;
+&lt;/div&gt;
 </description>
         <pubDate>Wed, 26 Jul 2017 04:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2017-07-26:/2017/07/the-implementation-of-csharp-local-functions</guid>

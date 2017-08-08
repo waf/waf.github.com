@@ -5,7 +5,7 @@ The Implementation of C# Local Functions
 :permalink: /2017/07/the-implementation-of-csharp-local-functions/
 :tags: [csharp, language]
 
-One of the new features in C# 7 is local functions. They provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). I also read that local functions compile down to normal methods, thus reducing GC allocations when compared to System.Func.
+C# 7 local functions provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). In addition, some articles have mentioned that local functions compile down to normal methods, thus reducing GC allocations when compared to System.Func.
 
 I was curious about that last part. How does it work? Let's open up the dotPeek decompiler and find out!
 
@@ -31,6 +31,9 @@ First, here's a simple test program using a local function:
 
 Admittedly, the above local function is not really needed in this case, but it's simple enough code that the decompilation won't be scary!
 
+Decompiling the Program
+=======================
+
 After decompiling the above program, we get the following for the ``AddFive`` method:
 
 .. code-block:: csharp
@@ -50,7 +53,10 @@ The above comments are helpfully added by the decompiler. As we can see, the C# 
 - ``Program.<AddFive>g__InnerAdd1_0`` -- this is our InnerAdd function, converted to a normal static function in the Program class.  <AddFive> is simply part of the name, it's not a generic type. Note that if the enclosing method is an instance method, the generated function will be an instance method.
 - ``Program.<>c__DisplayClass1_0`` -- This is a generated class. It captures the ``a`` parameter, and is passed by reference into our function.
 
-In order to look into the generated class and function, we need to inspect the IL code. Here is the IL code for the generated class that captures the ``a`` parameter:
+Inspecting the Intermediate Language (IL)
+=========================================
+
+In order to look into the generated class and function, we need to look at the IL code. Here is the IL code for the generated class that captures the ``a`` parameter:
 
 .. code-block:: csharp
 
@@ -92,6 +98,9 @@ Next, let's look at the generated method:
     } // end of class Demo.Program
 
 Despite being a bit long, this is pretty straight-forward. It's a static function that takes two parameters, ``int b`` and our generated ``obj1``. It loads our argument obj1 onto the stack, then loads field ``obj1.a``, then loads our argument ``b``. Next, it calls add, which pops the top two values off the stack and adds them, then pushes the result back on the stack. Finally, it calls ``ret`` to return that result.
+
+Adding More Complexity
+======================
 
 Let's make things a bit more interesting. What if our nested function mutates (*gasp*)?
 

@@ -12,7 +12,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//2017/07/the-implementation-of-csharp-local-functions/</loc>
-    <lastmod>2017-07-27</lastmod>
+    <lastmod>2017-08-08</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
@@ -23,12 +23,12 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/language/</loc>
-    <lastmod>2017-07-27</lastmod>
+    <lastmod>2017-08-08</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//articles/</loc>
-    <lastmod>2017-07-26</lastmod>
+    <lastmod>2017-08-08</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -64,7 +64,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//rss.xml</loc>
-    <lastmod>2017-07-27</lastmod>
+    <lastmod>2017-08-08</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -113,7 +113,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//atom.xml</loc>
-    <lastmod>2017-07-27</lastmod>
+    <lastmod>2017-08-08</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -175,19 +175,30 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://fuqua.io/blog//tag/visual-studio/</loc>
+    <lastmod>2017-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>https://fuqua.io/blog//tag/functional/</loc>
     <lastmod>2017-01-05</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//</loc>
-    <lastmod>2017-07-26</lastmod>
+    <lastmod>2017-08-08</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/</loc>
     <lastmod>2017-01-05</lastmod>
     <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://fuqua.io/blog//2017/08/level-up-your-vsvim/</loc>
+    <lastmod>2017-08-08</lastmod>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2014/02/native-javascript-promises-and-browser-apis/</loc>
@@ -207,7 +218,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/vim/</loc>
-    <lastmod>2017-01-05</lastmod>
+    <lastmod>2017-08-08</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -238,7 +249,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/csharp/</loc>
-    <lastmod>2017-07-27</lastmod>
+    <lastmod>2017-08-08</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
