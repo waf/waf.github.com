@@ -1,0 +1,86 @@
+==================================================================
+https://keybase.io/wafuqua
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://fuqua.io
+  * I am wafuqua (https://keybase.io/wafuqua) on keybase.
+  * I have a public key with fingerprint CB5A FF04 64BE 97B8 9FD3  190D 67B6 F489 167C 16A3
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0101f91160433871c46e7fd0c1cc0918b11de8e600fad6211d93b46fe9fe864903000a",
+      "fingerprint": "cb5aff0464be97b89fd3190d67b6f489167c16a3",
+      "host": "keybase.io",
+      "key_id": "67b6f489167c16a3",
+      "kid": "0101f91160433871c46e7fd0c1cc0918b11de8e600fad6211d93b46fe9fe864903000a",
+      "uid": "38f898be3195167f272135e04963ca19",
+      "username": "wafuqua"
+    },
+    "merkle_root": {
+      "ctime": 1508827310,
+      "hash_meta": "522b970117a105e9cd23a22146150bd1a2707ff7e8e3e31d2285b3c146969ea4",
+      "seqno": 1621256
+    },
+    "revoke": {
+      "sig_ids": [
+        "0174554f7c7985401a6b85bba6d989a2c9ba3121173b1f824a71826efb670c900f"
+      ]
+    },
+    "service": {
+      "hostname": "fuqua.io",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1508827350,
+  "expire_in": 157680000,
+  "prev": "08b5ff26e6a6dcdc05cf1e4ec038b808980136393d59635bf97aa2da7c03d9ab",
+  "seqno": 4,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1
+
+owGtk39MVWUYx++9oKibijaYOibrmOZU8H3Pj/ecF8uaLY0ypkQlEt7e95z3hSNw
+7+XcyzV+aKZMhr+L0EhzKSjUjVlztVpF4VIxh6KI2pJIK8VMLH+0SsTeS7a21p/9
+dfa+5/s8z/f5fM/ZPDLG5XHnfXCjOrEisd595BJ1Zfediy2XqN8qldLKpQI2+GCF
+FguGvAW2JaVJAALIMYQIqIpi6NBUEdO5BUxomgBDg0JoMYMhADixkCxOWKEq4gxz
+ZiAVAwUAQKQZErd9ecwJOLYvJNqaVCOcAxWplGGdGphbCsTAQjpFXDUwRLoJEVFE
+Yb4/GK0Q5igJslTbL+7EwTto7z/0/7PvksF2isENbFAmTGpiFpd1GSoaAypGikkg
+jgqDzPGRIibUywgvKS4h0vIZUhFzCgqZ1/H7Q1G2ZsiOKqAGDEPWFQjEfiSY7y1i
+ISIKNVmmWAcQ6gQCjWHTkhUiy1BFooJakMg60DnXhXNFeLFk2dCoYor3GGFGVGEj
+yIp9fjFB7CRrSDhwWNhfwKLDg3aeoBaU0nIEHl3VPi/WVK6bOjY0FUCCqGhGCbKw
+gYlsYkoUKMDoCoXckFWiQ0NGjFOkAxMLblLu8ug4J2ybg+2jQd0FMLj+X1EFHH/I
+b/oLxW1+KBQIpkWphEoDg5wY9d5t4KW2zxKfiKgIMydo+31iB6H8FzBNAGMvBGyH
+ee2oQtORIYIC0TksHM3doBrnwicSi5iWCTSTQ6YyEygGNYAIEUAFKVixNBGdRjnW
+CZEtoguBhQn9h6AqbJI80VJg85FQicOk5SOqPUmxLrfHNXSIJ/rvuEYMj//7h0qd
+H+9q+aJ77MyaqzmZZ7cd2KNWrBx+tSvnUNrxY/0ofZHceq1+c1V7cfbu9eFzudVZ
+fd/dfyvh1oO9dTXau95VWsOlhlicufj2x9suDp+dcaVpur+vscOOxO/Zmz0s7s7+
+zkXNx2+u7mzLioycXrV28+i6OyfmrcsYN6l/Wnrlhbcyn3lWGhWHQG5C1YS6UOT1
+b4d2DlTE/Fr949G8+zZ+9M5PdvbWcd3xbedOtfaNDjy1GKxYO7E9Q3/80JCUqfaU
+BR3jC1dU1i4p2NTa9sPOe99f8fzslK/XmB9+VuGO8LmPlB1ZOS9ld1Lc2ZzJr93a
+0ZMzt/mTXcsiox+e1utKPTN+sv7klIeGXui4oZuVlxu2NE1owkdLB+JGnT19bcSC
+ksQZWVsak+uWTpKv1B7avXXv3PfejvyRN9++XfnVp7XtNWX95fnXUY+jjMG8omC7
+OzeOD5w+M/Hn7mNVB9mRe1Y/J9Uc/u1KEBVvatuRGo59ep/7RQ+43vN9pHbSmeSE
+oottT5yHY8tOda1rGHM+0ZPibm0d1tPuTZ5GH+u1w60na68lzazPaOld+mpSxZuP
+em4+sFQtm1NKv7m8sKupNKNhI9mZeCBzfvqx8fvj5A35vvq+rKS+qZxlJK+fs3fH
+zV+GNDe/8fuXL5fkBFIPdm6ZE1rt3D68KltxzaLpLU27Gvtj9q1JPHlibMcr3S9t
+n9zFF65bMutP
+=qtly
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/wafuqua
+
+==================================================================
