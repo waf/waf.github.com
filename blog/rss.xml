@@ -5,9 +5,462 @@
         <link>https://fuqua.io/blog/</link>
         <description></description>
         <language>en</language>
-        <pubDate>Tue, 08 Aug 2017 04:00:00 GMT</pubDate>
+        <pubDate>Fri, 01 Nov 2019 17:00:00 GMT</pubDate>
         <docs>https://fuqua.io/blog/rss.xml</docs>
         <generator>acrylamid 0.7.10</generator>
+        
+            <item>
+        <title>.NET Conf Thailand 2019</title>
+        <link>https://fuqua.io/blog/2019/11/net-conf-thailand-2019/</link>
+        <description>&lt;p&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Conf Thailand 2019 was a huge success, thanks again to &lt;a class=&#34;reference external&#34; href=&#34;https://twitter.com/kidchenko&#34;&gt;Jose Barbosa&lt;/a&gt; and &lt;a class=&#34;reference external&#34; href=&#34;https://www.facebook.com/codesanookpage&#34;&gt;Theeranit (Aaron) Pongtongmuang&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I was invited to speak, and I covered the new features in C# 8.0. There are a&amp;nbsp;ton!&lt;/p&gt;
+&lt;ol class=&#34;arabic simple&#34;&gt;
+&lt;li&gt;Nullable Reference&amp;nbsp;Types&lt;/li&gt;
+&lt;li&gt;Async&amp;nbsp;Enumerables&lt;/li&gt;
+&lt;li&gt;Recursive&amp;nbsp;Patterns&lt;/li&gt;
+&lt;li&gt;Indices and&amp;nbsp;Ranges&lt;/li&gt;
+&lt;li&gt;Default Interface&amp;nbsp;Members&lt;/li&gt;
+&lt;li&gt;Static Local&amp;nbsp;Functions&lt;/li&gt;
+&lt;li&gt;Null Coallescing&amp;nbsp;Assignment&lt;/li&gt;
+&lt;li&gt;Readonly&amp;nbsp;Members&lt;/li&gt;
+&lt;li&gt;Using&amp;nbsp;Statements&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;I have my presentation slides and code available &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/DotNetConfThailand.2019.CSharp8&#34;&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You can see my talk on &lt;a class=&#34;reference external&#34; href=&#34;https://www.facebook.com/dotnetconf/videos/487578191836482/&#34;&gt;the dotnetconf page&lt;/a&gt;, however the audio volume is too soft to hear. Oh well! You can get
+similar content by watching Mads Torgersen&amp;#8217;s talk (&lt;a class=&#34;reference external&#34; href=&#34;https://channel9.msdn.com/Events/dotnetConf/NET-Conf-2019/Whats-new-in-C-8-Part-1&#34;&gt;Part 1&lt;/a&gt;) and Bill Wagner&amp;#8217;s talk (&lt;a class=&#34;reference external&#34; href=&#34;https://channel9.msdn.com/Events/dotnetConf/NET-Conf-2019/B103&#34;&gt;Part 2&lt;/a&gt;).&lt;/p&gt;
+</description>
+        <pubDate>Fri, 01 Nov 2019 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2019-11-02:/2019/11/net-conf-thailand-2019</guid>
+    </item>
+        
+            <item>
+        <title>Troubleshooting Assembly Binding Issues in .NET</title>
+        <link>https://fuqua.io/blog/2019/03/troubleshooting-assembly-binding-issues-in-net/</link>
+        <description>&lt;p&gt;If you&amp;#8217;ve developed .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; for any length of time, chances are you&amp;#8217;ve run into a gnarly error like&amp;nbsp;this:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;System.&lt;span class=&#34;caps&#34;&gt;IO&lt;/span&gt;.FileLoadException: Could not load file or assembly &amp;#8216;AcmeCorp.Foobar.Utilities, Version=1.2.0, Culture=neutral, PublicKeyToken=367d582291c765f7&amp;#8217; or one of its dependencies.
+The located assembly&amp;#8217;s manifest definition does not match the assembly&amp;nbsp;reference.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;It&amp;#8217;s a pretty puzzling error. It means that it &lt;strong&gt;found&lt;/strong&gt; version 1.2.0 of a &lt;span class=&#34;caps&#34;&gt;DLL&lt;/span&gt;, but did not use it because a different version was requested (e.g.&amp;nbsp;1.3.0).&lt;/p&gt;
+&lt;p&gt;There are a couple of gotchas when troubleshooting these types of&amp;nbsp;errors.&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;ensure-you-don-t-have-any-version-mismatches&#34;&gt;
+&lt;h3&gt;Ensure you don&amp;#8217;t have any version&amp;nbsp;mismatches&lt;/h3&gt;
+&lt;p&gt;As a first step, ensure that all projects in your solution reference the same version of the problematic &lt;span class=&#34;caps&#34;&gt;DLL&lt;/span&gt; or NuGet package. This is by far the easiest fix. For NuGet packages in Visual Studio, you can right-click your Solution, choose &amp;quot;Manage NuGet Packages for Solution&amp;quot; and use the &amp;quot;Consolidate&amp;quot; tab to fix the&amp;nbsp;issue.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;use-fusion-logs-to-better-understand-the-problem&#34;&gt;
+&lt;h3&gt;Use Fusion Logs to better understand the&amp;nbsp;problem&lt;/h3&gt;
+&lt;p&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; will log more details about the problem to the &amp;quot;Fusion Logs&amp;quot; system. By default, it&amp;#8217;s disabled. Enable it by opening your &amp;quot;Developer Command Prompt for Visual Studio&amp;quot; from the start menu &lt;strong&gt;as administrator&lt;/strong&gt;. Type the command &lt;tt class=&#34;docutils literal&#34;&gt;fuslogvw&lt;/tt&gt; to start the &amp;quot;Fusion Log&amp;nbsp;Viewer.&amp;quot;&lt;/p&gt;
+&lt;img alt=&#34;/img/fuslogvw.png&#34; class=&#34;align-center&#34; src=&#34;https://fuqua.io/blog/img/fuslogvw.png&#34; style=&#34;width: 80%;&#34;/&gt;
+&lt;p&gt;Click the settings button, choose &amp;quot;Log bind failures to disk&amp;quot; and then click &lt;span class=&#34;caps&#34;&gt;OK&lt;/span&gt;. Start your application again and you should see more details about the bind failures show up in the Fusion Log&amp;nbsp;Viewer.&lt;/p&gt;
+&lt;p&gt;If you don&amp;#8217;t see any log entries show up, there are a few things you can&amp;nbsp;try:&lt;/p&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;First try restarting your application and, if you&amp;#8217;re developing a web application, restarting your App&amp;nbsp;Pool.&lt;/li&gt;
+&lt;li&gt;The Fusion Log Viewer surprisingly uses the Internet Explorer cache, so you can try clearing the cache by going to &amp;quot;Internet Options → Browsing History → Delete&amp;quot; and deleting the Temporary Internet Files option. Weird but&amp;nbsp;true!&lt;/li&gt;
+&lt;li&gt;If you&amp;#8217;re using &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt;, you&amp;#8217;ll see additional error information on your &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; error page simply by having Fusion Logs&amp;nbsp;enabled.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Don&amp;#8217;t forget to disable Fusion Logs when you&amp;#8217;re done! There&amp;#8217;s a performance impact for having it&amp;nbsp;enabled.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;create-an-assembly-binding-redirect&#34;&gt;
+&lt;h3&gt;Create an Assembly Binding&amp;nbsp;Redirect&lt;/h3&gt;
+&lt;p&gt;Finally, you can add an &lt;a class=&#34;reference external&#34; href=&#34;https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/redirect-assembly-versions&#34;&gt;Assembly Binding Redirect&lt;/a&gt; to your App.config or Web.config of your entry project by using the &lt;a class=&#34;reference external&#34; href=&#34;https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/runtime/bindingredirect-element&#34;&gt;bindingRedirect&lt;/a&gt; element. This only works if there are no breaking changes between the two different versions of the&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;DLL&lt;/span&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;c&#34;&gt;&amp;lt;!-- the following should be placed under the hierarchy &amp;lt;configuration&amp;gt;&amp;lt;runtime&amp;gt;&amp;lt;assemblyBinding&amp;gt; --&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependentAssembly&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;assemblyIdentity&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;name=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;AcmeCorp.Foobar.Utilities&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;publicKeyToken=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;367d582291c765f7&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;culture=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;neutral&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;bindingRedirect&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;oldVersion=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;0.0.0.0-1.3.0.0&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;newVersion=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1.3.0.0&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependentAssembly&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The above configuration states &amp;quot;If you find an AcmeCorp.Foobar.Utilities.dll with a version between 0.0.0.0 and 1.3.0.0, redirect it to&amp;nbsp;1.3.0.0.&amp;quot;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;publicKeyToken&lt;/strong&gt; can be retrieved using the &lt;tt class=&#34;docutils literal&#34;&gt;sn&lt;/tt&gt; utility. From your Developer Command Prompt, &lt;tt class=&#34;docutils literal&#34;&gt;cd&lt;/tt&gt; to the location of your &lt;span class=&#34;caps&#34;&gt;DLL&lt;/span&gt;, and run &lt;tt class=&#34;docutils literal&#34;&gt;sn &lt;span class=&#34;pre&#34;&gt;-T&lt;/span&gt; YourDll.dll&lt;/tt&gt;. It will display the public key&amp;nbsp;token.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;oldVersion / newVersion&lt;/strong&gt; can be confusing. There are many different types of versions that a &lt;span class=&#34;caps&#34;&gt;DLL&lt;/span&gt; can have. What we care about is version in the assembly manifest. From your Developer Command Prompt, &lt;tt class=&#34;docutils literal&#34;&gt;cd&lt;/tt&gt; to the location of your &lt;span class=&#34;caps&#34;&gt;DLL&lt;/span&gt; and run &lt;tt class=&#34;docutils literal&#34;&gt;ildasm YourDll.dll&lt;/tt&gt;. &lt;span class=&#34;caps&#34;&gt;ILDASM&lt;/span&gt; will open your assembly. Click on the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;caps&#34;&gt;MANIFEST&lt;/span&gt;&lt;/tt&gt; node, and you&amp;#8217;ll see a version like &lt;tt class=&#34;docutils literal&#34;&gt;.ver 1:3:0:0&lt;/tt&gt; which would correspond to version &lt;tt class=&#34;docutils literal&#34;&gt;1.3.0.0&lt;/tt&gt; in your&amp;nbsp;App/Web.config.&lt;/p&gt;
+&lt;p&gt;These are all the tricks I&amp;#8217;ve learned to troubleshooting various assembly binding issues. Ideally you can have consistent versions of each &lt;span class=&#34;caps&#34;&gt;DLL&lt;/span&gt; in your application, but hey, the world is a complex&amp;nbsp;place!&lt;/p&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Fri, 15 Mar 2019 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2019-03-16:/2019/03/troubleshooting-assembly-binding-issues-in-net</guid>
+    </item>
+        
+            <item>
+        <title>A Caching HTTP Proxy using Titanium Web Proxy</title>
+        <link>https://fuqua.io/blog/2019/01/a-caching-http-proxy-using-titanium-web-proxy/</link>
+        <description>&lt;p&gt;At my work at Jetabroad I do a lot of integration with third-party webservices (like everyone these days).
+The webservices, especially the test endpoints, are of variable stability and&amp;nbsp;responsiveness.&lt;/p&gt;
+&lt;p&gt;The responsiveness issue can be maddening when you&amp;#8217;re trying to iterate quickly. I prefer doing
+the bulk of my development via unit tests or integration tests to isolate myself as much as possible.
+However, I still ultimately find myself developing directly against these third-party services from
+time to&amp;nbsp;time.&lt;/p&gt;
+&lt;p&gt;I built &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/catchy&#34;&gt;Catchy&lt;/a&gt; to help solve this pain. When you start it, you provide a whitelist of domains to
+intercept. Catchy will examine your outbound &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; or &lt;span class=&#34;caps&#34;&gt;SOAP&lt;/span&gt; requests to those domains, and then
+cache the inbound response based on the hash of the outbound&amp;nbsp;request.&lt;/p&gt;
+&lt;img alt=&#34;https://raw.githubusercontent.com/waf/catchy/master/demo.gif&#34; class=&#34;align-center&#34; src=&#34;https://raw.githubusercontent.com/waf/catchy/master/demo.gif&#34; style=&#34;width: 80%;&#34;/&gt;
+&lt;div class=&#34;section&#34; id=&#34;titanium-web-proxy-an-amazing-library&#34;&gt;
+&lt;h3&gt;Titanium Web Proxy &amp;#8211; an amazing&amp;nbsp;library&lt;/h3&gt;
+&lt;p&gt;Early prototypes were originally built on top of Fiddler Core, but after Fiddler Core was killed by
+Telerik, I transitioned it over to the excellent &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/justcoding121/Titanium-Web-Proxy&#34;&gt;Titanium Web Proxy&lt;/a&gt; project. It makes intercepting
+and analyzing requests, even over &lt;span class=&#34;caps&#34;&gt;TLS&lt;/span&gt;, very&amp;nbsp;straightforward.&lt;/p&gt;
+&lt;p&gt;The proxy code itself is straightforward. The following snippet of Titanium Web Proxy code allows
+you to intercept &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; and &lt;span class=&#34;caps&#34;&gt;HTTPS&lt;/span&gt; requests (via &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; 1.1 and &lt;span class=&#34;caps&#34;&gt;HTTP2&lt;/span&gt;!) and run arbitrary C# functions
+to inspect / modify the requests and&amp;nbsp;responses:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;proxyServer&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ProxyServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;explicitEndPoint&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ExplicitProxyEndPoint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ipAddress&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;proxyServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EnableHttp2&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;proxyServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CertificateManager&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CreateRootCertificate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;proxyServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CertificateManager&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TrustRootCertificate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;proxyServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AddEndPoint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;explicitEndPoint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// specify your callbacks here&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;explicitEndPoint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeforeTunnelConnectRequest&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;BeforeTunnelConnectRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;proxyServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeforeRequest&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OnRequestHandler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;proxyServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeforeResponse&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OnResponseHandler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;proxyServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ExceptionFunc&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OnErrorFunc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;proxyServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Start&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;proxyServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SetAsSystemProxy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;explicitEndPoint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ProxyProtocolType&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AllHttp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It&amp;#8217;s rare to find a network library that works completely as advertised, and exposes a complex
+concept behind an easy to understand &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. Well done to&amp;nbsp;them!&lt;/p&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Fri, 18 Jan 2019 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2019-01-19:/2019/01/a-caching-http-proxy-using-titanium-web-proxy</guid>
+    </item>
+        
+            <item>
+        <title>.NET Conf Thailand 2018</title>
+        <link>https://fuqua.io/blog/2018/11/net-conf-thailand-2018/</link>
+        <description>&lt;p&gt;I recently spoke at .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Conf Thailand 2018! Thanks to &lt;a class=&#34;reference external&#34; href=&#34;https://twitter.com/kidchenko&#34;&gt;Jose Barbosa&lt;/a&gt; and &lt;a class=&#34;reference external&#34; href=&#34;https://www.facebook.com/codesanookpage&#34;&gt;Theeranit (Aaron) Pongtongmuang&lt;/a&gt; for&amp;nbsp;organizing!&lt;/p&gt;
+&lt;p&gt;I covered what&amp;#8217;s new in C# 7.0 to 7.3 (performance, performance, performance!), and a sneak preview of what&amp;#8217;s upcoming in C#8 (non-nullable reference&amp;nbsp;types).&lt;/p&gt;
+&lt;p&gt;Demo code is available &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/DotNetConfThailand.2018.CSharpDemo&#34;&gt;on GitHub&lt;/a&gt; and, while recordings are not available, you can see Mads Torgersen cover similar topics &lt;a class=&#34;reference external&#34; href=&#34;https://channel9.msdn.com/Events/dotnetConf/2018/S103&#34;&gt;on Channel9&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 09 Nov 2018 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2018-11-10:/2018/11/net-conf-thailand-2018</guid>
+    </item>
+        
+            <item>
+        <title>Cross Platform CI with CoreRT and AppVeyor</title>
+        <link>https://fuqua.io/blog/2018/10/cross-platform-ci-with-corert-and-appveyor/</link>
+        <description>&lt;p&gt;CoreRT is an ahead-of-time (&lt;span class=&#34;caps&#34;&gt;AOT&lt;/span&gt;) compiler and runtime for .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core. It builds .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core applications into a single, small binary that runs without requiring .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core to be installed on the system. This makes distribution easy, especially to Mac &lt;span class=&#34;caps&#34;&gt;OS&lt;/span&gt; and Linux, which may not have .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core installed. On all platforms, the program will have a faster start-up time and lower memory&amp;nbsp;footprint.&lt;/p&gt;
+&lt;p&gt;Like most developers, I have a pet static site generator I&amp;#8217;m working on. As it&amp;#8217;s a command line utility that will be distributed to users that most likely won&amp;#8217;t have .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core installed, I decided to try CoreRT. The &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/dotnet/corert/blob/master/Documentation/intro-to-corert.md&#34;&gt;initial setup&lt;/a&gt; was simple, but it took some time to figure out how to set up continuous integration (&lt;span class=&#34;caps&#34;&gt;CI&lt;/span&gt;) on AppVeyor. I wanted the &lt;span class=&#34;caps&#34;&gt;CI&lt;/span&gt; process to produce binaries artifacts from the &lt;tt class=&#34;docutils literal&#34;&gt;master&lt;/tt&gt; branch for each platform. As a bonus, if I tag a commit, it should build a release for each platform and post them to the GitHub Releases&amp;nbsp;page.&lt;/p&gt;
+&lt;p&gt;One drawback of AppVeyor is that it does not yet support Mac &lt;span class=&#34;caps&#34;&gt;OS&lt;/span&gt;. However, there are plans to support it &lt;cite&gt;sometime this year&lt;/cite&gt;. I figure that if I have it working on both Windows and Linux, it should hopefully not be too difficult to add Mac &lt;span class=&#34;caps&#34;&gt;OS&lt;/span&gt;&amp;nbsp;support.&lt;/p&gt;
+&lt;p&gt;AppVeyor uses a &lt;span class=&#34;caps&#34;&gt;YAML&lt;/span&gt; file for its configuration, and like most &lt;span class=&#34;caps&#34;&gt;CI&lt;/span&gt; platforms, there&amp;#8217;s more than one way to accomplish your goal. I found that the following configuration is a nice mixture of Don&amp;#8217;t-Repeat-Yourself and&amp;nbsp;maintainability:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;0.0.{build}&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;clone_depth&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;# Windows with &lt;span class=&#34;caps&#34;&gt;VS2017&lt;/span&gt;&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;Visual Studio 2017&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;# default version of &amp;#39;ubuntu&amp;#39; is old for compatibility reasons. Specify the newest &lt;span class=&#34;caps&#34;&gt;LTS&lt;/span&gt;.&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;ubuntu1804&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;branches&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;only&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;master&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# items prefixed with &amp;#39;cmd:&amp;#39; run only on Windows&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# items prefixed with &amp;#39;sh:&amp;#39; run only on Ubuntu&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;init&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;cmd&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;git config --global core.autocrlf true&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;install&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;# application dependencies&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;cmd&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;choco install pandoc&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;  &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;wget https://github.com/jgm/pandoc/releases/download/2.3.1/pandoc-2.3.1-1-amd64.deb &amp;amp;&amp;amp; sudo dpkg -i pandoc-2.3.1-1-amd64.deb&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;# corert dependencies https://github.com/dotnet/corert/blob/master/Documentation/prerequisites-for-building.md&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;  &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;sudo apt-get install -y clang libkrb5-dev&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;before_build&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;dotnet --version&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;dotnet restore --verbosity m&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;build_script&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;dotnet build&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;test_script&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;cd Nessie.Tests&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;dotnet test&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;after_test&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;cd ..&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;cmd&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;dotnet publish -c release -r win-x64 -o dist/windows&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;# specifying the absolute path here is required to remove paths from archive&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;cmd&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;7z a Nessie/dist/windows/nessie-windows-x64.zip %APPVEYOR_BUILD_FOLDER%/Nessie/dist/windows/nessie.exe&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;# by default, CoreRT on linux tries to use clang-3.9, reset this to version independent&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;# https://github.com/dotnet/corert/issues/5654&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;  &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;export CppCompilerAndLinker=clang&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;  &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;dotnet publish -c release -r linux-x64 -o dist/linux&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;  &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;7z a Nessie/dist/linux/nessie-linux-x64.zip $APPVEYOR_BUILD_FOLDER/Nessie/dist/linux/Nessie&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# for / matrix docs&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# https://www.appveyor.com/blog/2018/04/25/specialized-build-matrix-configuration-in-appveyor/&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;matrix&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+      &lt;span class=&#34;nt&#34;&gt;only&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+        &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;Visual Studio 2017&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;artifacts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+     &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;Nessie/dist/windows/nessie-windows-x64.zip&amp;#39;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;nessie-windows&lt;/span&gt;
+
+  &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;matrix&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+      &lt;span class=&#34;nt&#34;&gt;only&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+        &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;ubuntu1804&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;artifacts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+      &lt;span class=&#34;p p-Indicator&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;Nessie/dist/linux/nessie-linux-x64.zip&amp;#39;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;nessie-linux&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;deploy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;provider&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;GitHub&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;# encrypted token, it&amp;#39;s ok to be in version control&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;# https://ci.appveyor.com/tools/encrypt&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;auth_token&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;secure&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;zQl909f8bNxmaKdpgiE730kw9vjsNvoV0SjwN/fk3lv9dy7d9cdhgo0/iz/apRqc&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;artifact&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;nessie-windows, nessie-linux&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;prerelease&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;true&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;on&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;appveyor_repo_tag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l l-Scalar l-Scalar-Plain&#34;&gt;true&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I won&amp;#8217;t go through this line-by-line, as hopefully the comments make everything clear. Here are the things that took me a while to figure&amp;nbsp;out:&lt;/p&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;Use the image &lt;tt class=&#34;docutils literal&#34;&gt;ubuntu1804&lt;/tt&gt; if you want up-to-date ubuntu. The normal &lt;tt class=&#34;docutils literal&#34;&gt;ubuntu&lt;/tt&gt; tag is still&amp;nbsp;16.04.&lt;/li&gt;
+&lt;li&gt;On Ubuntu, you need to run &lt;tt class=&#34;docutils literal&#34;&gt;sudo &lt;span class=&#34;pre&#34;&gt;apt-get&lt;/span&gt; install &lt;span class=&#34;pre&#34;&gt;-y&lt;/span&gt; clang &lt;span class=&#34;pre&#34;&gt;libkrb5-dev&lt;/span&gt;&lt;/tt&gt; to get the required dependencies for&amp;nbsp;CoreRT.&lt;/li&gt;
+&lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;dotnet publish &lt;span class=&#34;pre&#34;&gt;-c&lt;/span&gt; release &lt;span class=&#34;pre&#34;&gt;-r&lt;/span&gt; RELEASE_ID&lt;/tt&gt; will generate the binary files. See the &lt;a class=&#34;reference external&#34; href=&#34;https://docs.microsoft.com/en-us/dotnet/core/rid-catalog&#34;&gt;&lt;span class=&#34;caps&#34;&gt;RID&lt;/span&gt; Catalog&lt;/a&gt; for a list of valid operating system&amp;nbsp;identifiers.&lt;/li&gt;
+&lt;li&gt;&lt;tt class=&#34;docutils literal&#34;&gt;export CppCompilerAndLinker=clang&lt;/tt&gt; is required if you don&amp;#8217;t want to manually install an ancient version of clang on Ubuntu. This environment variable overrides the default Clang 3.9 that CoreRT uses by&amp;nbsp;default.&lt;/li&gt;
+&lt;li&gt;For command line scripts, prefix &lt;tt class=&#34;docutils literal&#34;&gt;sh:&lt;/tt&gt; for Linux and &lt;tt class=&#34;docutils literal&#34;&gt;cmd:&lt;/tt&gt; for Windows. For platform-specific configurations that are &lt;strong&gt;not&lt;/strong&gt; command line scripts (e.g. the &lt;tt class=&#34;docutils literal&#34;&gt;artifacts&lt;/tt&gt; configuration) you need to use AppVeyor&amp;#8217;s matrix configuration. Essentially, the &lt;tt class=&#34;docutils literal&#34;&gt;only&lt;/tt&gt; is a filter, and the sibling tags like &lt;tt class=&#34;docutils literal&#34;&gt;artifacts&lt;/tt&gt; will take effect when the condition is&amp;nbsp;true.&lt;/li&gt;
+&lt;li&gt;&lt;dl class=&#34;first docutils&#34;&gt;
+&lt;dt&gt;The &lt;tt class=&#34;docutils literal&#34;&gt;deploy:&lt;/tt&gt; configuration (for posting releases to github) requires the &lt;tt class=&#34;docutils literal&#34;&gt;appveyor_repo_tag&lt;/tt&gt; condition. Otherwise, a build on master branch would create a release and tag it in git. This tag would then trigger another&amp;nbsp;build!&lt;/dt&gt;
+&lt;dd&gt;&lt;ul class=&#34;first last&#34;&gt;
+&lt;li&gt;Each commit to &lt;tt class=&#34;docutils literal&#34;&gt;master&lt;/tt&gt; will trigger a build. When you&amp;#8217;re happy with &lt;tt class=&#34;docutils literal&#34;&gt;master&lt;/tt&gt;, tag the commit and push it. AppVeyor will then create a release on&amp;nbsp;GitHub.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is more of a brain dump than a blog post, but I hope this ends up being useful to other people out there working with CoreRT and&amp;nbsp;AppVeyor!&lt;/p&gt;
+</description>
+        <pubDate>Sat, 20 Oct 2018 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2018-10-21:/2018/10/cross-platform-ci-with-corert-and-appveyor</guid>
+    </item>
+        
+            <item>
+        <title>Rendering an ASP.NET Core MVC action to a string</title>
+        <link>https://fuqua.io/blog/2018/07/rendering-an-asp-net-core-mvc-action-to-a-string/</link>
+        <description>&lt;p&gt;I&amp;#8217;m currently going through my &amp;quot;build a static site engine&amp;quot; phase that most developers pass
+through at some point in their career. As part of this, I wanted to write a normal &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt;
+Core application complete with server-side rendering, and then have the option to entirely
+pre-render it to&amp;nbsp;disk.&lt;/p&gt;
+&lt;p&gt;It turns out that this is quite difficult &amp;#8211; StackOverflow and GitHub issues were a barren
+wasteland of half-working answers. Most everyone assumes that you have a ControllerContext,
+or at least an HttpContext! Rendering it from a command line application was unheard&amp;nbsp;of!&lt;/p&gt;
+&lt;p&gt;After much experimentation, I managed to get it working! You can see a complete example in
+the &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/RazorToStringExample&#34;&gt;RazorToStringExample&lt;/a&gt;&amp;nbsp;repository.&lt;/p&gt;
+&lt;p&gt;For example, here&amp;#8217;s how you can render the route &lt;tt class=&#34;docutils literal&#34;&gt;Home/Index&lt;/tt&gt; to a&amp;nbsp;string:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Program&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;async&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Task&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// async Main requires C# 7.1&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;website&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CreateWebHostBuilder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Build&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;c1&#34;&gt;// invoke your route to get the model result.&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;model&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ViewResult&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HomeController&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Index&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Model&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+        &lt;span class=&#34;c1&#34;&gt;// render the view with the model&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// must be scoped due to an asp.net internal IViewBufferScope service being scoped&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scope&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;website&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Services&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CreateScope&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;renderer&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scope&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ServiceProvider&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetService&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;typeof&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RazorViewToStringRenderer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RazorViewToStringRenderer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;await&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;renderer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RenderViewToStringAsync&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Home/Index&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;model&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;Console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WriteLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IWebHostBuilder&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;CreateWebHostBuilder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;WebHost&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CreateDefaultBuilder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UseStartup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Startup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The magic happens in the RazorViewToStringRenderer, which is &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/AspNetCoreMvcToStringExample/blob/master/RazorToStringExample/Services/RazorViewToStringRenderer.cs&#34;&gt;defined here&lt;/a&gt;. We have to set up a lot of &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core services to get everything working, but so far it&amp;#8217;s handled everything I&amp;#8217;ve been able to throw at&amp;nbsp;it!&lt;/p&gt;
+</description>
+        <pubDate>Sat, 28 Jul 2018 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2018-07-29:/2018/07/rendering-an-asp-net-core-mvc-action-to-a-string</guid>
+    </item>
+        
+            <item>
+        <title>Parsing PowerShell Programatically</title>
+        <link>https://fuqua.io/blog/2017/12/parsing-powershell-programatically/</link>
+        <description>&lt;p&gt;I&amp;#8217;ve recently been working with a lot of PowerShell at work, and the experience has been, well, less than perfect. PowerShell is a dynamically-typed scripting language, and is most often used for administering Windows systems. The combination of making system changes and the runtime errors associated with dynamically-typed languages has been frustrating. It&amp;#8217;s quite common to get the system into a weird or inconsistent state when developing PowerShell&amp;nbsp;scripts.&lt;/p&gt;
+&lt;p&gt;Ideally all your PowerShell is properly orchestrated with &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;-WhatIf&lt;/span&gt;&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;SupportsShouldProcess&lt;/tt&gt; functionality, but in my experience it&amp;#8217;s common for there to be large differences in behavior between &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;-WhatIf&lt;/span&gt;&lt;/tt&gt; execution and real&amp;nbsp;execution.&lt;/p&gt;
+&lt;p&gt;The end goal is to move away from large chunks of PowerShell, to something like &lt;span class=&#34;caps&#34;&gt;DSC&lt;/span&gt; or Docker. However, while that process is underway, my team and I still have this day-to-day pain&amp;nbsp;point.&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;the-value-of-a-build-step&#34;&gt;
+&lt;h3&gt;The value of a build&amp;nbsp;step&lt;/h3&gt;
+&lt;p&gt;Other dynamically-typed languages also have this problem, most notably JavaScript. However, JavaScript has two mitigations. First, JavaScript is most often used in the context of a browser or servicing an &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; request. In these scenarios there&amp;#8217;s rarely persistent state across executions. Second, JavaScript has webpack / TypeScript, which serves as a build step that can catch dumb mistakes like typo-ing a function name or argument&amp;nbsp;value.&lt;/p&gt;
+&lt;p&gt;For PowerShell, the closest we have is &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/PowerShell/PSScriptAnalyzer&#34;&gt;PSScriptAnalyzer&lt;/a&gt;, and it helps a lot &amp;#8211; it&amp;#8217;s a static analysis engine that warns about style and best practice violations. However, it isn&amp;#8217;t the complete solution. I&amp;#8217;m more interested in catching errors like &amp;quot;you&amp;#8217;re invoking a function that doesn&amp;#8217;t&amp;nbsp;exist.&amp;quot;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;powershell-s-built-in-parser&#34;&gt;
+&lt;h3&gt;PowerShell&amp;#8217;s built-in&amp;nbsp;parser&lt;/h3&gt;
+&lt;p&gt;Turns out, .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; has great built-in support for parsing and analyzing PowerShell code! It almost rivals Roslyn from the C# world. All the functionality is contained in the namespace &lt;a class=&#34;reference external&#34; href=&#34;https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.language&#34;&gt;System.Management.Automation.Language&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This functionality is available on any ScriptBlock in&amp;nbsp;PowerShell:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Ast&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;Attributes&lt;/span&gt;         &lt;span class=&#34;err&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;UsingStatements&lt;/span&gt;    &lt;span class=&#34;err&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;ParamBlock&lt;/span&gt;         &lt;span class=&#34;err&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;BeginBlock&lt;/span&gt;         &lt;span class=&#34;err&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;ProcessBlock&lt;/span&gt;       &lt;span class=&#34;err&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;EndBlock&lt;/span&gt;           &lt;span class=&#34;err&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;DynamicParamBlock&lt;/span&gt;  &lt;span class=&#34;err&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;ScriptRequirements&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Extent&lt;/span&gt;             &lt;span class=&#34;err&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Parent&lt;/span&gt;             &lt;span class=&#34;err&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Additionally, because it&amp;#8217;s all .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt;, it&amp;#8217;s simple to build your own analyzer / linter in C#. The namespace contains a parser to convert a file into an abstract syntax&amp;nbsp;tree:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ScriptBlockAst&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ast&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Parser&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ParseFile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;filename&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;out&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Token&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tokens&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;out&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ParseError&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;errors&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As well as a visitor pattern implementation for traversing the abstract syntax&amp;nbsp;tree:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;/// &amp;lt;summary&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;/// AstVisitor is used for basic scenarios requiring traversal of the nodes&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;/// in an Ast. An implementation of AstVisitor does not explicitly traverse&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;/// the Ast; the engine traverses all nodes and calls the appropriate method&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;/// on each node.&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;/// &amp;lt;/summary&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;abstract&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;AstVisitor2&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;virtual&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;VisitScriptBlock&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ScriptBlockAst&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scriptBlockAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Continue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;virtual&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;VisitFunctionDefinition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FunctionDefinitionAst&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;functionDefinitionAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Continue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;virtual&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;VisitCommand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CommandAst&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;commandAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Continue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;virtual&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;VisitStatementBlock&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;StatementBlockAst&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;statementBlockAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Continue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;virtual&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;VisitIfStatement&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IfStatementAst&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ifStmtAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Continue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;virtual&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;VisitSwitchStatement&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SwitchStatementAst&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;switchStatementAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Continue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;virtual&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;VisitForEachStatement&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ForEachStatementAst&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;forEachStatementAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Continue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;//...etc&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;/// &amp;lt;summary&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;/// Each Visit* method in AstVisitor2 returns one of these&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;/// values to control how visiting nodes in the &lt;span class=&#34;caps&#34;&gt;AST&lt;/span&gt; should proceed.&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;/// &amp;lt;/summary&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;enum&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Continue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// Continue visiting all nodes the ast.&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;SkipChildren&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// Skip visiting child nodes of currently visited node&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;StopVisit&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// Stop visiting all nodes.&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;finding-invalid-function-invocations&#34;&gt;
+&lt;h3&gt;Finding invalid function&amp;nbsp;invocations&lt;/h3&gt;
+&lt;p&gt;Let&amp;#8217;s write a simple linter that detects the following program. It&amp;#8217;s syntactically correct, but would result in a runtime error due to a missing &lt;tt class=&#34;docutils literal&#34;&gt;Bar&lt;/tt&gt; function:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Foo&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nb&#34;&gt;Write-Output&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;Foo&amp;quot;&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Bar&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;Foo&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We have three functions in the above program: &lt;tt class=&#34;docutils literal&#34;&gt;Foo&lt;/tt&gt;, &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Write-Output&lt;/span&gt;&lt;/tt&gt; and our missing function &lt;tt class=&#34;docutils literal&#34;&gt;Bar&lt;/tt&gt;. &lt;tt class=&#34;docutils literal&#34;&gt;Foo&lt;/tt&gt; is defined in our program, &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Write-Output&lt;/span&gt;&lt;/tt&gt; is available in the standard library, and &lt;tt class=&#34;docutils literal&#34;&gt;Bar&lt;/tt&gt; is undefined and will result in a runtime&amp;nbsp;error.&lt;/p&gt;
+&lt;p&gt;The basic algorithm for detecting this invalid code is something like&amp;nbsp;this:&lt;/p&gt;
+&lt;ol class=&#34;arabic simple&#34;&gt;
+&lt;li&gt;Visit each node in&amp;nbsp;order&lt;/li&gt;
+&lt;li&gt;If we find a function definition, record the function&amp;#8217;s name and&amp;nbsp;body.&lt;/li&gt;
+&lt;li&gt;If we find a function invocation, check if it&amp;#8217;s one of the functions we know about. If so, recursively visit that function&amp;#8217;s body. If we don&amp;#8217;t know about it, it&amp;#8217;s an error that should be&amp;nbsp;reported.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;step-1-visiting-each-node-in-order&#34;&gt;
+&lt;h3&gt;Step 1: Visiting each node in&amp;nbsp;order&lt;/h3&gt;
+&lt;p&gt;For Step 1, we simply subclass the provided abstract &lt;tt class=&#34;docutils literal&#34;&gt;AstVisitor2&lt;/tt&gt; base class.
+The base class will visit each node for us, and we can override methods if we want to perform an action.
+We&amp;#8217;ll need to know about what functions are defined already (like &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Write-Output&lt;/span&gt;&lt;/tt&gt;) so let&amp;#8217;s take that
+as a constructor parameter &lt;tt class=&#34;docutils literal&#34;&gt;moduleCommands&lt;/tt&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;AnalysisVisitor&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitor2&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// an initially empty collection that will accumulate the locally-defined functions&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IImmutableDictionary&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FunctionDefinitionAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LocalCommands&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// an collection that has the list of already defined functions, like Write-Output&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IImmutableDictionary&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CommandInfo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ModuleCommands&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// The errors we&amp;#39;ve found during our analysis&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ValidationErrors&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;AnalysisVisitor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;IImmutableDictionary&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FunctionDefinitionAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;localCommands&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;IImmutableDictionary&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CommandInfo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;moduleCommands&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LocalCommands&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;localCommands&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ModuleCommands&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;moduleCommands&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ValidationErrors&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;();&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can call our visitor like&amp;nbsp;so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ast&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Parser&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ParseFile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;s&#34;&gt;&amp;quot;./myFile.ps1&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;out&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Token&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tokens&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;out&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ParseError&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;errors&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fileVisitor&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AnalysisVisitor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;localFunctions&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ImmutableDictionary&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FunctionDefinitionAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Empty&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;moduleFunctions&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetInScopeFunctions&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;ast&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Visit&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;fileVisitor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WriteLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Errors:&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WriteLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Join&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Environment&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NewLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fileVisitor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ValidationErrors&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The function &lt;tt class=&#34;docutils literal&#34;&gt;GetInScopeFunctions&lt;/tt&gt; is outside the scope of this article, but if you&amp;#8217;re curious you can &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/PSCommandLint/blob/d1d579e7d83c526640e8dd2287da005b2ebe025d/PSCommandLint/Analysis/CommandAnalyzer.cs#L75&#34;&gt;see the definition here&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;step-2-keeping-track-of-function-definitions&#34;&gt;
+&lt;h3&gt;Step 2: Keeping track of function&amp;nbsp;definitions&lt;/h3&gt;
+&lt;p&gt;For Step 2, we add an override for &lt;tt class=&#34;docutils literal&#34;&gt;VisitFunctionDefinition&lt;/tt&gt;. We&amp;#8217;ll add each visited function definition to our &lt;tt class=&#34;docutils literal&#34;&gt;LocalCommands&lt;/tt&gt; property:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;override&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;VisitFunctionDefinition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FunctionDefinitionAst&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;functionDefinitionAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;functionName&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;functionDefinitionAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LocalCommands&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ContainsKey&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;functionName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;ValidationErrors&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Add&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Overwriting existing function &amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;functionName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;LocalCommands&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LocalCommands&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SetItem&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;functionName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;functionDefinitionAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// Track that we&amp;#39;ve seen the function, but don&amp;#39;t analyze the body.&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// the body will be analyzed when the function is called.&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// If we tried to analyze the body now, we may find invocations of&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// functions that will be defined later.&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SkipChildren&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;step-3-following-function-invocations&#34;&gt;
+&lt;h3&gt;Step 3: Following function&amp;nbsp;invocations&lt;/h3&gt;
+&lt;p&gt;For Step 3, we&amp;#8217;ll add another override, this time for &lt;tt class=&#34;docutils literal&#34;&gt;VisitCommand&lt;/tt&gt; which represents a function&amp;nbsp;invocation.&lt;/p&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;If the invoked command is in our &lt;tt class=&#34;docutils literal&#34;&gt;ModuleCommands&lt;/tt&gt; variable, we&amp;#8217;ll skip it, as it&amp;#8217;s defined in another module. This will handle functions like &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Write-Output&lt;/span&gt;&lt;/tt&gt;.&lt;/li&gt;
+&lt;li&gt;If the invoked command is in our &lt;tt class=&#34;docutils literal&#34;&gt;LocalCommands&lt;/tt&gt; variable, we&amp;#8217;ll then recursively visit the function body and merge the result with our overall&amp;nbsp;result.&lt;/li&gt;
+&lt;li&gt;If we don&amp;#8217;t know about the command, then we&amp;#8217;ve identified the&amp;nbsp;error!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;override&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AstVisitAction&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;VisitCommand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CommandAst&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;commandAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;commandName&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;commandAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetCommandName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ModuleCommands&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ContainsKey&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;commandName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// nothing to analyze, it&amp;#39;s in another module (e.g. Write-Output)&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;base&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;VisitCommand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;commandAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LocalCommands&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TryGetValue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;commandName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;out&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;functionDefinition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// recursively visit the invoked function&amp;#39;s body&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;functionVisitor&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AnalysisVisitor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LocalCommands&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ModuleCommands&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;functionDefinition&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Visit&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;functionVisitor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;MergeResult&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;functionVisitor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;base&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;VisitCommand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;commandAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;ValidationErrors&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Add&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;commandName&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot; is not defined&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;base&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;VisitCommand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;commandAst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;All done! This very basic analyzer will detect our error. There&amp;#8217;s all sorts of improvements we can do, such as
+support for dot-sourced files and descending into modules, but these features will follow the same pattern as our
+simple&amp;nbsp;analyzer.&lt;/p&gt;
+&lt;p&gt;Overall, I was very impressed with the ease of analysis of PowerShell code. All code in this post is available in my repo &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/PSCommandLint&#34;&gt;PSCommandLint&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Fri, 15 Dec 2017 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2017-12-16:/2017/12/parsing-powershell-programatically</guid>
+    </item>
         
             <item>
         <title>Level up your VsVim</title>
@@ -68,7 +521,7 @@ nnoremap cia :vsc Refactor.ReorderParameters&amp;lt;cr&amp;gt;
 &lt;p&gt;If you find other useful mappings, feel free to share them&amp;nbsp;below!&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Tue, 08 Aug 2017 04:00:00 GMT</pubDate>
+        <pubDate>Mon, 07 Aug 2017 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2017-08-08:/2017/08/level-up-your-vsvim</guid>
     </item>
         
@@ -180,8 +633,93 @@ nnoremap cia :vsc Refactor.ReorderParameters&amp;lt;cr&amp;gt;
 &lt;p&gt;This is more interesting than the first case. We can see that our generated class is set up ahead of time, then passed into the generated static function, and then all subsequent references to the parameter &lt;tt class=&#34;docutils literal&#34;&gt;a&lt;/tt&gt; are rewritten into references to the generated field!&amp;nbsp;Fascinating.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Wed, 26 Jul 2017 04:00:00 GMT</pubDate>
+        <pubDate>Tue, 25 Jul 2017 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2017-07-26:/2017/07/the-implementation-of-csharp-local-functions</guid>
+    </item>
+        
+            <item>
+        <title>Splitting Thai words with Browser APIs</title>
+        <link>https://fuqua.io/blog/2017/06/splitting-thai-words-with-browser-apis/</link>
+        <description>&lt;p&gt;One of the difficulties for students learning the Thai language is the lack of spaces between words. For example, here is a simple sentence in&amp;nbsp;Thai:&lt;/p&gt;
+&lt;p class=&#34;align-center&#34;&gt;สวัสดีครับกินข้าวหรือยัง&lt;/p&gt;
+&lt;p&gt;After some time, students start to recognize the shapes of the words and it becomes effortless to read. Before that time, however, it&amp;#8217;s quite a&amp;nbsp;struggle!&lt;/p&gt;
+&lt;p&gt;I found a neat trick yesterday for splitting Thai sentences into words with JavaScript in Chrome. There&amp;#8217;s no native &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; for understanding Thai text, but it&amp;#8217;s possible to piggyback on top of the browser&amp;#8217;s text selection&amp;nbsp;APIs.&lt;/p&gt;
+&lt;p&gt;When a word is double-clicked in the browser, the browser will select that word&amp;#8212;and this selection is localization-aware! This functionality is exposed in the non-standard &lt;a class=&#34;reference external&#34; href=&#34;https://developer.mozilla.org/en-US/docs/Web/API/Selection/modify&#34;&gt;Selection.modify&lt;/a&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. While this &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; is present in every browser, I&amp;#8217;ve found it only works on Thai text in&amp;nbsp;Chrome.&lt;/p&gt;
+&lt;p&gt;&lt;tt class=&#34;docutils literal&#34;&gt;Selection.modify&lt;/tt&gt; is a bit like the old-school &amp;quot;turtle&amp;quot; game where a pen is given a command with a direction and a distance, and it draws a line in that direction for that distance. In our case, we&amp;#8217;re &amp;quot;drawing&amp;quot; the selection of text. The &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; looks like&amp;nbsp;this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;sel&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;modify&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;alter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;direction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;granularity&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;strong&gt;alter&lt;/strong&gt;: &amp;quot;move&amp;quot; to move the current cursor position or &amp;quot;extend&amp;quot; to extend a range of selected&amp;nbsp;text.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;direction&lt;/strong&gt;: &amp;quot;forward&amp;quot; or &amp;quot;backward&amp;quot; &amp;#8211; the direction to move/extend the selection. This is a locale-aware definition. Additionally, &amp;quot;left&amp;quot; and &amp;quot;right&amp;quot; are locale-invariant&amp;nbsp;options.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;granularity&lt;/strong&gt;: &amp;quot;character&amp;quot; or &amp;quot;word&amp;quot; &amp;#8211; the distance to move/extend the selection. Chrome implements many more options for this&amp;nbsp;parameter.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For example, &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;sel.modify(&amp;quot;extend&amp;quot;,&lt;/span&gt; &amp;quot;forward&amp;quot;, &amp;quot;word&amp;quot;)&lt;/tt&gt; would extend the current selection forward by one word. By measuring the selection range after each call, we can get the indices of each&amp;nbsp;word.&lt;/p&gt;
+&lt;p&gt;The actual code ends up being pretty&amp;nbsp;short:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;input&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;สวัสดีครับกินข้าวหรือยัง&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;button&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;↓ split ↓&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;button&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;output&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;script&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nb&#34;&gt;document&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;querySelector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;quot;button&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;addEventListener&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;quot;click&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kr&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;input&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;document&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;querySelector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;.input&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;kr&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;output&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;document&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;querySelector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;.output&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;kr&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;sel&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;window&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getSelection&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// our selection api&lt;/span&gt;
+
+            &lt;span class=&#34;c1&#34;&gt;// set selection range to [0, 0]&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;output&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;textContent&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;sel&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;collapse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;start&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+            &lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;end&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+            &lt;span class=&#34;c1&#34;&gt;// instruct the browser to select each word, then read the&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;// selection and output it.&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;end&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;textContent&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;length&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;nx&#34;&gt;sel&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;modify&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;extend&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;forward&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;word&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+                &lt;span class=&#34;nx&#34;&gt;end&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;sel&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;focusOffset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+                &lt;span class=&#34;kr&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;word&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;textContent&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;substring&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;start&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;end&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+                &lt;span class=&#34;nx&#34;&gt;start&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;end&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+                &lt;span class=&#34;nx&#34;&gt;output&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;textContent&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;word&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;  &amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;/script&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here is the&amp;nbsp;result:&lt;/p&gt;
+&lt;div class=&#34;input&#34;&gt;สวัสดีครับกินข้าวหรือยัง&lt;/div&gt;
+&lt;button&gt;↓ split ↓&lt;/button&gt;
+&lt;div class=&#34;output&#34;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+    document
+        .querySelector(&#34;button&#34;)
+        .addEventListener(&#34;click&#34;, () =&gt; {
+            const input = document.querySelector(&#39;.input&#39;);
+            const output = document.querySelector(&#39;.output&#39;);
+            const sel = window.getSelection(); // our selection api
+
+            // set selection range to [0, 0]
+            output.textContent = &#39;&#39;;
+            sel.collapse(input, 0);
+            var start = 0;
+            var end = 0;
+
+            // instruct the browser to select each word, then read the
+            // selection and output it.
+            while(end &lt; input.textContent.length) {
+                sel.modify(&#39;extend&#39;, &#39;forward&#39;, &#39;word&#39;);
+                end = sel.focusOffset;
+                const word = input.textContent.substring(start, end);
+                start = end;
+
+                output.textContent += word + &#34;  &#34;;
+            }
+        }, false);
+&lt;/script&gt;&lt;p&gt;I think this is a pretty neat&amp;nbsp;trick!&lt;/p&gt;
+</description>
+        <pubDate>Fri, 02 Jun 2017 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2017-06-03:/2017/06/splitting-thai-words-with-browser-apis</guid>
     </item>
         
             <item>
@@ -246,7 +784,7 @@ nnoremap cia :vsc Refactor.ReorderParameters&amp;lt;cr&amp;gt;
     &lt;span class=&#34;s2&#34;&gt;&amp;quot;Two houses are next to each other if they differ by 1.&amp;quot;&lt;/span&gt;
     &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;abs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;h1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;h2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
 
-&lt;span class=&#34;k&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;zebra_puzzle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;zebra_puzzle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Let&amp;#8217;s take a moment to understand this code. This solution represents each house as an integer. It generates all permutations of houses, and then self-joins these permutations (called &lt;tt class=&#34;docutils literal&#34;&gt;orderings&lt;/tt&gt;) repeatedly. On each join, it binds each integer to an attribute name, like &amp;#8216;Englishman&amp;#8217;, &amp;#8216;red&amp;#8217;, or &amp;#8216;coffee&amp;#8217;. Each requirement in the above problem description is then a simple integer equality check. It applies each requirements as early as possible to filter out invalid&amp;nbsp;permutations.&lt;/p&gt;
 &lt;p&gt;In my opinion, this is an incredibly readable and concise solution compared to the existing C# solution, and its fast execution time (a couple of milliseconds) shows that you don&amp;#8217;t always need a high-powered logic engine if you&amp;#8217;re dealing with a relatively small number of possible solutions. I wanted to solve this problem in a similar way, in C#. It ended up being an interesting tour through some new C# 7&amp;nbsp;features.&lt;/p&gt;
@@ -361,7 +899,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
 &lt;p&gt;&lt;tt class=&#34;docutils literal&#34;&gt;System.ValueTuple&lt;/tt&gt; looks like a very useful feature &amp;#8211; but I&amp;#8217;ll need to be careful to balance this with code readability concerns. Sometimes it might be better to break a &lt;tt class=&#34;docutils literal&#34;&gt;System.ValueTuple&lt;/tt&gt; into a named class with documentation. For cases like this blog post though, where the types are only ever used inside a single method or class, I think it&amp;#8217;s a valuable&amp;nbsp;feature.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Mon, 02 Jan 2017 04:00:00 GMT</pubDate>
+        <pubDate>Sun, 01 Jan 2017 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2017-01-02:/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7</guid>
     </item>
         
@@ -424,11 +962,11 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
 &lt;p&gt;OpenCover has &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/OpenCover/opencover/wiki/Usage/&#34;&gt;many configuration options&lt;/a&gt; we can use to tweak the behavior, including filters by namespace or&amp;nbsp;attribute.&lt;/p&gt;
 &lt;p&gt;After starting OpenCover, we can send &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; requests to the application to fully exercise it. This can be scripted, or done manually using a&amp;nbsp;browser.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;#&lt;/span&gt; exercise the &lt;span class=&#34;s1&#34;&gt;&amp;#39;tomorrow&amp;#39;&lt;/span&gt; code path
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; wget http://localhost/?eventDate&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;2016-08-14
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; wget http://localhost/?eventDate&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt;-08-14
 &lt;span class=&#34;gp&#34;&gt;#&lt;/span&gt; exercise the &lt;span class=&#34;s1&#34;&gt;&amp;#39;in X days&amp;#39;&lt;/span&gt; code path
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; wget http://localhost/?eventDate&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;2016-08-29
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; wget http://localhost/?eventDate&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt;-08-29
 &lt;span class=&#34;gp&#34;&gt;#&lt;/span&gt; exercise the &lt;span class=&#34;s1&#34;&gt;&amp;#39;X days ago&amp;#39;&lt;/span&gt; code path
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; wget http://localhost/?eventDate&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;2016-07-10
+&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; wget http://localhost/?eventDate&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt;-07-10
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;When we&amp;#8217;re done sending requests to the application, we can stop OpenCover by pressing &amp;#8216;q&amp;#8217;. OpenCover will generate our coverage results in a file called &lt;tt class=&#34;docutils literal&#34;&gt;results.xml&lt;/tt&gt;. We can then use the ReportGenerator to create an &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;&amp;nbsp;report:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; ReportGenerator.exe -reports:&lt;span class=&#34;s2&#34;&gt;&amp;quot;.\results.xml&amp;quot;&lt;/span&gt; -targetdir:report
@@ -438,7 +976,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
 &lt;p&gt;This technique depends on us being able to fully exercise all parts of the web application. That could be the hardest part, depending on how large the application is. Tooling like OpenCover and ReportGenerator make the rest of it&amp;nbsp;easy!&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sat, 13 Aug 2016 04:00:00 GMT</pubDate>
+        <pubDate>Fri, 12 Aug 2016 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2016-08-13:/2016/08/finding-dead-csharp-code-in-aspnet</guid>
     </item>
         
@@ -448,7 +986,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
         <description>&lt;p&gt;I just posted an article about SonarQube, an open source static analysis tool, and how we set it up to scan every incoming GitHub pull request at&amp;nbsp;work.&lt;/p&gt;
 &lt;p&gt;You can &lt;a class=&#34;reference external&#34; href=&#34;http://techblog.jetabroad.com/2016/06/increasing-code-quality-with-sonarqube.html&#34;&gt;read it at the Jetabroad Tech Blog&lt;/a&gt;.&lt;/p&gt;
 </description>
-        <pubDate>Mon, 27 Jun 2016 04:00:00 GMT</pubDate>
+        <pubDate>Sun, 26 Jun 2016 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2016-06-27:/2016/06/increasing-code-quality-with-sonarqube</guid>
     </item>
         
@@ -457,7 +995,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
         <link>https://fuqua.io/blog/2016/06/vim-presentation/</link>
         <description>&lt;p&gt;I recently gave a presentation on thinking in vim, which tries to bring people to that &amp;quot;Aha!&amp;quot; moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is&amp;nbsp;useful!&lt;/p&gt;
 &lt;iframe style=&#34;width:100%&#34; src=&#34;https://docs.google.com/presentation/d/1WzjWgKrrlN0BRnP0a99jomsnNX2xRUhvCSVLVWFfpyw/embed?start=false&amp;amp;loop=false&amp;amp;delayms=60000&#34; frameborder=&#34;0&#34; width=&#34;960&#34; height=&#34;569&#34; allowfullscreen=&#34;true&#34; mozallowfullscreen=&#34;true&#34; webkitallowfullscreen=&#34;true&#34;&gt;&lt;/iframe&gt;</description>
-        <pubDate>Mon, 13 Jun 2016 04:00:00 GMT</pubDate>
+        <pubDate>Sun, 12 Jun 2016 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2016-06-13:/2016/06/vim-presentation</guid>
     </item>
         
@@ -471,7 +1009,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
 &lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/ThaiRecog&#34;&gt;Thai &lt;span class=&#34;caps&#34;&gt;OCR&lt;/span&gt; Android App&lt;/a&gt; &amp;#8211; Quick &lt;span class=&#34;caps&#34;&gt;POC&lt;/span&gt; android app for doing Thai language &lt;span class=&#34;caps&#34;&gt;OCR&lt;/span&gt; using the camera. It doesn&amp;#8217;t work very well right now, but I suspect a &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/tesseract-ocr/tesseract&#34;&gt;Tesseract&lt;/a&gt; upgrade might fix&amp;nbsp;that.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Thu, 02 Apr 2015 04:00:00 GMT</pubDate>
+        <pubDate>Wed, 01 Apr 2015 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2015-04-02:/2015/04/a-software-developer-learning-thai</guid>
     </item>
         
@@ -485,7 +1023,7 @@ Water drinker lives in 1 and zebra owner lives in 5&lt;/blockquote&gt;
 &lt;p&gt;Format Finder presents you with a very specific point in time: Monday, March 1st, 2009 at 8:&lt;span class=&#34;caps&#34;&gt;04AM&lt;/span&gt;. You then provide the desired output of that date, and Format Finder will provide the formatting strings for you. For example, if you type in &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;2009-03-01&lt;/span&gt;&lt;/tt&gt;, Format Finder will return a custom format string of &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;yyyy-&lt;span class=&#34;caps&#34;&gt;MM&lt;/span&gt;-dd&lt;/span&gt;&lt;/tt&gt; along with a explanation of each part. Alternatively, if you type in &lt;tt class=&#34;docutils literal&#34;&gt;3/01/2009&lt;/tt&gt;, Format Finder will return the standard format string of &lt;tt class=&#34;docutils literal&#34;&gt;d&lt;/tt&gt;.&lt;/p&gt;
 &lt;p&gt;I hope other people find this as useful as I do. Let&amp;#8217;s skew that &lt;span class=&#34;caps&#34;&gt;XKCD&lt;/span&gt;&amp;nbsp;curve!&lt;/p&gt;
 </description>
-        <pubDate>Thu, 26 Feb 2015 04:00:00 GMT</pubDate>
+        <pubDate>Wed, 25 Feb 2015 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2015-02-26:/2015/02/quick-tip-format-finder-for-net-date-strings</guid>
     </item>
         
@@ -671,7 +1209,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 &lt;p&gt;A full, working demo is available &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/push-demo&#34;&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sun, 25 May 2014 04:00:00 GMT</pubDate>
+        <pubDate>Sat, 24 May 2014 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2014-05-25:/2014/05/pushing-database-changes-to-the-web-with-datomic</guid>
     </item>
         
@@ -843,7 +1381,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Tue, 11 Mar 2014 04:00:00 GMT</pubDate>
+        <pubDate>Mon, 10 Mar 2014 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2014-03-11:/2014/03/haskells-elegant-fibonacci-in-csharp</guid>
     </item>
         
@@ -1013,7 +1551,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 &lt;p&gt;It&amp;#8217;s worth noting that the need to wrap Browser APIs in compatibility layers will hopefully be a short-term pain. There are plans to add Promise support to existing browser APIs where possible. We&amp;#8217;re not there yet, though, so we need these wrappers for&amp;nbsp;now.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sat, 22 Feb 2014 04:00:00 GMT</pubDate>
+        <pubDate>Fri, 21 Feb 2014 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2014-02-22:/2014/02/native-javascript-promises-and-browser-apis</guid>
     </item>
         
@@ -1211,7 +1749,7 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 &lt;p&gt;We now have a simple &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; over a relational database. We can manage our database schema using Lobos migrations, and query our database using elegant, idiomatic Clojure via&amp;nbsp;Korma.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Wed, 04 Dec 2013 04:00:00 GMT</pubDate>
+        <pubDate>Tue, 03 Dec 2013 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2013-12-04:/2013/12/rest-apis-and-relational-databases-in-clojure</guid>
     </item>
         
@@ -1294,7 +1832,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 &lt;p&gt;I&amp;#8217;ve covered a few of the more interesting Acrylamid customization options and Python modules, but there are many, many more. Take a look at the &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/filters.html&#34;&gt;Acrylamid filter documentation&lt;/a&gt; for an exhaustive&amp;nbsp;list!&lt;/p&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Tue, 10 Sep 2013 04:00:00 GMT</pubDate>
+        <pubDate>Mon, 09 Sep 2013 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2013-09-10:/2013/09/acrylamid-with-virtualenv-and-pip</guid>
     </item>
         </channel>

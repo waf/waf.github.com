@@ -43,7 +43,7 @@
 .highlight .nn { color: #222222} /* Name.Namespace */
 .highlight .nx { color: #222222} /* Name.Other */
 .highlight .py { color: #222222} /* Name.Property */
-.highlight .nt { color: #F56017; font-weight: bold} /* Name.Tag */
+.highlight .nt { color: #F56017} /* Name.Tag */
 .highlight .nv { color: #4C6394} /* Name.Variable */
 .highlight .ow { color: #222222} /* Operator.Word */
 .highlight .w { color: #222222} /* Text.Whitespace */

@@ -10,9 +10,8 @@
     <ul class="entry-list">
     {% for entry in env.entrylist %}
         <li>
-            <span class="date">{{ entry.date.strftime("%G %B %e") }}</span>
-            &mdash;
-            <a class="title" href="{{ env.path + entry.permalink }}">{{ entry.title | e }}</a>
+            <a class="title tags-filter" data-tags="{{ entry.tags | join(" ") | replace("csharp", "csharp c#")}}" href="{{ env.path + entry.permalink }}">{{ entry.title | e }}</a>
+            <span class="date">{{ entry.date.strftime("%e %B %G") }}</span>
         </li>
     {% endfor %}
     </ul>
@@ -20,7 +19,7 @@
 <script>
     window.addEventListener("load", function() {
         new List('entries-search', { 
-            valueNames: ['title'],
+            valueNames: ['title', { name: 'tags-filter', attr: 'data-tags' } ],
             searchClass: 'search-box',
             listClass: 'entry-list'
         });

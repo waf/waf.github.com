@@ -142,15 +142,32 @@ tt, code, kbd, samp {
     width:220px;
     padding:5px;
     border: 1px solid #999;
-    transition: box-shadow 0.25s;
+    transition: box-shadow 0.2s ease-in-out;
     border-radius:0;
 }
 .search-box:focus {
     box-shadow: 0 0 5px #999999;
     outline:none;
 }
-.entry-list a {
-    line-height: 1.5em;
+.entry-list {
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+.entry-list li {
+    display:flex;
+    justify-content: space-between;
+    padding:5px 0;
+}
+.entry-list .date {
+    color:#888;
+}
+
+.entry-list li:hover .date {
+    color:#666;
+}
+.entry-list li:hover .title {
+    color:#D15214;
 }
 
 @media (max-width:820px) {
@@ -224,6 +241,10 @@ nav a:hover {
 #comments div {
     display:block !important;
     margin:20px auto !important;
+}
+
+.align-center {
+    text-align:center;
 }
 
 img.align-center {

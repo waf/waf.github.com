@@ -100,7 +100,7 @@
     <span class="s2">&quot;Two houses are next to each other if they differ by 1.&quot;</span>
     <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">h1</span><span class="o">-</span><span class="n">h2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">zebra_puzzle</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">zebra_puzzle</span><span class="p">())</span>
 </pre></div>
 <p>Let&#8217;s take a moment to understand this code. This solution represents each house as an integer. It generates all permutations of houses, and then self-joins these permutations (called <tt class="docutils literal">orderings</tt>) repeatedly. On each join, it binds each integer to an attribute name, like &#8216;Englishman&#8217;, &#8216;red&#8217;, or &#8216;coffee&#8217;. Each requirement in the above problem description is then a simple integer equality check. It applies each requirements as early as possible to filter out invalid&nbsp;permutations.</p>
 <p>In my opinion, this is an incredibly readable and concise solution compared to the existing C# solution, and its fast execution time (a couple of milliseconds) shows that you don&#8217;t always need a high-powered logic engine if you&#8217;re dealing with a relatively small number of possible solutions. I wanted to solve this problem in a similar way, in C#. It ended up being an interesting tour through some new C# 7&nbsp;features.</p>
@@ -233,6 +233,17 @@ Water drinker lives in 1 and zebra owner lives in 5</blockquote>
         </div>
     </div>
 </article>
+        <div class="pager">
+        
+            <a href="/blog/2016/08/finding-dead-csharp-code-in-aspnet/" class="prev">
+            Finding Dead C# Code in an ASP.NET ... &#x21DD;
+            </a>
+        
+        
+            <a href="/blog/2017/06/splitting-thai-words-with-browser-apis/" class="next">
+            &#x21DC; Splitting Thai words with Browser APIs
+            </a>
+        </div>
 <script src="/blog/script/list.min.js"></script>
     </body>
 </html>
