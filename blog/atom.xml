@@ -22,6 +22,8 @@
         <category term="web" />
         <category term="blazor" />
         <category term="wasm" />
+        <category term="csharp" />
+        <category term="websockets" />
         
         <author>
             <name>Will Fuqua</name>

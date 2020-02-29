@@ -2,7 +2,7 @@ Native Websockets with Blazor WebAssembly
 #########################################
 
 :date: 2020-02-01
-:tags: [dotnet, web, blazor, wasm]
+:tags: [dotnet, web, blazor, wasm, csharp, websockets]
 
 A couple of days ago, Blazor WebAssembly 3.2.0 Preview 1 was released (announcement_). I'm personally excited about this release
 because it's the first Blazor release that contains native support for client-side websockets!
