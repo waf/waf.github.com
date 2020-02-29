@@ -142,12 +142,12 @@ tt, code, kbd, samp {
     width:220px;
     padding:5px;
     border: 1px solid #999;
-    transition: box-shadow 0.2s ease-in-out;
+    transition: border 0.2s ease-in-out;
     border-radius:0;
 }
 .search-box:focus {
-    box-shadow: 0 0 5px #999999;
     outline:none;
+    border: 1px solid #F56017;
 }
 .entry-list {
     margin:0;
@@ -188,6 +188,15 @@ tt, code, kbd, samp {
     article time {
         width:100%;
         text-align:center;
+    }
+}
+@media (max-width:500px) {
+    .entry-list .date {
+        display:none;
+    }
+    .entry-list a {
+        display:inline-block;
+        padding:5px 0;
     }
 }
 /* navigation */
