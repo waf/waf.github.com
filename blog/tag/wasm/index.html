@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>.NET Conf Thailand 2019</title>
+        <title>Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
@@ -24,15 +24,13 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content=".NET Conf Thailand 2019 was a huge success, thanks..." />
-    <meta name="keywords" content="dotnet, csharp, presentation" />
     </head>
     <body>
         <header>
             <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
         
-        <nav>
+            <nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
@@ -40,32 +38,21 @@
     </ul>
 </nav>
 <article>
-    <h1>.NET Conf Thailand 2019</h1>
-    <p>.<span class="caps">NET</span> Conf Thailand 2019 was a huge success, thanks again to <a class="reference external" href="https://twitter.com/kidchenko">Jose Barbosa</a> and <a class="reference external" href="https://www.facebook.com/codesanookpage">Theeranit (Aaron) Pongtongmuang</a>.</p>
-<p>I was invited to speak, and I covered the new features in C# 8.0. There are a&nbsp;ton!</p>
-<ol class="arabic simple">
-<li>Nullable Reference&nbsp;Types</li>
-<li>Async&nbsp;Enumerables</li>
-<li>Recursive&nbsp;Patterns</li>
-<li>Indices and&nbsp;Ranges</li>
-<li>Default Interface&nbsp;Members</li>
-<li>Static Local&nbsp;Functions</li>
-<li>Null Coallescing&nbsp;Assignment</li>
-<li>Readonly&nbsp;Members</li>
-<li>Using&nbsp;Statements</li>
-</ol>
-<p>I have my presentation slides and code available <a class="reference external" href="https://github.com/waf/DotNetConfThailand.2019.CSharp8">on GitHub</a>.</p>
-<p>You can see my talk on <a class="reference external" href="https://www.facebook.com/dotnetconf/videos/487578191836482/">the dotnetconf page</a>, however the audio volume is too soft to hear. Oh well! You can get
-similar content by watching Mads Torgersen&#8217;s talk (<a class="reference external" href="https://channel9.msdn.com/Events/dotnetConf/NET-Conf-2019/Whats-new-in-C-8-Part-1">Part 1</a>) and Bill Wagner&#8217;s talk (<a class="reference external" href="https://channel9.msdn.com/Events/dotnetConf/NET-Conf-2019/B103">Part 2</a>).</p>
-
+    <h1>Native Websockets with Blazor WebAssembly</h1>
+    <p>A couple of days ago, Blazor WebAssembly 3.2.0 Preview 1 was released (<a class="reference external" href="https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-preview-1-release-now-available/">announcement</a>). I&#8217;m personally excited about this release
+because it&#8217;s the first Blazor release that contains native support for client-side&nbsp;websockets!</p>
+<p>Previously, if you wanted to use websockets, you either had to write your own wrapper, or use a larger library like
+SignalR that did the wrapping for you. However, if you just wanted to use the normal <tt class="docutils literal">System.Net.WebSockets.ClientWebSocket</tt> class that&#8217;s built into .<span class="caps">NET</span>, you could&nbsp;not.</p>
+<p>The Mono/<span class="caps">WASM</span> project has actually supported <tt class="docutils literal">ClientWebSocket</tt> for about a year (<a class="reference external" href="https://github.com/mono/mono/pull/12615"><span class="caps">PR</span> 12615</a>). However, some recent changes in Blazor allowed the Blazor project to be able to consume <span>&#8230;<a href="/blog/2020/02/native-websockets-with-blazor-webassembly/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
                 <a href="/blog/tag/dotnet/" rel="tag">dotnet</a>,
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>
+                <a href="/blog/tag/web/" rel="tag">web</a>,
+                <a href="/blog/tag/blazor/" rel="tag">blazor</a>
                     and
                     
-                <a href="/blog/tag/presentation/" rel="tag">presentation</a>
+                <a href="/blog/tag/wasm/" rel="tag">wasm</a>
                 
         
     </div>
@@ -73,24 +60,14 @@ similar content by watching Mads Torgersen&#8217;s talk (<a class="reference ext
     </script>
     <div id="comments">
         <div class="g-comments"
-            data-href="https://fuqua.io/blog/2019/11/net-conf-thailand-2019/"
+            data-href="https://fuqua.io/blog/2020/02/native-websockets-with-blazor-webassembly/"
             data-width="642"
             data-first_party_property="BLOGGER"
             data-view_type="FILTERED_POSTMOD">
         </div>
     </div>
 </article>
-        <div class="pager">
         
-            <a href="/blog/2019/03/troubleshooting-assembly-binding-issues-in-net/" class="prev">
-            Troubleshooting Assembly Binding Issues ... &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2020/02/native-websockets-with-blazor-webassembly/" class="next">
-            &#x21DC; Native Websockets with Blazor ...
-            </a>
-        </div>
 <script src="/blog/script/list.min.js"></script>
     </body>
 </html>

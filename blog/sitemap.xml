@@ -59,6 +59,11 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>https://fuqua.io/blog//tag/wasm/</loc>
+    <lastmod>2020-02-29</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>https://fuqua.io/blog//2017/06/splitting-thai-words-with-browser-apis/</loc>
     <lastmod>2020-02-29</lastmod>
     <changefreq>never</changefreq>
@@ -86,6 +91,11 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>https://fuqua.io/blog//tag/sql/</loc>
+    <lastmod>2020-02-29</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>https://fuqua.io/blog//tag/database/</loc>
     <lastmod>2020-02-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -102,20 +112,16 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://fuqua.io/blog//tag/lobos/</loc>
-    <lastmod>2020-02-29</lastmod>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
     <loc>https://fuqua.io/blog//2017/12/parsing-powershell-programatically/</loc>
     <lastmod>2020-02-29</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://fuqua.io/blog//tag/sql/</loc>
+    <loc>https://fuqua.io/blog//2020/02/native-websockets-with-blazor-webassembly/</loc>
     <lastmod>2020-02-29</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2016/06/increasing-code-quality-with-sonarqube/</loc>
@@ -157,6 +163,11 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/asp-net/</loc>
+    <lastmod>2020-02-29</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://fuqua.io/blog//tag/promise/</loc>
     <lastmod>2020-02-29</lastmod>
     <changefreq>weekly</changefreq>
   </url>
@@ -203,7 +214,7 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://fuqua.io/blog//tag/promise/</loc>
+    <loc>https://fuqua.io/blog//tag/lobos/</loc>
     <lastmod>2020-02-29</lastmod>
     <changefreq>weekly</changefreq>
   </url>
@@ -212,6 +223,11 @@
     <lastmod>2020-02-29</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://fuqua.io/blog//tag/blazor/</loc>
+    <lastmod>2020-02-29</lastmod>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/presentation/</loc>
