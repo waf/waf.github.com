@@ -5,9 +5,93 @@
         <link>https://fuqua.io/blog/</link>
         <description></description>
         <language>en</language>
-        <pubDate>Fri, 31 Jan 2020 17:00:00 GMT</pubDate>
+        <pubDate>Thu, 21 May 2020 17:00:00 GMT</pubDate>
         <docs>https://fuqua.io/blog/rss.xml</docs>
         <generator>acrylamid 0.7.10</generator>
+        
+            <item>
+        <title>Microsoft Build 2020 – Highlights for .NET Developers</title>
+        <link>https://fuqua.io/blog/2020/05/microsoft-build-2020-highlights-for-net-developers/</link>
+        <description>&lt;p&gt;Over the course of the last three days, Microsoft Build 2020 released a flood of news and announcements.
+For those of us who follow the .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; ecosystem, it can be difficult to wade through them&amp;nbsp;all!&lt;/p&gt;
+&lt;p&gt;I&amp;#8217;ve collected a list of announcements that I think are interesting as a .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; developer, and added short
+summaries. The announcements are grouped into four categories: &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt;, .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt;, Visual Studio and&amp;nbsp;Windows.&lt;/p&gt;
+&lt;p&gt;In addition, each category is split into &amp;quot;released&amp;quot; (you can use it now!) or &amp;quot;preview / announced&amp;quot;
+(you can test it out now, or&amp;nbsp;soon).&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;asp-net&#34;&gt;
+&lt;h3&gt;&lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt;&lt;/h3&gt;
+&lt;div class=&#34;section&#34; id=&#34;released&#34;&gt;
+&lt;h4&gt;Released&lt;/h4&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-now-available/&#34;&gt;Blazor WebAssembly is released!&lt;/a&gt; - v3.2.0 is an official release &amp;#8211; it&amp;#8217;s not a preview anymore! It&amp;#8217;s considered ready for production use, but is not a Long Term Support&amp;nbsp;release.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/aspnet/introducing-project-tye/&#34;&gt;Project Tye&lt;/a&gt; - a tool for deploying .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; core applications to&amp;nbsp;Kubernetes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;preview-announced&#34;&gt;
+&lt;h4&gt;Preview /&amp;nbsp;Announced&lt;/h4&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/aspnet/asp-net-core-updates-in-net-5-preview-4/&#34;&gt;&lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core updates in .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; 5 Preview 4&lt;/a&gt; - Improved &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt;/2 performance by adding support for HPack dynamic compression. Smaller docker image sizes by sharing layers between upstream&amp;nbsp;images.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;net&#34;&gt;
+&lt;h3&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt;&lt;/h3&gt;
+&lt;div class=&#34;section&#34; id=&#34;id1&#34;&gt;
+&lt;h4&gt;Preview /&amp;nbsp;Announced&lt;/h4&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/dotnet/announcing-net-5-preview-4-and-our-journey-to-one-net/&#34;&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; 5 Preview 4&lt;/a&gt; - C# 9 and F# 5 previews, source generators for compile-time code generation / introspection. Also some updates on publishing to a single file application. &lt;span class=&#34;caps&#34;&gt;ARM&lt;/span&gt; processor support for Web / &lt;span class=&#34;caps&#34;&gt;UI&lt;/span&gt;&amp;nbsp;applications.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/dotnet/welcome-to-c-9-0/&#34;&gt;C# 9 Preview&lt;/a&gt; - A lot of new functional features. This is just a preview &amp;#8211; features listed in this article might not make it into the final release, or might have different syntax after all the design issues have been figured out. But it&amp;#8217;s still exciting to see C# embrace&amp;nbsp;immutability!&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/dotnet/f-5-update-for-net-5-preview-4/&#34;&gt;F# 5 Preview&lt;/a&gt; - Better tooling, faster compiling, interoperability with C#&amp;#8217;s new &amp;quot;default interface member&amp;quot;&amp;nbsp;feature.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/dotnet/introducing-net-multi-platform-app-ui/&#34;&gt;As part of .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; 5, Xamarin.Forms library is now called &lt;span class=&#34;caps&#34;&gt;MAUI&lt;/span&gt;&lt;/a&gt; - My guess is everyone will continue to call it Xamarin.Forms. This article also mentions that Xamarin.iOS and Xamarin.Android will be integrated into .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt;&amp;nbsp;6.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/dotnet/introducing-yarp-preview-1/&#34;&gt;&lt;span class=&#34;caps&#34;&gt;YARP&lt;/span&gt; Reverse Proxy Preview&lt;/a&gt; - High performance reverse proxy server. Think of it like an application load balancer / rewrite rules engine built as &lt;span class=&#34;caps&#34;&gt;ASP&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core&amp;nbsp;middleware.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/microsoft/ProjectReunion&#34;&gt;Project Reunion&lt;/a&gt; - A polyfill library so you can use the same libraries (WinUI 3, WebView2, &lt;span class=&#34;caps&#34;&gt;MSIX&lt;/span&gt;) on both WinForms and &lt;span class=&#34;caps&#34;&gt;UWP&lt;/span&gt;&amp;nbsp;platforms.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;visual-studio&#34;&gt;
+&lt;h3&gt;Visual&amp;nbsp;Studio&lt;/h3&gt;
+&lt;div class=&#34;section&#34; id=&#34;id2&#34;&gt;
+&lt;h4&gt;Released&lt;/h4&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/visualstudio/visual-studio-2019-v16-6-and-v16-7-preview-1-ship-today/&#34;&gt;&lt;span class=&#34;caps&#34;&gt;VS2019&lt;/span&gt; 16.6 released, with 16.7 in preview&lt;/a&gt; - &lt;span class=&#34;caps&#34;&gt;VS2019&lt;/span&gt; 16.6 contains a new &amp;quot;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Async Tool&amp;quot; for debugging applications. Better snapshot debugging and refactorings. Has a new &amp;quot;Web Tools for Azure&amp;quot; tool, as well as new C++ 20 standard library&amp;nbsp;features.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/dotnet/windows-forms-designer-for-net-core-released/&#34;&gt;Windows Forms Designer for .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core&lt;/a&gt; - The WinForms designer now works with .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core WinForms&amp;nbsp;applications.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/dotnet/ml-net-model-builder-is-now-a-part-of-visual-studio/&#34;&gt;&lt;span class=&#34;caps&#34;&gt;ML&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Model Builder in Visual Studio&lt;/a&gt; - The existing &lt;span class=&#34;caps&#34;&gt;ML&lt;/span&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Model Builder extension (which is super cool) is now integrated into Visual Studio. Add &amp;quot;Machine Learning&amp;quot; with just two clicks! &amp;#8230;plus years of&amp;nbsp;study.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;id3&#34;&gt;
+&lt;h4&gt;Preview /&amp;nbsp;Announced&lt;/h4&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/visualstudio/expanding-visual-studio-2019-support-for-visual-studio-codespaces/&#34;&gt;Visual Studio 2019 can be used with Codespaces&lt;/a&gt; - Visual Studio Online is renamed to Visual Studio Codespaces. Visual Studio 2019 can now serve as a &amp;quot;client ui&amp;quot; to a codespace in the&amp;nbsp;cloud.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/dotnet/using-visual-studio-codespaces-with-net-core/&#34;&gt;How to use .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core with Visual Studio Codespaces&lt;/a&gt; - A tour of the editing / testing / debugging experience of .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Core with Visual Studio &lt;span class=&#34;strike&#34;&gt;Online&lt;/span&gt;&amp;nbsp;Codespaces.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;windows&#34;&gt;
+&lt;h3&gt;Windows&lt;/h3&gt;
+&lt;div class=&#34;section&#34; id=&#34;id4&#34;&gt;
+&lt;h4&gt;Released&lt;/h4&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/commandline/windows-terminal-1-0/&#34;&gt;The new Windows Terminal hit 1.0&lt;/a&gt; - Supports tabs and split panes. &lt;span class=&#34;caps&#34;&gt;GPU&lt;/span&gt; accelerated rendering will display your compile errors blazing&amp;nbsp;fast.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;id5&#34;&gt;
+&lt;h4&gt;Preview /&amp;nbsp;Announced&lt;/h4&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/commandline/windows-package-manager-preview/&#34;&gt;winget - a new windows package manager&lt;/a&gt; - Windows command line package manager like chocolately. As far as I can tell, it does not manage dependencies or updates&amp;nbsp;(yet?).&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;reference external&#34; href=&#34;https://devblogs.microsoft.com/commandline/the-windows-subsystem-for-linux-build-2020-summary/&#34;&gt;Windows Subsystem For Linux (&lt;span class=&#34;caps&#34;&gt;WSL&lt;/span&gt;) 2&lt;/a&gt; - &lt;span class=&#34;caps&#34;&gt;WSL2&lt;/span&gt; will ship later this month in the Windows 10 May 2020 Update. Docker Desktop for Windows will replatform onto &lt;span class=&#34;caps&#34;&gt;WSL2&lt;/span&gt;. &lt;span class=&#34;caps&#34;&gt;GPU&lt;/span&gt; support for &lt;span class=&#34;caps&#34;&gt;GPU&lt;/span&gt; processing (think &lt;span class=&#34;caps&#34;&gt;CUDA&lt;/span&gt;, not intended for games). Linux &lt;span class=&#34;caps&#34;&gt;GUI&lt;/span&gt; app support via&amp;nbsp;wayland.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Whew! Even for a short summary, that still ended up being long. It&amp;#8217;s been an exciting few days for the .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; ecosystem, and .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; 5 promises to keep that excitement&amp;nbsp;alive.&lt;/p&gt;
+&lt;embed&gt;
+    &lt;style&gt;
+        .strike { text-decoration: line-through; }
+        li { margin: 8px 0 8px 0; }
+    &lt;/style&gt;
+&lt;/embed&gt;&lt;/div&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Thu, 21 May 2020 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2020-05-22:/2020/05/microsoft-build-2020-highlights-for-net-developers</guid>
+    </item>
         
             <item>
         <title>Native Websockets with Blazor WebAssembly</title>

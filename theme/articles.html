@@ -11,7 +11,7 @@
     {% for entry in env.entrylist %}
         <li>
             <a class="title tags-filter" data-tags="{{ entry.tags | join(" ") | replace("csharp", "csharp c#")}}" href="{{ env.path + entry.permalink }}">{{ entry.title | e }}</a>
-            <span class="date">{{ entry.date.strftime("%e %B %G") }}</span>
+            <span class="date">{{ entry.date.day }} {{ entry.date.strftime("%B %Y") }}</span>
         </li>
     {% endfor %}
     </ul>

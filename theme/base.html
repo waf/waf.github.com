@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ entry.lang if entry else conf.lang }}">
+<html lang="{{ (entry.lang if entry else conf.lang).lower() }}">
     <head>
         {% block head -%}
         <meta charset="utf-8" />
