@@ -271,8 +271,10 @@ nav a:hover {
 }
 .comment-ongithub {
     height:80px;
-    line-height: 80px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* styles for use in blog posts */
