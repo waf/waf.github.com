@@ -3,6 +3,7 @@ Microsoft Build 2020 – Highlights for .NET Developers
 
 :date: 2020-05-22
 :tags: [dotnet, csharp, presentation]
+:commentid: 2
 
 Over the course of the last three days, Microsoft Build 2020 released a flood of news and announcements.
 For those of us who follow the .NET ecosystem, it can be difficult to wade through them all!
@@ -54,10 +55,10 @@ Released
 Preview / Announced
 ~~~~~~~~~~~~~~~~~~~
 
+.. role:: strike
 
 - `Visual Studio 2019 can be used with Codespaces <https://devblogs.microsoft.com/visualstudio/expanding-visual-studio-2019-support-for-visual-studio-codespaces/>`_ - Visual Studio Online is renamed to Visual Studio Codespaces. Visual Studio 2019 can now serve as a "client ui" to a codespace in the cloud.
 - `How to use .NET Core with Visual Studio Codespaces <https://devblogs.microsoft.com/dotnet/using-visual-studio-codespaces-with-net-core/>`_ - A tour of the editing / testing / debugging experience of .NET Core with Visual Studio :strike:`Online` Codespaces.
-
 
 Windows
 -------
@@ -75,7 +76,6 @@ Preview / Announced
 
 Whew! Even for a short summary, that still ended up being long. It's been an exciting few days for the .NET ecosystem, and .NET 5 promises to keep that excitement alive.
 
-.. role:: strike
 .. raw:: html
 
     <embed>

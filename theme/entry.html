@@ -23,14 +23,8 @@
             <p>untagged</p>
         {% endif %}
     </div>
-    <script src="https://apis.google.com/js/plusone.js">
-    </script>
-    <div id="comments">
-        <div class="g-comments"
-            data-href="{{conf.www_root + entry.permalink}}"
-            data-width="642"
-            data-first_party_property="BLOGGER"
-            data-view_type="FILTERED_POSTMOD">
-        </div>
-    </div>
+    {% if env.type == 'entry' %}
+        <div id="comments"></div>
+        <script src="{{env.path}}/script/comments.js?issue={{entry.commentid}}"></script>
+    {% endif %}
 </article>
