@@ -2,7 +2,9 @@ A Lesser-Known C# Feature: Nested Object Initializers
 #####################################################
 
 :date: 2020-12-12
+:permalink: /2020/12/a-lesser-known-csharp-feature-nested-object-initializers/
 :tags: [csharp, language]
+:commentid: 3
 
 I've been writing C# for quite some time now, but only recently found out about the "nested object initializers" syntax in C#. Nested object initializers elegantly solve problems for which I've previously used workarounds. It's not a new feature; it was introduced in C# 3.0, under section 7.5.10.2 of the language specification:
 

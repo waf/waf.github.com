@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>A Lesser-Known C# Feature: Nested Object Initializers</title>
+        <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
+        <link media="all" href="/blog/style/main.css" rel="stylesheet" />
+        <link href="/favicon.ico" rel="shortcut icon" />
+        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
+        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
+        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-38553935-1']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    <meta name="description" content="I&#39;ve been writing C# for quite some time now, but..." />
+    <meta name="keywords" content="csharp, language" />
+    </head>
+    <body>
+        <header>
+            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        </header>
+        
+        <nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+<article>
+    <h1>A Lesser-Known C# Feature: Nested Object Initializers</h1>
+    <p>I&#8217;ve been writing C# for quite some time now, but only recently found out about the &quot;nested object initializers&quot; syntax in C#. Nested object initializers elegantly solve problems for which I&#8217;ve previously used workarounds. It&#8217;s not a new feature; it was introduced in C# 3.0, under section 7.5.10.2 of the language&nbsp;specification:</p>
+<blockquote>
+An object initializer after the equals sign is a nested object initializer, i.e. an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property.</blockquote>
+<p>In case the above specification is not clear, we&#8217;ll work through an example. C# has several types of initializer syntax, among which are object initializers and collection initializers. Nested object initializers could be considered a specialization of&nbsp;both.</p>
+<div class="section" id="reviewing-object-and-collection-initializers">
+<h2>Reviewing Object and Collection&nbsp;Initializers</h2>
+<p>Before diving into nested object initializers, let&#8217;s review object initializers and collection initializers. These initializers provide a convenient syntax for object construction; they technically construct an &quot;empty&quot; object and then mutate that object as part of the initialization. Here&#8217;s an example of&nbsp;both:</p>
+<div class="highlight"><pre><span></span><span class="c1">// given classes defined like this:</span>
+<span class="k">class</span> <span class="nc">Company</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Person</span> <span class="n">Ceo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">IList</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;</span> <span class="n">Employees</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">class</span> <span class="nc">Person</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// an object initializer for Company</span>
+<span class="kt">var</span> <span class="n">apple</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Company</span>
+<span class="p">{</span>
+    <span class="c1">// an object initializer for Person</span>
+    <span class="n">Ceo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Person</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Tim Cook&quot;</span> <span class="p">},</span>
+    <span class="c1">// a collection initializer:</span>
+    <span class="n">Employees</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;</span>
+    <span class="p">{</span>
+        <span class="k">new</span> <span class="n">Person</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Joe&quot;</span> <span class="p">},</span>
+        <span class="k">new</span> <span class="n">Person</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Janet&quot;</span> <span class="p">},</span>
+        <span class="k">new</span> <span class="n">Person</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;John&quot;</span> <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+<p>In the above example, the object initializer is used to initialize both the <tt class="docutils literal">Company</tt> object and the <tt class="docutils literal">Person</tt> objects. The collection initializer is used to create a new <tt class="docutils literal">List&lt;Person&gt;</tt> and add 3 entries to it. Collection initializers can initialize any object that implements <tt class="docutils literal">IEnumerable</tt> and contains an <tt class="docutils literal">Add</tt> method (either as part of the type, or as an extension&nbsp;method).</p>
+</div>
+<div class="section" id="nested-object-initializers">
+<h2>Nested Object&nbsp;Initializers</h2>
+<p>Now, how do nested object initializers tie into this? In the previous code example, we were creating new objects (a new <tt class="docutils literal">Person</tt> for the <tt class="docutils literal">Company.Ceo</tt> property, and a new <tt class="docutils literal">List&lt;Person&gt;</tt> for the <tt class="docutils literal">Company.Employees</tt> property). Nested object initializers allow for <strong>mutating default values</strong> in the&nbsp;class.</p>
+<p>Let&#8217;s alter our class definition above. We all know that null values are a pain, so we could set default values for each property, and use nested object initializers during object&nbsp;construction:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Company</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Person</span> <span class="n">Ceo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Person</span><span class="p">();</span>
+    <span class="k">public</span> <span class="n">IList</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;</span> <span class="n">Employees</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;();</span>
+<span class="p">}</span>
+
+<span class="kt">var</span> <span class="n">apple</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Company</span>
+<span class="p">{</span>
+    <span class="n">Ceo</span> <span class="p">=</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Tim Cook&quot;</span> <span class="p">},</span>
+    <span class="n">Employees</span> <span class="p">=</span>
+    <span class="p">{</span>
+        <span class="k">new</span> <span class="n">Person</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Joe&quot;</span> <span class="p">},</span>
+        <span class="k">new</span> <span class="n">Person</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Janet&quot;</span> <span class="p">},</span>
+        <span class="k">new</span> <span class="n">Person</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;John&quot;</span> <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>With the nested object initializer syntax, we remove the reference to the constructors for both properties, and it will mutate the existing, default&nbsp;value.</p>
+</div>
+<div class="section" id="where-is-this-useful">
+<h2>Where is this&nbsp;useful?</h2>
+<p>The nested object initializer implies mutation of existing values, so it shouldn&#8217;t be used everywhere; I prefer immutability where possible. However, there are still a few areas where this could be&nbsp;useful.</p>
+<p>For nested object initializers with collection initializers, this helps resolve a conflict between wanting to use object initializers, and wanting to <a class="reference external" href="https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/guidelines-for-collections#collection-properties-and-return-values">prefer empty collections over null collections</a>. This was always a bit of a conflict for&nbsp;me.</p>
+<p>For nested object initializers with object initializers, this could help in configuration scenarios, where we want to have some default configuration object. In this case, the nested object initializer could be used to override these default configuration&nbsp;values.</p>
+</div>
+<div class="section" id="learning-more">
+<h2>Learning&nbsp;more</h2>
+<p>The best documentation for this seems to be the <a class="reference external" href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#object-initializers">C# Language Reference</a>. There&#8217;s also a <a class="reference external" href="https://github.com/dotnet/docs/issues/12979">GitHub issue</a> asking for better documentation on this feature. I personally found the chat rooms available on gitter very helpful for learning more about this feature; special thanks to <a class="reference external" href="https://github.com/HaloFour">HaloFour</a>, <a class="reference external" href="https://github.com/Joe4evr">Joe4evr</a> and <a class="reference external" href="https://github.com/jnm2">jnm2</a> for helping&nbsp;out!</p>
+</div>
+
+    <div class="tags">
+        
+            tagged as
+                <a href="/blog/tag/csharp/" rel="tag">csharp</a>
+                    and
+                    
+                <a href="/blog/tag/language/" rel="tag">language</a>
+                
+        
+    </div>
+    
+        <div id="comments"></div>
+        <script src="/blog/script/comments.js?issue=3"></script>
+    
+</article>
+        <div class="pager">
+        
+            <a href="/blog/2020/05/microsoft-build-2020-highlights-for-net-developers/" class="prev">
+            Microsoft Build 2020 – Highlights for ... &#x21DD;
+            </a>
+        
+        
+        </div>
+<script src="/blog/script/list.min.js"></script>
+    </body>
+</html>

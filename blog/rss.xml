@@ -4,10 +4,85 @@
         <title>Blog - Will Fuqua</title>
         <link>https://fuqua.io/blog/</link>
         <description></description>
-        <language>En</language>
-        <pubDate>Thu, 21 May 2020 17:00:00 GMT</pubDate>
+        <language>en</language>
+        <pubDate>Fri, 11 Dec 2020 17:00:00 GMT</pubDate>
         <docs>https://fuqua.io/blog/rss.xml</docs>
         <generator>acrylamid 0.7.10</generator>
+        
+            <item>
+        <title>A Lesser-Known C# Feature: Nested Object Initializers</title>
+        <link>https://fuqua.io/blog/2020/12/a-lesser-known-csharp-feature-nested-object-initializers/</link>
+        <description>&lt;p&gt;I&amp;#8217;ve been writing C# for quite some time now, but only recently found out about the &amp;quot;nested object initializers&amp;quot; syntax in C#. Nested object initializers elegantly solve problems for which I&amp;#8217;ve previously used workarounds. It&amp;#8217;s not a new feature; it was introduced in C# 3.0, under section 7.5.10.2 of the language&amp;nbsp;specification:&lt;/p&gt;
+&lt;blockquote&gt;
+An object initializer after the equals sign is a nested object initializer, i.e. an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property.&lt;/blockquote&gt;
+&lt;p&gt;In case the above specification is not clear, we&amp;#8217;ll work through an example. C# has several types of initializer syntax, among which are object initializers and collection initializers. Nested object initializers could be considered a specialization of&amp;nbsp;both.&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;reviewing-object-and-collection-initializers&#34;&gt;
+&lt;h3&gt;Reviewing Object and Collection&amp;nbsp;Initializers&lt;/h3&gt;
+&lt;p&gt;Before diving into nested object initializers, let&amp;#8217;s review object initializers and collection initializers. These initializers provide a convenient syntax for object construction; they technically construct an &amp;quot;empty&amp;quot; object and then mutate that object as part of the initialization. Here&amp;#8217;s an example of&amp;nbsp;both:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// given classes defined like this:&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Company&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Ceo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IList&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Employees&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Person&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// an object initializer for Company&lt;/span&gt;
+&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apple&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Company&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// an object initializer for Person&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Ceo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Tim Cook&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// a collection initializer:&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Employees&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Joe&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Janet&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;John&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the above example, the object initializer is used to initialize both the &lt;tt class=&#34;docutils literal&#34;&gt;Company&lt;/tt&gt; object and the &lt;tt class=&#34;docutils literal&#34;&gt;Person&lt;/tt&gt; objects. The collection initializer is used to create a new &lt;tt class=&#34;docutils literal&#34;&gt;List&amp;lt;Person&amp;gt;&lt;/tt&gt; and add 3 entries to it. Collection initializers can initialize any object that implements &lt;tt class=&#34;docutils literal&#34;&gt;IEnumerable&lt;/tt&gt; and contains an &lt;tt class=&#34;docutils literal&#34;&gt;Add&lt;/tt&gt; method (either as part of the type, or as an extension&amp;nbsp;method).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;nested-object-initializers&#34;&gt;
+&lt;h3&gt;Nested Object&amp;nbsp;Initializers&lt;/h3&gt;
+&lt;p&gt;Now, how do nested object initializers tie into this? In the previous code example, we were creating new objects (a new &lt;tt class=&#34;docutils literal&#34;&gt;Person&lt;/tt&gt; for the &lt;tt class=&#34;docutils literal&#34;&gt;Company.Ceo&lt;/tt&gt; property, and a new &lt;tt class=&#34;docutils literal&#34;&gt;List&amp;lt;Person&amp;gt;&lt;/tt&gt; for the &lt;tt class=&#34;docutils literal&#34;&gt;Company.Employees&lt;/tt&gt; property). Nested object initializers allow for &lt;strong&gt;mutating default values&lt;/strong&gt; in the&amp;nbsp;class.&lt;/p&gt;
+&lt;p&gt;Let&amp;#8217;s alter our class definition above. We all know that null values are a pain, so we could set default values for each property, and use nested object initializers during object&amp;nbsp;construction:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Company&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Ceo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IList&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Employees&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apple&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Company&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Ceo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Tim Cook&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Employees&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Joe&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Janet&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Person&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;John&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With the nested object initializer syntax, we remove the reference to the constructors for both properties, and it will mutate the existing, default&amp;nbsp;value.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;where-is-this-useful&#34;&gt;
+&lt;h3&gt;Where is this&amp;nbsp;useful?&lt;/h3&gt;
+&lt;p&gt;The nested object initializer implies mutation of existing values, so it shouldn&amp;#8217;t be used everywhere; I prefer immutability where possible. However, there are still a few areas where this could be&amp;nbsp;useful.&lt;/p&gt;
+&lt;p&gt;For nested object initializers with collection initializers, this helps resolve a conflict between wanting to use object initializers, and wanting to &lt;a class=&#34;reference external&#34; href=&#34;https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/guidelines-for-collections#collection-properties-and-return-values&#34;&gt;prefer empty collections over null collections&lt;/a&gt;. This was always a bit of a conflict for&amp;nbsp;me.&lt;/p&gt;
+&lt;p&gt;For nested object initializers with object initializers, this could help in configuration scenarios, where we want to have some default configuration object. In this case, the nested object initializer could be used to override these default configuration&amp;nbsp;values.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;learning-more&#34;&gt;
+&lt;h3&gt;Learning&amp;nbsp;more&lt;/h3&gt;
+&lt;p&gt;The best documentation for this seems to be the &lt;a class=&#34;reference external&#34; href=&#34;https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#object-initializers&#34;&gt;C# Language Reference&lt;/a&gt;. There&amp;#8217;s also a &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/dotnet/docs/issues/12979&#34;&gt;GitHub issue&lt;/a&gt; asking for better documentation on this feature. I personally found the chat rooms available on gitter very helpful for learning more about this feature; special thanks to &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/HaloFour&#34;&gt;HaloFour&lt;/a&gt;, &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/Joe4evr&#34;&gt;Joe4evr&lt;/a&gt; and &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/jnm2&#34;&gt;jnm2&lt;/a&gt; for helping&amp;nbsp;out!&lt;/p&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Fri, 11 Dec 2020 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2020-12-12:/2020/12/a-lesser-known-csharp-feature-nested-object-initializers</guid>
+    </item>
         
             <item>
         <title>Microsoft Build 2020 – Highlights for .NET Developers</title>
