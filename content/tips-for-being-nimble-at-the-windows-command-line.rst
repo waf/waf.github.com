@@ -37,14 +37,14 @@ For example, we could bind a frequently used ``git log`` command to `Ctrl+Alt+L`
         "keys": "ctrl+alt+l"
     },
 
-Git, of course, has its own aliasing system, but it's nice to have a keyboard shortcut for it, too. I personally also keybind some frequent directory navigation commands, as well as invoking common compiler / build tool commands.
+Git, of course, has its own aliasing system, but it's nice to have a keyboard shortcut for it, too. I personally also keybind some frequent directory navigation commands, as well as some common compiler / build tool commands.
 
 Running PowerShell Core
 =======================
 
 When most people think of PowerShell, they probably think of the older PowerShell 5, which is the default version of PowerShell installed on Windows. This version of PowerShell is **old** (the most recent point release was 5.1, in 2017).
 
-PowerShell Core, the cross-platform, open-source alternative, has been around since 2016 and is actively developed. It runs alongside PowerShell 5, instead of replacing it, so there's no risk in installing it. It can be installed from the `Microsoft Store <ms-windows-store://pdp/?ProductId=9mz1snwt0n5d>`_ or `GitHub <https://github.com/PowerShell/PowerShell>`_
+PowerShell Core, the cross-platform, open-source alternative, has been around since 2016 and is actively developed. It runs alongside PowerShell 5, instead of replacing it, so there's no risk in installing it. It can be installed from the `Microsoft Store <ms-windows-store://pdp/?ProductId=9mz1snwt0n5d>`_ or `GitHub <https://github.com/PowerShell/PowerShell>`_.
 
 PowerShell Core has a lot of nice improvements across the usability of its shell, its programming language, and its performance. It's worth upgrading just for the ``cd -`` and ``cd +`` features, which navigate back and forward through the working directory history:
 
@@ -69,7 +69,7 @@ Now, it might be odd for a "Windows Command Line" blog post to recommend install
 
 The Windows Subsystem for Linux 2 (WSL2) provides a real Linux command line inside Windows, with Linux kernel updates shipped via Windows Update (!!!). After `installing WSL2 <https://docs.microsoft.com/en-us/windows/wsl/install-win10>`_, we can download distros like `Ubuntu from the Microsoft Store <ms-windows-store://pdp/?ProductId=9nblggh4msv6>`_. From there, advanced shells like ZSH and Fish are just an ``apt install`` away!
 
-While the typical GNU/Linux command line tools, like ``grep`` and ``sed``, are great, we can make it even better. When we run the ``code`` command inside WSL2, it will launch Visual Studio Code on Windows, and set up a client/server bridge to WSL2 automatically. This allows us to use the Visual Studio Code front-end on Windows, with all the IDE / editor features it supports, and it will communicate with our WSL2 backend to actually execute the program.
+While the typical GNU/Linux command line tools, like ``grep`` and ``sed``, are great, we can make our experience even better. When we run the ``code`` command inside WSL2, it will launch Visual Studio Code on Windows, and set up a client/server bridge to WSL2 automatically. This allows us to use the Visual Studio Code front-end on Windows, with all the IDE / editor features it supports, and it will communicate with our WSL2 backend to actually execute the program.
 
 This way, we can use the WSL2 command line from Windows Terminal, with our code executing under WSL2, but we get a graphical editing and debugging experience:
 
