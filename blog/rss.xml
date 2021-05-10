@@ -5,9 +5,77 @@
         <link>https://fuqua.io/blog/</link>
         <description></description>
         <language>en</language>
-        <pubDate>Fri, 11 Dec 2020 17:00:00 GMT</pubDate>
+        <pubDate>Sun, 09 May 2021 17:00:00 GMT</pubDate>
         <docs>https://fuqua.io/blog/rss.xml</docs>
         <generator>acrylamid 0.7.10</generator>
+        
+            <item>
+        <title>Tips for being nimble at the Windows Command Line</title>
+        <link>https://fuqua.io/blog/2021/05/tips-for-being-nimble-at-the-windows-command-line/</link>
+        <description>&lt;p&gt;The command line experience on Windows has historically been less than stellar. The last few years, however, we&amp;#8217;ve seen rapid improvement. In this post, I&amp;#8217;ll cover three different areas of improvement, along with some concrete tips in each topic that are real&amp;nbsp;timesavers:&lt;/p&gt;
+&lt;ol class=&#34;arabic simple&#34;&gt;
+&lt;li&gt;The new Windows&amp;nbsp;Terminal&lt;/li&gt;
+&lt;li&gt;Running PowerShell&amp;nbsp;Core&lt;/li&gt;
+&lt;li&gt;Developing with Windows Subsystem for&amp;nbsp;Linux&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Even if you&amp;#8217;re familiar with all three of these topics, I hope at least one of the tips will be new to&amp;nbsp;you!&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;the-new-windows-terminal&#34;&gt;
+&lt;h3&gt;The new Windows&amp;nbsp;Terminal&lt;/h3&gt;
+&lt;p&gt;Microsoft&amp;#8217;s release of Windows Terminal, a modern, &lt;span class=&#34;caps&#34;&gt;GPU&lt;/span&gt;-accelerated and open-source terminal application, is a real game changer. It can be installed and updated &lt;a class=&#34;reference external&#34; href=&#34;ms-windows-store://pdp/?ProductId=9n0dx20hk701&#34;&gt;from the Microsoft store&lt;/a&gt;, with other methods of installation available &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/microsoft/terminal&#34;&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Windows Terminal supports running various shells in tabs (and side-by-side panes). For example, we can use PowerShell in one tab, &lt;span class=&#34;caps&#34;&gt;ZSH&lt;/span&gt; under the Windows Subsystem for Linux in another tab, and to the side, a Command Prompt &lt;span class=&#34;strike&#34;&gt;pain&lt;/span&gt;&amp;nbsp;pane.&lt;/p&gt;
+&lt;p&gt;Windows Terminal is ultra-configurable, and uses &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; for its configuration store (with a work-in-progress Settings &lt;span class=&#34;caps&#34;&gt;UI&lt;/span&gt; layered on top). An example of this configurability is the &lt;tt class=&#34;docutils literal&#34;&gt;sendInput&lt;/tt&gt; command, which can send arbitrary keystrokes and escape sequences to the&amp;nbsp;terminal:&lt;/p&gt;
+&lt;p&gt;For example, we could bind a frequently used &lt;tt class=&#34;docutils literal&#34;&gt;git log&lt;/tt&gt; command to &lt;cite&gt;Ctrl+Alt+L&lt;/cite&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;place&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;this&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;keybinding&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;the&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;`actions`&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;array&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;quot;command&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;sendInput&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;quot;input&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;git log --all --decorate --oneline --graph\r\n&amp;quot;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;quot;keys&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;ctrl+alt+l&amp;quot;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;,&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Git, of course, has its own aliasing system, but it&amp;#8217;s nice to have a keyboard shortcut for it, too. I personally also keybind some frequent directory navigation commands, as well as invoking common compiler / build tool&amp;nbsp;commands.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;running-powershell-core&#34;&gt;
+&lt;h3&gt;Running PowerShell&amp;nbsp;Core&lt;/h3&gt;
+&lt;p&gt;When most people think of PowerShell, they probably think of the older PowerShell 5, which is the default version of PowerShell installed on Windows. This version of PowerShell is &lt;strong&gt;old&lt;/strong&gt; (the most recent point release was 5.1, in&amp;nbsp;2017).&lt;/p&gt;
+&lt;p&gt;PowerShell Core, the cross-platform, open-source alternative, has been around since 2016 and is actively developed. It runs alongside PowerShell 5, instead of replacing it, so there&amp;#8217;s no risk in installing it. It can be installed from the &lt;a class=&#34;reference external&#34; href=&#34;ms-windows-store://pdp/?ProductId=9mz1snwt0n5d&#34;&gt;Microsoft Store&lt;/a&gt; or &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/PowerShell/PowerShell&#34;&gt;GitHub&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;PowerShell Core has a lot of nice improvements across the usability of its shell, its programming language, and its performance. It&amp;#8217;s worth upgrading just for the &lt;tt class=&#34;docutils literal&#34;&gt;cd -&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;cd +&lt;/tt&gt; features, which navigate back and forward through the working directory&amp;nbsp;history:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;will@home:~$&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; projects/death-ray
+
+&lt;span class=&#34;gp&#34;&gt;will@home:~/projects/death-ray$&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; node_modules
+
+&lt;span class=&#34;gp&#34;&gt;will@home:~/projects/death-ray/node_modules$&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; -
+
+&lt;span class=&#34;gp&#34;&gt;will@home:~/projects/death-ray$&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; -
+
+&lt;span class=&#34;gp&#34;&gt;will@home:~$&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; +
+
+&lt;span class=&#34;gp&#34;&gt;will@home:~/projects/death-ray$&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;developing-with-windows-subsystem-for-linux&#34;&gt;
+&lt;h3&gt;Developing with Windows Subsystem for&amp;nbsp;Linux&lt;/h3&gt;
+&lt;p&gt;Now, it might be odd for a &amp;quot;Windows Command Line&amp;quot; blog post to recommend installing Linux, but, well, here we are. The Linux / &lt;span class=&#34;caps&#34;&gt;BSD&lt;/span&gt; / Mac &lt;span class=&#34;caps&#34;&gt;OS&lt;/span&gt; communities have been setting the standard in command line efficiency, and we can get all that goodness on Windows 10,&amp;nbsp;too.&lt;/p&gt;
+&lt;p&gt;The Windows Subsystem for Linux 2 (&lt;span class=&#34;caps&#34;&gt;WSL2&lt;/span&gt;) provides a real Linux command line inside Windows, with Linux kernel updates shipped via Windows Update (!!!). After &lt;a class=&#34;reference external&#34; href=&#34;https://docs.microsoft.com/en-us/windows/wsl/install-win10&#34;&gt;installing &lt;span class=&#34;caps&#34;&gt;WSL2&lt;/span&gt;&lt;/a&gt;, we can download distros like &lt;a class=&#34;reference external&#34; href=&#34;ms-windows-store://pdp/?ProductId=9nblggh4msv6&#34;&gt;Ubuntu from the Microsoft Store&lt;/a&gt;. From there, advanced shells like &lt;span class=&#34;caps&#34;&gt;ZSH&lt;/span&gt; and Fish are just an &lt;tt class=&#34;docutils literal&#34;&gt;apt install&lt;/tt&gt; away!&lt;/p&gt;
+&lt;p&gt;While the typical &lt;span class=&#34;caps&#34;&gt;GNU&lt;/span&gt;/Linux command line tools, like &lt;tt class=&#34;docutils literal&#34;&gt;grep&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;sed&lt;/tt&gt;, are great, we can make it even better. When we run the &lt;tt class=&#34;docutils literal&#34;&gt;code&lt;/tt&gt; command inside &lt;span class=&#34;caps&#34;&gt;WSL2&lt;/span&gt;, it will launch Visual Studio Code on Windows, and set up a client/server bridge to &lt;span class=&#34;caps&#34;&gt;WSL2&lt;/span&gt; automatically. This allows us to use the Visual Studio Code front-end on Windows, with all the &lt;span class=&#34;caps&#34;&gt;IDE&lt;/span&gt; / editor features it supports, and it will communicate with our &lt;span class=&#34;caps&#34;&gt;WSL2&lt;/span&gt; backend to actually execute the&amp;nbsp;program.&lt;/p&gt;
+&lt;p&gt;This way, we can use the &lt;span class=&#34;caps&#34;&gt;WSL2&lt;/span&gt; command line from Windows Terminal, with our code executing under &lt;span class=&#34;caps&#34;&gt;WSL2&lt;/span&gt;, but we get a graphical editing and debugging&amp;nbsp;experience:&lt;/p&gt;
+&lt;img alt=&#34;/img/windows-terminal-vscode-with-wsl2.png&#34; src=&#34;https://fuqua.io/blog/img/windows-terminal-vscode-with-wsl2.png&#34; style=&#34;width: 100%;&#34;/&gt;
+&lt;p&gt;This is especially useful when doing development in languages where Windows is a bit of a second-class citizen, like on NodeJS or&amp;nbsp;Python.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;enjoy-this-you-can-get-more&#34;&gt;
+&lt;h3&gt;Enjoy this? You can get&amp;nbsp;more!&lt;/h3&gt;
+&lt;p&gt;You can find all these tips and many more in my new book, &lt;a class=&#34;reference external&#34; href=&#34;https://www.amazon.com/dp/B08XK8C5FD&#34;&gt;Windows Terminal Tips, Tricks, and Productivity Hacks&lt;/a&gt;. Thanks for&amp;nbsp;reading!&lt;/p&gt;
+&lt;embed&gt;
+    &lt;style&gt;
+        .strike { text-decoration: line-through; }
+        li { margin: 8px 0 8px 0; }
+    &lt;/style&gt;
+&lt;/embed&gt;&lt;/div&gt;
+</description>
+        <pubDate>Sun, 09 May 2021 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2021-05-10:/2021/05/tips-for-being-nimble-at-the-windows-command-line</guid>
+    </item>
         
             <item>
         <title>A Lesser-Known C# Feature: Nested Object Initializers</title>
