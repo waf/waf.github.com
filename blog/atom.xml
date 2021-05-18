@@ -27,13 +27,13 @@
             <uri>https://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
-        <content type="html">&lt;p&gt;The command line experience on Windows has historically been less than stellar. The last few years, however, we&amp;#8217;ve seen rapid improvement. In this post, I&amp;#8217;ll cover three different areas of improvement, along with some concrete tips in each topic that are real&amp;nbsp;timesavers:&lt;/p&gt;
+        <content type="html">&lt;p&gt;Although the command line experience on Windows has historically been less than stellar, the last few years has seen rapid improvement. In this post, I&amp;#8217;ll cover three main areas of&amp;nbsp;improvement:&lt;/p&gt;
 &lt;ol class=&#34;arabic simple&#34;&gt;
 &lt;li&gt;The new Windows&amp;nbsp;Terminal&lt;/li&gt;
 &lt;li&gt;Running PowerShell&amp;nbsp;Core&lt;/li&gt;
 &lt;li&gt;Developing with Windows Subsystem for&amp;nbsp;Linux&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;Even if you&amp;#8217;re familiar with all three of these topics, I hope at least one of the tips will be new to&amp;nbsp;you!&lt;/p&gt;
+&lt;p&gt;In case you&amp;#8217;re familiar with all three of these topics, I&amp;#8217;ll be including some concrete tips in each topic that are real timesavers; hopefully at least one of the tips will be&amp;nbsp;new.&lt;/p&gt;
 &lt;div class=&#34;section&#34; id=&#34;the-new-windows-terminal&#34;&gt;
 &lt;h3&gt;The new Windows&amp;nbsp;Terminal&lt;/h3&gt;
 &lt;p&gt;Microsoft&amp;#8217;s release of Windows Terminal, a modern, &lt;span class=&#34;caps&#34;&gt;GPU&lt;/span&gt;-accelerated and open-source terminal application, is a real game changer. It can be installed and updated &lt;a class=&#34;reference external&#34; href=&#34;ms-windows-store://pdp/?ProductId=9n0dx20hk701&#34;&gt;from the Microsoft store&lt;/a&gt;, with other methods of installation available &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/microsoft/terminal&#34;&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;

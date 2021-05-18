@@ -7,13 +7,13 @@ Tips for being nimble at the Windows Command Line
 
 .. role:: strike
 
-The command line experience on Windows has historically been less than stellar. The last few years, however, we've seen rapid improvement. In this post, I'll cover three different areas of improvement, along with some concrete tips in each topic that are real timesavers:
+Although the command line experience on Windows has historically been less than stellar, the last few years has seen rapid improvement. In this post, I'll cover three main areas of improvement: 
 
 #. The new Windows Terminal
 #. Running PowerShell Core
 #. Developing with Windows Subsystem for Linux
 
-Even if you're familiar with all three of these topics, I hope at least one of the tips will be new to you!
+In case you're familiar with all three of these topics, I'll be including some concrete tips in each topic that are real timesavers; hopefully at least one of the tips will be new.
 
 The new Windows Terminal
 ========================
