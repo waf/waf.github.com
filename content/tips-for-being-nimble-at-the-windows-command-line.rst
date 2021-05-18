@@ -1,5 +1,5 @@
-Tips for being nimble at the Windows Command Line
-#################################################
+Tips for using the Windows Command Line effectively
+###################################################
 
 :date: 2021-05-10
 :tags: [windows-terminal, powershell, zsh]
@@ -7,7 +7,7 @@ Tips for being nimble at the Windows Command Line
 
 .. role:: strike
 
-Although the command line experience on Windows has historically been less than stellar, the last few years has seen rapid improvement. In this post, I'll cover three main areas of improvement: 
+Although the command line experience on Windows has historically been less than stellar, the last few years have seen rapid improvement. In this post, I'll cover three main areas of improvement: 
 
 #. The new Windows Terminal
 #. Running PowerShell Core
@@ -81,7 +81,7 @@ This is especially useful when doing development in languages where Windows is a
 Enjoy this? You can get more!
 =============================
 
-You can find all these tips and many more in my new book, `Windows Terminal Tips, Tricks, and Productivity Hacks <https://www.amazon.com/dp/B08XK8C5FD>`_. Thanks for reading!
+You can find all these tips and many more in my new book, `Windows Terminal Tips, Tricks, and Productivity Hacks <https://www.amazon.com/dp/B08XK8C5FD>`_, which is currently $10 off on Amazon! Thanks for reading.
 
 .. raw:: html
 

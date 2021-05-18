@@ -39,11 +39,11 @@
 </nav>
 <article>
     <h1>Native Websockets with Blazor WebAssembly</h1>
-    <p>A couple of days ago, Blazor WebAssembly 3.2.0 Preview 1 was released (<a class="reference external" href="https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-preview-1-release-now-available/">announcement</a>). I&#8217;m personally excited about this release
-because it&#8217;s the first Blazor release that contains native support for client-side&nbsp;websockets!</p>
+    <p>A couple of days ago, Blazor WebAssembly 3.2.0 Preview 1 was released (<a class="reference external" href="https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-preview-1-release-now-available/">announcement</a>). I'm personally excited about this release
+because it's the first Blazor release that contains native support for client-side websockets!</p>
 <p>Previously, if you wanted to use websockets, you either had to write your own wrapper, or use a larger library like
-SignalR that did the wrapping for you. However, if you just wanted to use the normal <tt class="docutils literal">System.Net.WebSockets.ClientWebSocket</tt> class that&#8217;s built into .<span class="caps">NET</span>, you could&nbsp;not.</p>
-<p>The Mono/<span class="caps">WASM</span> project has actually supported <tt class="docutils literal">ClientWebSocket</tt> for about a year (<a class="reference external" href="https://github.com/mono/mono/pull/12615"><span class="caps">PR</span> 12615</a>). However, some recent changes in Blazor allowed the Blazor project to be able to consume <span>&#8230;<a href="/blog/2020/02/native-websockets-with-blazor-webassembly/" class="continue">continue</a>.</span></p>
+SignalR that did the wrapping for you. However, if you just wanted to use the normal <tt class="docutils literal">System.Net.WebSockets.ClientWebSocket</tt> class that's built into .NET, you could not.</p>
+<p>The Mono/WASM project has actually supported <tt class="docutils literal">ClientWebSocket</tt> for about a year (<a class="reference external" href="https://github.com/mono/mono/pull/12615">PR 12615</a>). However, some recent changes in Blazor allowed the Blazor project to be able <span>&#8230;<a href="/blog/2020/02/native-websockets-with-blazor-webassembly/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -71,13 +71,13 @@ SignalR that did the wrapping for you. However, if you just wanted to use the no
 <article>
     <h1>A Caching HTTP Proxy using Titanium Web Proxy</h1>
     <p>At my work at Jetabroad I do a lot of integration with third-party webservices (like everyone these days).
-The webservices, especially the test endpoints, are of variable stability and&nbsp;responsiveness.</p>
-<p>The responsiveness issue can be maddening when you&#8217;re trying to iterate quickly. I prefer doing
+The webservices, especially the test endpoints, are of variable stability and responsiveness.</p>
+<p>The responsiveness issue can be maddening when you're trying to iterate quickly. I prefer doing
 the bulk of my development via unit tests or integration tests to isolate myself as much as possible.
 However, I still ultimately find myself developing directly against these third-party services from
-time to&nbsp;time.</p>
+time to time.</p>
 <p>I built <a class="reference external" href="https://github.com/waf/catchy">Catchy</a> to help solve this pain. When you start it, you provide a whitelist of domains to
-intercept. Catchy will examine your outbound <span class="caps">REST</span> or <span class="caps">SOAP</span> requests to <span>&#8230;<a href="/blog/2019/01/a-caching-http-proxy-using-titanium-web-proxy/" class="continue">continue</a>.</span></p>
+intercept. Catchy will examine your outbound REST or SOAP <span>&#8230;<a href="/blog/2019/01/a-caching-http-proxy-using-titanium-web-proxy/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -101,8 +101,8 @@ intercept. Catchy will examine your outbound <span class="caps">REST</span> or <
 </nav>
 <article>
     <h1>Pushing Database Changes to the Web with Datomic</h1>
-    <p>Lately I&#8217;ve been playing around with <a class="reference external" href="http://www.datomic.com">Datomic</a>, a database invented by Rich Hickey, the creator of Clojure.
-Datomic feels like a natural extension of Clojure&#8217;s immutable, persistent datastructures. From Datomic&#8217;s <a class="reference external" href="http://docs.datomic.com/architecture.html">architecture documentation</a>:</p>
+    <p>Lately I've been playing around with <a class="reference external" href="http://www.datomic.com">Datomic</a>, a database invented by Rich Hickey, the creator of Clojure.
+Datomic feels like a natural extension of Clojure's immutable, persistent datastructures. From Datomic's <a class="reference external" href="http://docs.datomic.com/architecture.html">architecture documentation</a>:</p>
 <blockquote>
 A Datomic database stores a collection of facts. The facts in a database are immutable; once stored, they do not change. However, old facts can be superseded by new facts over time. The state of the database is a value defined by the set of facts in effect at a given moment in time.</blockquote>
 <p>Daniel Higginbotham wrote a great tutorial on the basics of Datomic called <a class="reference external" href="http://www.flyingmachinestudios.com/programming/datomic-for-five-year-olds/">Datomic for Five Year Olds</a>, <span>&#8230;<a href="/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" class="continue">continue</a>.</span></p>
@@ -132,11 +132,11 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 </nav>
 <article>
     <h1>Native JavaScript Promises and Browser APIs</h1>
-    <p>One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of <a class="reference external" href="http://en.wikipedia.org/wiki/Promise_(programming)">Promises</a>. Promises simplify asynchronous code. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is&nbsp;everywhere.</p>
+    <p>One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of <a class="reference external" href="http://en.wikipedia.org/wiki/Promise_(programming)">Promises</a>. Promises simplify asynchronous code. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is everywhere.</p>
 <div class="section" id="the-problem-with-asynchronicity">
-<h2>The Problem with&nbsp;Asynchronicity</h2>
-<p>Asynchronous patterns are great for keeping UIs responsive and non-blocking, but they have a cost: asynchronous JavaScript code tends to be highly nested, which hurts readability. Additionally, because you can&#8217;t catch errors that are thrown inside callbacks from outside those callbacks, error handling needs to be spread throughout every level of&nbsp;nesting.</p>
-<p>When we use Promises, our code structure is flattened, and our error handling code can be <span>&#8230;<a href="/blog/2014/02/native-javascript-promises-and-browser-apis/" class="continue">continue</a>.</span></p></div>
+<h1>The Problem with Asynchronicity</h1>
+<p>Asynchronous patterns are great for keeping UIs responsive and non-blocking, but they have a cost: asynchronous JavaScript code tends to be highly nested, which hurts readability. Additionally, because you can't catch errors that are thrown inside callbacks from outside those callbacks, error handling needs to be spread throughout every level of nesting.</p>
+<p>When we use Promises, our code structure is flattened, and our error handling <span>&#8230;<a href="/blog/2014/02/native-javascript-promises-and-browser-apis/" class="continue">continue</a>.</span></p></div>
     <div class="tags">
         
             tagged as
@@ -161,11 +161,11 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 </nav>
 <article>
     <h1>REST APIs and Relational Databases in Clojure</h1>
-    <p>I&#8217;ve found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational&nbsp;databases.</p>
-<p>In this post we&#8217;ll create a simple <span class="caps">REST</span> <span class="caps">API</span> for a todo list web application. We&#8217;ll use <a class="reference external" href="https://github.com/weavejester/compojure">Compojure</a> to create a <span class="caps">REST</span> <span class="caps">API</span>, <a class="reference external" href="http://budu.github.io/lobos/">Lobos</a> to create and manage our database tables, and <a class="reference external" href="http://sqlkorma.com/">Korma</a> to query a PostgreSQL&nbsp;database.</p>
+    <p>I've found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational databases.</p>
+<p>In this post we'll create a simple REST API for a todo list web application. We'll use <a class="reference external" href="https://github.com/weavejester/compojure">Compojure</a> to create a REST API, <a class="reference external" href="http://budu.github.io/lobos/">Lobos</a> to create and manage our database tables, and <a class="reference external" href="http://sqlkorma.com/">Korma</a> to query a PostgreSQL database.</p>
 <div class="section" id="generating-a-compojure-application">
-<h2>Generating a Compojure&nbsp;Application</h2>
-<p>The first thing we&#8217;ll do is <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Getting-Started">set up a Compojure web application</a>. Use Leiningen to create and spin up an <span>&#8230;<a href="/blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="continue">continue</a>.</span></p></div>
+<h1>Generating a Compojure Application</h1>
+<p>The first thing we'll do is <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Getting-Started">set up a Compojure web application</a>. Use Leiningen to create and <span>&#8230;<a href="/blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="continue">continue</a>.</span></p></div>
     <div class="tags">
         
             tagged as

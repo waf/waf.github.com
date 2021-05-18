@@ -2,12 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://fuqua.io/blog//tag/analysis/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/fibonacci/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -18,17 +18,17 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/reagent/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/language/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//articles/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -39,7 +39,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/virtualenv/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -55,12 +55,12 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/acrylamid/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/wasm/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -71,12 +71,12 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/html5/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/korma/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -92,17 +92,17 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/sql/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/database/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/continuous-integration/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -137,7 +137,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/ring/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -148,7 +148,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/compojure/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -158,10 +158,9 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://fuqua.io/blog//2021/05/tips-for-being-nimble-at-the-windows-command-line/</loc>
+    <loc>https://fuqua.io/blog//tag/sonarqube/</loc>
     <lastmod>2021-05-18</lastmod>
-    <changefreq>never</changefreq>
-    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//atom.xml</loc>
@@ -170,32 +169,32 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/asp-net/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/promise/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/functional/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/websockets/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/sente/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://fuqua.io/blog//tag/sonarqube/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <loc>https://fuqua.io/blog//tag/razor/</loc>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -206,12 +205,12 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/dates/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/tools/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -222,7 +221,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/lobos/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -237,29 +236,34 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://fuqua.io/blog//tag/javascript/</loc>
+    <lastmod>2021-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>https://fuqua.io/blog//tag/blazor/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2020/12/a-lesser-known-csharp-feature-nested-object-initializers/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/presentation/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/python/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/csharp/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -269,13 +273,8 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://fuqua.io/blog//tag/razor/</loc>
-    <lastmod>2021-05-10</lastmod>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
     <loc>https://fuqua.io/blog//tag/visual-studio/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -286,17 +285,17 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/csharp/2/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -307,7 +306,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/appveyor/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -318,22 +317,22 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/web/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/dotnet/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/haskell/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/thai/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -344,12 +343,12 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/vim/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/datomic/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -359,13 +358,14 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/clojure/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://fuqua.io/blog//tag/javascript/</loc>
-    <lastmod>2021-05-10</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://fuqua.io/blog//2021/05/tips-for-using-the-windows-command-line-effectively/</loc>
+    <lastmod>2021-05-18</lastmod>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2014/05/pushing-database-changes-to-the-web-with-datomic/</loc>
@@ -375,7 +375,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/opencover/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
@@ -386,7 +386,7 @@
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/corert/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-05-18</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>

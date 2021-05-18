@@ -14,9 +14,9 @@
     <updated>2021-05-09T17:00:00Z</updated>
     <generator uri="https://github.com/posativ/acrylamid/" version="0.7.10">acrylamid</generator>
         <entry>
-        <title>Tips for being nimble at the Windows Command Line</title>
-        <link rel="alternate" type="text/html" href="https://fuqua.io/blog/2021/05/tips-for-being-nimble-at-the-windows-command-line/" />
-        <id>tag:fuqua.io/blog,2021-05-10:/2021/05/tips-for-being-nimble-at-the-windows-command-line</id>
+        <title>Tips for using the Windows Command Line effectively</title>
+        <link rel="alternate" type="text/html" href="https://fuqua.io/blog/2021/05/tips-for-using-the-windows-command-line-effectively/" />
+        <id>tag:fuqua.io/blog,2021-05-10:/2021/05/tips-for-using-the-windows-command-line-effectively</id>
         <updated>2021-05-09T17:00:00Z</updated>
         <category term="windows-terminal" />
         <category term="powershell" />
@@ -27,7 +27,7 @@
             <uri>https://fuqua.io/blog/</uri>
             <email>info@example.com</email>
         </author>
-        <content type="html">&lt;p&gt;Although the command line experience on Windows has historically been less than stellar, the last few years has seen rapid improvement. In this post, I&amp;#8217;ll cover three main areas of&amp;nbsp;improvement:&lt;/p&gt;
+        <content type="html">&lt;p&gt;Although the command line experience on Windows has historically been less than stellar, the last few years have seen rapid improvement. In this post, I&amp;#8217;ll cover three main areas of&amp;nbsp;improvement:&lt;/p&gt;
 &lt;ol class=&#34;arabic simple&#34;&gt;
 &lt;li&gt;The new Windows&amp;nbsp;Terminal&lt;/li&gt;
 &lt;li&gt;Running PowerShell&amp;nbsp;Core&lt;/li&gt;
@@ -80,7 +80,7 @@
 &lt;/div&gt;
 &lt;div class=&#34;section&#34; id=&#34;enjoy-this-you-can-get-more&#34;&gt;
 &lt;h3&gt;Enjoy this? You can get&amp;nbsp;more!&lt;/h3&gt;
-&lt;p&gt;You can find all these tips and many more in my new book, &lt;a class=&#34;reference external&#34; href=&#34;https://www.amazon.com/dp/B08XK8C5FD&#34;&gt;Windows Terminal Tips, Tricks, and Productivity Hacks&lt;/a&gt;. Thanks for&amp;nbsp;reading!&lt;/p&gt;
+&lt;p&gt;You can find all these tips and many more in my new book, &lt;a class=&#34;reference external&#34; href=&#34;https://www.amazon.com/dp/B08XK8C5FD&#34;&gt;Windows Terminal Tips, Tricks, and Productivity Hacks&lt;/a&gt;, which is currently $10 off on Amazon! Thanks for&amp;nbsp;reading.&lt;/p&gt;
 &lt;embed&gt;
     &lt;style&gt;
         .strike { text-decoration: line-through; }
