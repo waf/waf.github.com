@@ -81,7 +81,7 @@ This is especially useful when doing development in languages where Windows is a
 Enjoy this? You can get more!
 =============================
 
-You can find all these tips and many more in my new book, `Windows Terminal Tips, Tricks, and Productivity Hacks <https://www.amazon.com/dp/B08XK8C5FD>`_, which is currently $10 off on Amazon! Thanks for reading.
+You can find all these tips and many more in my new book, `Windows Terminal Tips, Tricks, and Productivity Hacks <https://packt.live/3gon3St>`_, which is currently $10 off on Amazon! Thanks for reading.
 
 .. raw:: html
 
