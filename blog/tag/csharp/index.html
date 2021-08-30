@@ -38,11 +38,40 @@
     </ul>
 </nav>
 <article>
+    <h1>Analyzing Code Quality with LINQ and NDepend</h1>
+    <p>I&#8217;ve been building an open-source personal project (<a class="reference external" href="https://github.com/waf/CSharpRepl">C# <span class="caps">REPL</span></a>) and spending a good chunk of time on code quality. I self-impose a zero-warning policy, use nullable reference types, track unit test coverage,&nbsp;etc.</p>
+<p>After ensuring all the Visual Studio / Roslyn code analyzer warnings were fixed, I thought I&#8217;d try out NDepend to get a second opinion, and also understand its capabilities. After downloading <a class="reference external" href="https://www.ndepend.com/download">a free trial of NDepend</a> and spending some time with it, I was pretty impressed with its technical underpinnings as they&#8217;re exposed to the end user. Spoilers: <em>It&#8217;s <span class="caps">LINQ</span> all the way down</em>.</p>
+<div class="section" id="static-analysis-with-linq">
+<h2>Static Analysis with&nbsp;<span class="caps">LINQ</span></h2>
+<p>Out of the box, <span>&#8230;<a href="/blog/2021/08/analyzing-code-quality-with-linq-and-ndepend/" class="continue">continue</a>.</span></p></div>
+    <div class="tags">
+        
+            tagged as
+                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
+                <a href="/blog/tag/analysis/" rel="tag">analysis</a>,
+                <a href="/blog/tag/linq/" rel="tag">linq</a>
+                    and
+                    
+                <a href="/blog/tag/ndepend/" rel="tag">ndepend</a>
+                
+        
+    </div>
+    
+</article>
+        
+            <nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+<article>
     <h1>A Lesser-Known C# Feature: Nested Object Initializers</h1>
-    <p>I've been writing C# for quite some time now, but only recently found out about the &quot;nested object initializers&quot; syntax in C#. Nested object initializers elegantly solve problems for which I've previously used workarounds. It's not a new feature; it was introduced in C# 3.0, under section 7.5.10.2 of the language specification:</p>
+    <p>I&#8217;ve been writing C# for quite some time now, but only recently found out about the &quot;nested object initializers&quot; syntax in C#. Nested object initializers elegantly solve problems for which I&#8217;ve previously used workarounds. It&#8217;s not a new feature; it was introduced in C# 3.0, under section 7.5.10.2 of the language&nbsp;specification:</p>
 <blockquote>
 An object initializer after the equals sign is a nested object initializer, i.e. an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property.</blockquote>
-<p>In case <span>&#8230;<a href="/blog/2020/12/a-lesser-known-csharp-feature-nested-object-initializers/" class="continue">continue</a>.</span></p>
+<p>In case the <span>&#8230;<a href="/blog/2020/12/a-lesser-known-csharp-feature-nested-object-initializers/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -66,17 +95,17 @@ An object initializer after the equals sign is a nested object initializer, i.e.
 <article>
     <h1>Microsoft Build 2020 – Highlights for .NET Developers</h1>
     <p>Over the course of the last three days, Microsoft Build 2020 released a flood of news and announcements.
-For those of us who follow the .NET ecosystem, it can be difficult to wade through them all!</p>
-<p>I've collected a list of announcements that I think are interesting as a .NET developer, and added short
-summaries. The announcements are grouped into four categories: ASP.NET, .NET, Visual Studio and Windows.</p>
+For those of us who follow the .<span class="caps">NET</span> ecosystem, it can be difficult to wade through them&nbsp;all!</p>
+<p>I&#8217;ve collected a list of announcements that I think are interesting as a .<span class="caps">NET</span> developer, and added short
+summaries. The announcements are grouped into four categories: <span class="caps">ASP</span>.<span class="caps">NET</span>, .<span class="caps">NET</span>, Visual Studio and&nbsp;Windows.</p>
 <p>In addition, each category is split into &quot;released&quot; (you can use it now!) or &quot;preview / announced&quot;
-(you can test it out now, or soon).</p>
+(you can test it out now, or&nbsp;soon).</p>
 <div class="section" id="asp-net">
-<h1>ASP.NET</h1>
+<h2><span class="caps">ASP</span>.<span class="caps">NET</span></h2>
 <div class="section" id="released">
-<h2>Released</h2>
+<h3>Released</h3>
 <ul class="simple">
-<li><a class="reference external" href="https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-now-available/">Blazor WebAssembly is released!</a> - v3.2.0 is an official release -- it's not <span>&#8230;<a href="/blog/2020/05/microsoft-build-2020-highlights-for-net-developers/" class="continue">continue</a>.</span></li></ul></div></div>
+<li><a class="reference external" href="https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-now-available/">Blazor WebAssembly is released!</a> - v3.2.0 is an official release &#8211; it&#8217;s not a preview anymore! <span>&#8230;<a href="/blog/2020/05/microsoft-build-2020-highlights-for-net-developers/" class="continue">continue</a>.</span></li></ul></div></div>
     <div class="tags">
         
             tagged as
@@ -100,11 +129,11 @@ summaries. The announcements are grouped into four categories: ASP.NET, .NET, Vi
 </nav>
 <article>
     <h1>Native Websockets with Blazor WebAssembly</h1>
-    <p>A couple of days ago, Blazor WebAssembly 3.2.0 Preview 1 was released (<a class="reference external" href="https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-preview-1-release-now-available/">announcement</a>). I'm personally excited about this release
-because it's the first Blazor release that contains native support for client-side websockets!</p>
+    <p>A couple of days ago, Blazor WebAssembly 3.2.0 Preview 1 was released (<a class="reference external" href="https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-preview-1-release-now-available/">announcement</a>). I&#8217;m personally excited about this release
+because it&#8217;s the first Blazor release that contains native support for client-side&nbsp;websockets!</p>
 <p>Previously, if you wanted to use websockets, you either had to write your own wrapper, or use a larger library like
-SignalR that did the wrapping for you. However, if you just wanted to use the normal <tt class="docutils literal">System.Net.WebSockets.ClientWebSocket</tt> class that's built into .NET, you could not.</p>
-<p>The Mono/WASM project has actually supported <tt class="docutils literal">ClientWebSocket</tt> for about a year (<a class="reference external" href="https://github.com/mono/mono/pull/12615">PR 12615</a>). However, some recent changes in Blazor allowed the Blazor project to be able <span>&#8230;<a href="/blog/2020/02/native-websockets-with-blazor-webassembly/" class="continue">continue</a>.</span></p>
+SignalR that did the wrapping for you. However, if you just wanted to use the normal <tt class="docutils literal">System.Net.WebSockets.ClientWebSocket</tt> class that&#8217;s built into .<span class="caps">NET</span>, you could&nbsp;not.</p>
+<p>The Mono/<span class="caps">WASM</span> project has actually supported <tt class="docutils literal">ClientWebSocket</tt> for about a year (<a class="reference external" href="https://github.com/mono/mono/pull/12615"><span class="caps">PR</span> 12615</a>). However, some recent changes in Blazor allowed the Blazor project to be able to consume <span>&#8230;<a href="/blog/2020/02/native-websockets-with-blazor-webassembly/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -131,22 +160,22 @@ SignalR that did the wrapping for you. However, if you just wanted to use the no
 </nav>
 <article>
     <h1>.NET Conf Thailand 2019</h1>
-    <p>.NET Conf Thailand 2019 was a huge success, thanks again to <a class="reference external" href="https://twitter.com/kidchenko">Jose Barbosa</a> and <a class="reference external" href="https://www.facebook.com/codesanookpage">Theeranit (Aaron) Pongtongmuang</a>.</p>
-<p>I was invited to speak, and I covered the new features in C# 8.0. There are a ton!</p>
+    <p>.<span class="caps">NET</span> Conf Thailand 2019 was a huge success, thanks again to <a class="reference external" href="https://twitter.com/kidchenko">Jose Barbosa</a> and <a class="reference external" href="https://www.facebook.com/codesanookpage">Theeranit (Aaron) Pongtongmuang</a>.</p>
+<p>I was invited to speak, and I covered the new features in C# 8.0. There are a&nbsp;ton!</p>
 <ol class="arabic simple">
-<li>Nullable Reference Types</li>
-<li>Async Enumerables</li>
-<li>Recursive Patterns</li>
-<li>Indices and Ranges</li>
-<li>Default Interface Members</li>
-<li>Static Local Functions</li>
-<li>Null Coallescing Assignment</li>
-<li>Readonly Members</li>
-<li>Using Statements</li>
+<li>Nullable Reference&nbsp;Types</li>
+<li>Async&nbsp;Enumerables</li>
+<li>Recursive&nbsp;Patterns</li>
+<li>Indices and&nbsp;Ranges</li>
+<li>Default Interface&nbsp;Members</li>
+<li>Static Local&nbsp;Functions</li>
+<li>Null Coallescing&nbsp;Assignment</li>
+<li>Readonly&nbsp;Members</li>
+<li>Using&nbsp;Statements</li>
 </ol>
 <p>I have my presentation slides and code available <a class="reference external" href="https://github.com/waf/DotNetConfThailand.2019.CSharp8">on GitHub</a>.</p>
 <p>You can see my talk on <a class="reference external" href="https://www.facebook.com/dotnetconf/videos/487578191836482/">the dotnetconf page</a>, however the audio volume is too soft to hear. Oh well! You can get
-similar content by watching Mads Torgersen's talk (<a class="reference external" href="https://channel9.msdn.com/Events/dotnetConf/NET-Conf-2019/Whats-new-in-C-8-Part-1">Part 1</a>) and Bill Wagner's talk (<a class="reference external" href="https://channel9.msdn.com/Events/dotnetConf/NET-Conf-2019/B103">Part 2</a>).</p>
+similar content by watching Mads Torgersen&#8217;s talk (<a class="reference external" href="https://channel9.msdn.com/Events/dotnetConf/NET-Conf-2019/Whats-new-in-C-8-Part-1">Part 1</a>) and Bill Wagner&#8217;s talk (<a class="reference external" href="https://channel9.msdn.com/Events/dotnetConf/NET-Conf-2019/B103">Part 2</a>).</p>
 
     <div class="tags">
         
@@ -171,14 +200,14 @@ similar content by watching Mads Torgersen's talk (<a class="reference external"
 </nav>
 <article>
     <h1>Troubleshooting Assembly Binding Issues in .NET</h1>
-    <p>If you've developed .NET for any length of time, chances are you've run into a gnarly error like this:</p>
-<p><em>System.IO.FileLoadException: Could not load file or assembly 'AcmeCorp.Foobar.Utilities, Version=1.2.0, Culture=neutral, PublicKeyToken=367d582291c765f7' or one of its dependencies.
-The located assembly's manifest definition does not match the assembly reference.</em></p>
-<p>It's a pretty puzzling error. It means that it <strong>found</strong> version 1.2.0 of a DLL, but did not use it because a different version was requested (e.g. 1.3.0).</p>
-<p>There are a couple of gotchas when troubleshooting these types of errors.</p>
+    <p>If you&#8217;ve developed .<span class="caps">NET</span> for any length of time, chances are you&#8217;ve run into a gnarly error like&nbsp;this:</p>
+<p><em>System.<span class="caps">IO</span>.FileLoadException: Could not load file or assembly &#8216;AcmeCorp.Foobar.Utilities, Version=1.2.0, Culture=neutral, PublicKeyToken=367d582291c765f7&#8217; or one of its dependencies.
+The located assembly&#8217;s manifest definition does not match the assembly&nbsp;reference.</em></p>
+<p>It&#8217;s a pretty puzzling error. It means that it <strong>found</strong> version 1.2.0 of a <span class="caps">DLL</span>, but did not use it because a different version was requested (e.g.&nbsp;1.3.0).</p>
+<p>There are a couple of gotchas when troubleshooting these types of&nbsp;errors.</p>
 <div class="section" id="ensure-you-don-t-have-any-version-mismatches">
-<h1>Ensure you don't have any version mismatches</h1>
-<p>As a first step, ensure that all projects in your solution reference the <span>&#8230;<a href="/blog/2019/03/troubleshooting-assembly-binding-issues-in-net/" class="continue">continue</a>.</span></p></div>
+<h2>Ensure you don&#8217;t have any version&nbsp;mismatches</h2>
+<p>As a first step, ensure that all projects in your solution reference the same version of the problematic <span>&#8230;<a href="/blog/2019/03/troubleshooting-assembly-binding-issues-in-net/" class="continue">continue</a>.</span></p></div>
     <div class="tags">
         
             tagged as
@@ -201,8 +230,8 @@ The located assembly's manifest definition does not match the assembly reference
 </nav>
 <article>
     <h1>.NET Conf Thailand 2018</h1>
-    <p>I recently spoke at .NET Conf Thailand 2018! Thanks to <a class="reference external" href="https://twitter.com/kidchenko">Jose Barbosa</a> and <a class="reference external" href="https://www.facebook.com/codesanookpage">Theeranit (Aaron) Pongtongmuang</a> for organizing!</p>
-<p>I covered what's new in C# 7.0 to 7.3 (performance, performance, performance!), and a sneak preview of what's upcoming in C#8 (non-nullable reference types).</p>
+    <p>I recently spoke at .<span class="caps">NET</span> Conf Thailand 2018! Thanks to <a class="reference external" href="https://twitter.com/kidchenko">Jose Barbosa</a> and <a class="reference external" href="https://www.facebook.com/codesanookpage">Theeranit (Aaron) Pongtongmuang</a> for&nbsp;organizing!</p>
+<p>I covered what&#8217;s new in C# 7.0 to 7.3 (performance, performance, performance!), and a sneak preview of what&#8217;s upcoming in C#8 (non-nullable reference&nbsp;types).</p>
 <p>Demo code is available <a class="reference external" href="https://github.com/waf/DotNetConfThailand.2018.CSharpDemo">on GitHub</a> and, while recordings are not available, you can see Mads Torgersen cover similar topics <a class="reference external" href="https://channel9.msdn.com/Events/dotnetConf/2018/S103">on Channel9</a>.</p>
 
     <div class="tags">
@@ -228,8 +257,8 @@ The located assembly's manifest definition does not match the assembly reference
 </nav>
 <article>
     <h1>Cross Platform CI with CoreRT and AppVeyor</h1>
-    <p>CoreRT is an ahead-of-time (AOT) compiler and runtime for .NET Core. It builds .NET Core applications into a single, small binary that runs without requiring .NET Core to be installed on the system. This makes distribution easy, especially to Mac OS and Linux, which may not have .NET Core installed. On all platforms, the program will have a faster start-up time and lower memory footprint.</p>
-<p>Like most developers, I have a pet static site generator I'm working on. As it's a command line utility that will be distributed to users that most likely won't have .NET Core installed, I decided to <span>&#8230;<a href="/blog/2018/10/cross-platform-ci-with-corert-and-appveyor/" class="continue">continue</a>.</span></p>
+    <p>CoreRT is an ahead-of-time (<span class="caps">AOT</span>) compiler and runtime for .<span class="caps">NET</span> Core. It builds .<span class="caps">NET</span> Core applications into a single, small binary that runs without requiring .<span class="caps">NET</span> Core to be installed on the system. This makes distribution easy, especially to Mac <span class="caps">OS</span> and Linux, which may not have .<span class="caps">NET</span> Core installed. On all platforms, the program will have a faster start-up time and lower memory&nbsp;footprint.</p>
+<p>Like most developers, I have a pet static site generator I&#8217;m working on. As it&#8217;s a command line utility that will be distributed to users that most likely won&#8217;t have .<span class="caps">NET</span> Core installed, I decided to try <span>&#8230;<a href="/blog/2018/10/cross-platform-ci-with-corert-and-appveyor/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -254,14 +283,15 @@ The located assembly's manifest definition does not match the assembly reference
 </nav>
 <article>
     <h1>Rendering an ASP.NET Core MVC action to a string</h1>
-    <p>I'm currently going through my &quot;build a static site engine&quot; phase that most developers pass
-through at some point in their career. As part of this, I wanted to write a normal ASP.NET
+    <p>I&#8217;m currently going through my &quot;build a static site engine&quot; phase that most developers pass
+through at some point in their career. As part of this, I wanted to write a normal <span class="caps">ASP</span>.<span class="caps">NET</span>
 Core application complete with server-side rendering, and then have the option to entirely
-pre-render it to disk.</p>
-<p>It turns out that this is quite difficult -- StackOverflow and GitHub issues were a barren
+pre-render it to&nbsp;disk.</p>
+<p>It turns out that this is quite difficult &#8211; StackOverflow and GitHub issues were a barren
 wasteland of half-working answers. Most everyone assumes that you have a ControllerContext,
-or at least an HttpContext! Rendering it from a command line application was unheard of!</p>
-<p>After much experimentation, I managed to get it working! You can see a complete <span>&#8230;<a href="/blog/2018/07/rendering-an-asp-net-core-mvc-action-to-a-string/" class="continue">continue</a>.</span></p>
+or at least an HttpContext! Rendering it from a command line application was unheard&nbsp;of!</p>
+<p>After much experimentation, I managed to get it working! You can see a complete example in
+the <span>&#8230;<a href="/blog/2018/07/rendering-an-asp-net-core-mvc-action-to-a-string/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -286,9 +316,9 @@ or at least an HttpContext! Rendering it from a command line application was unh
 </nav>
 <article>
     <h1>Parsing PowerShell Programatically</h1>
-    <p>I've recently been working with a lot of PowerShell at work, and the experience has been, well, less than perfect. PowerShell is a dynamically-typed scripting language, and is most often used for administering Windows systems. The combination of making system changes and the runtime errors associated with dynamically-typed languages has been frustrating. It's quite common to get the system into a weird or inconsistent state when developing PowerShell scripts.</p>
-<p>Ideally all your PowerShell is properly orchestrated with <tt class="docutils literal"><span class="pre">-WhatIf</span></tt> and <tt class="docutils literal">SupportsShouldProcess</tt> functionality, but in my experience it's common for there to be large differences in behavior between <tt class="docutils literal"><span class="pre">-WhatIf</span></tt> execution and real execution.</p>
-<p>The <span>&#8230;<a href="/blog/2017/12/parsing-powershell-programatically/" class="continue">continue</a>.</span></p>
+    <p>I&#8217;ve recently been working with a lot of PowerShell at work, and the experience has been, well, less than perfect. PowerShell is a dynamically-typed scripting language, and is most often used for administering Windows systems. The combination of making system changes and the runtime errors associated with dynamically-typed languages has been frustrating. It&#8217;s quite common to get the system into a weird or inconsistent state when developing PowerShell&nbsp;scripts.</p>
+<p>Ideally all your PowerShell is properly orchestrated with <tt class="docutils literal"><span class="pre">-WhatIf</span></tt> and <tt class="docutils literal">SupportsShouldProcess</tt> functionality, but in my experience it&#8217;s common for there to be large differences in behavior between <tt class="docutils literal"><span class="pre">-WhatIf</span></tt> execution and real&nbsp;execution.</p>
+<p>The end goal <span>&#8230;<a href="/blog/2017/12/parsing-powershell-programatically/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -296,37 +326,6 @@ or at least an HttpContext! Rendering it from a command line application was unh
                     and
                     
                 <a href="/blog/tag/csharp/" rel="tag">csharp</a>
-                
-        
-    </div>
-    
-</article>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>Level up your VsVim</h1>
-    
-
-<p>If you're like me, you installed Visual Studio, installed <a class="reference external" href="https://github.com/jaredpar/VsVim">VsVim</a>, and then happily started coding. However, did you know that Visual Studio's semantic understanding and manipulation of your code is exposed to VsVim?</p>
-<p>For example, you might already know that pressing <tt class="docutils literal">gd</tt> in VsVim will &quot;go to the definition&quot; of a method. But what if we want to &quot;go to the implementation&quot; e.g. through an interface to the underlying concrete method? The standard <tt class="docutils literal"><span class="pre">Ctrl-F12</span></tt> requires some contortions, and maybe requires glancing down at your keyboard.</p>
-<p>It's easy to fix this; just add this mapping to your <tt class="docutils literal">~\_vsvimrc</tt>:</p>
-<div class="highlight"><pre><span></span>map gi :vsc Edit.GoToImplementation&lt;CR&gt;
-</pre></div>
-<p>Let's break this <span>&#8230;<a href="/blog/2017/08/level-up-your-vsvim/" class="continue">continue</a>.</span></p>
-    <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
-                <a href="/blog/tag/vim/" rel="tag">vim</a>
-                    and
-                    
-                <a href="/blog/tag/visual-studio/" rel="tag">visual-studio</a>
                 
         
     </div>

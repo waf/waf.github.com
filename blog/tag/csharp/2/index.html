@@ -38,16 +38,49 @@
     </ul>
 </nav>
 <article>
+    <h1>Level up your VsVim</h1>
+    
+
+<p>If you&#8217;re like me, you installed Visual Studio, installed <a class="reference external" href="https://github.com/jaredpar/VsVim">VsVim</a>, and then happily started coding. However, did you know that Visual Studio&#8217;s semantic understanding and manipulation of your code is exposed to&nbsp;VsVim?</p>
+<p>For example, you might already know that pressing <tt class="docutils literal">gd</tt> in VsVim will &quot;go to the definition&quot; of a method. But what if we want to &quot;go to the implementation&quot; e.g. through an interface to the underlying concrete method? The standard <tt class="docutils literal"><span class="pre">Ctrl-F12</span></tt> requires some contortions, and maybe requires glancing down at your&nbsp;keyboard.</p>
+<p>It&#8217;s easy to fix this; just add this mapping to your <tt class="docutils literal">~\_vsvimrc</tt>:</p>
+<div class="highlight"><pre><span></span>map gi :vsc Edit.GoToImplementation&lt;<span class="caps">CR</span>&gt;
+</pre></div>
+<p>Let&#8217;s break this down. The <span>&#8230;<a href="/blog/2017/08/level-up-your-vsvim/" class="continue">continue</a>.</span></p>
+    <div class="tags">
+        
+            tagged as
+                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
+                <a href="/blog/tag/vim/" rel="tag">vim</a>
+                    and
+                    
+                <a href="/blog/tag/visual-studio/" rel="tag">visual-studio</a>
+                
+        
+    </div>
+    
+</article>
+        
+            <nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+<article>
     <h1>The Implementation of C# Local Functions</h1>
-    <p>C# 7 local functions provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). In addition, some articles have mentioned that local functions compile down to normal methods, thus reducing GC allocations when compared to System.Func.</p>
-<p>I was curious about that last part. How does it work? Let's open up the dotPeek decompiler and find out!</p>
-<p>First, here's a simple test program using a local function:</p>
+    <p>C# 7 local functions provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). In addition, some articles have mentioned that local functions compile down to normal methods, thus reducing <span class="caps">GC</span> allocations when compared to&nbsp;System.Func.</p>
+<p>I was curious about that last part. How does it work? Let&#8217;s open up the dotPeek decompiler and find&nbsp;out!</p>
+<p>First, here&#8217;s a simple test program using a local&nbsp;function:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Program</span>
 <span class="p">{</span>
     <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">AddFive</span><span class="p">(</span><span class="m">7</span><span class="p">));</span>
-  </pre><span>&#8230;<a href="/blog/2017/07/the-implementation-of-csharp-local-functions/" class="continue">continue</a>.</span></div>
+    <span class="p">}</span>
+
+ </pre><span>&#8230;<a href="/blog/2017/07/the-implementation-of-csharp-local-functions/" class="continue">continue</a>.</span></div>
     <div class="tags">
         
             tagged as
@@ -70,26 +103,33 @@
 </nav>
 <article>
     <h1>Solving the Zebra Puzzle with LINQ and C# 7</h1>
-    <p>I recently ran across <a class="reference external" href="https://en.wikipedia.org/wiki/Zebra_Puzzle">the Zebra Puzzle</a>, a logic puzzle from about 50 years ago:</p>
+    <p>I recently ran across <a class="reference external" href="https://en.wikipedia.org/wiki/Zebra_Puzzle">the Zebra Puzzle</a>, a logic puzzle from about 50 years&nbsp;ago:</p>
 <blockquote>
 <ol class="arabic simple">
-<li>There are five houses.</li>
-<li>The Englishman lives in the red house.</li>
-<li>The Spaniard owns the dog.</li>
-<li>Coffee is drunk in the green house.</li>
-<li>The Ukrainian drinks tea.</li>
-<li>The green house is immediately to the right of the ivory house.</li>
-<li>The Old Gold smoker owns snails.</li>
-<li>Kools are smoked in the yellow house.</li>
-<li>Milk is drunk in the middle house.</li>
-<li>The Norwegian lives in the first house.</li>
-<li>The man who smokes Chesterfields lives in the house next to the man with the fox.</li>
-<li>Kools are smoked in the house next to the house where the horse is kept.</li>
-<li>The <span>&#8230;<a href="/blog/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7/" class="continue">continue</a>.</span></li></ol></blockquote>
+<li>There are five&nbsp;houses.</li>
+<li>The Englishman lives in the red&nbsp;house.</li>
+<li>The Spaniard owns the&nbsp;dog.</li>
+<li>Coffee is drunk in the green&nbsp;house.</li>
+<li>The Ukrainian drinks&nbsp;tea.</li>
+<li>The green house is immediately to the right of the ivory&nbsp;house.</li>
+<li>The Old Gold smoker owns&nbsp;snails.</li>
+<li>Kools are smoked in the yellow&nbsp;house.</li>
+<li>Milk is drunk in the middle&nbsp;house.</li>
+<li>The Norwegian lives in the first&nbsp;house.</li>
+<li>The man who smokes Chesterfields lives in the house next to the man with the&nbsp;fox.</li>
+<li>Kools are smoked in the house next to the house where the horse is&nbsp;kept.</li>
+<li>The Lucky Strike smoker drinks orange&nbsp;juice.</li>
+<li>The Japanese smokes&nbsp;Parliaments.</li>
+<li>The Norwegian lives next to the blue&nbsp;house.</li>
+</ol>
+<p>Now, <span>&#8230;<a href="/blog/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7/" class="continue">continue</a>.</span></p></blockquote>
     <div class="tags">
         
             tagged as
                 <a href="/blog/tag/csharp/" rel="tag">csharp</a>
+                    and
+                    
+                <a href="/blog/tag/linq/" rel="tag">linq</a>
                 
         
     </div>
@@ -105,14 +145,14 @@
 </nav>
 <article>
     <h1>Finding Dead C# Code in an ASP.NET application</h1>
-    <p>Large, long-lasting codebases tend to accumulate unused code, or dead code, over time. This happens as features are added, changed and removed.</p>
-<p>Some types of dead code, like unreferenced methods, are easy to detect with Visual Studio's out-of-the-box static analysis. However, other types of dead code are trickier; maybe there's a method that's only referenced by unit tests, or it's referenced under a condition that's never valid:</p>
+    <p>Large, long-lasting codebases tend to accumulate unused code, or dead code, over time. This happens as features are added, changed and&nbsp;removed.</p>
+<p>Some types of dead code, like unreferenced methods, are easy to detect with Visual Studio&#8217;s out-of-the-box static analysis. However, other types of dead code are trickier; maybe there&#8217;s a method that&#8217;s only referenced by unit tests, or it&#8217;s referenced under a condition that&#8217;s never&nbsp;valid:</p>
 <div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span> <span class="p">&lt;</span> <span class="k">new</span> <span class="n">DateTime</span><span class="p">(</span><span class="m">1970</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
 <span class="p">{</span>
     <span class="c1">// some dead code</span>
 <span class="p">}</span>
 </pre></div>
-<p>How can we detect this type of dead code? Rather than using static analysis to detect it, we can use dynamic analysis---the <span>&#8230;<a href="/blog/2016/08/finding-dead-csharp-code-in-aspnet/" class="continue">continue</a>.</span></p>
+<p>How can we detect this type of dead code? Rather than using static analysis to detect it, we can use dynamic analysis&#8212;the same technique <span>&#8230;<a href="/blog/2016/08/finding-dead-csharp-code-in-aspnet/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -136,7 +176,7 @@
 </nav>
 <article>
     <h1>Increasing Code Quality with SonarQube</h1>
-    <p>I just posted an article about SonarQube, an open source static analysis tool, and how we set it up to scan every incoming GitHub pull request at work.</p>
+    <p>I just posted an article about SonarQube, an open source static analysis tool, and how we set it up to scan every incoming GitHub pull request at&nbsp;work.</p>
 <p>You can <a class="reference external" href="http://techblog.jetabroad.com/2016/06/increasing-code-quality-with-sonarqube.html">read it at the Jetabroad Tech Blog</a>.</p>
 
     <div class="tags">
@@ -162,11 +202,11 @@
 </nav>
 <article>
     <h1>Quick Tip: Format Finder for .NET date strings</h1>
-    <p>If you've written C# for any length of time, chances are you've become very familiar with the MSDN documentation pages about <a class="reference external" href="https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx">Standard Date and Time Format Strings</a> and <a class="reference external" href="https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx">Custom Date and Time Format Strings</a>. Any time you need to format a <tt class="docutils literal">DateTime</tt>, those pages are invaluable.</p>
-<p>I don't find myself reading those pages often enough to warrant memorizing the strings, but I do read them often enough that it's worth automating the lookup. So I wrote a simple webapp to do it.</p>
+    <p>If you&#8217;ve written C# for any length of time, chances are you&#8217;ve become very familiar with the <span class="caps">MSDN</span> documentation pages about <a class="reference external" href="https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx">Standard Date and Time Format Strings</a> and <a class="reference external" href="https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx">Custom Date and Time Format Strings</a>. Any time you need to format a <tt class="docutils literal">DateTime</tt>, those pages are&nbsp;invaluable.</p>
+<p>I don&#8217;t find myself reading those pages often enough to warrant memorizing the strings, but I do read them often enough that it&#8217;s worth automating the lookup. So I wrote a simple webapp to do&nbsp;it.</p>
 
 <p>I plan on skewing those curves by sharing this tool. So, here it is: <a class="reference external" href="https://fuqua.io/format-finder/">Format Finder</a>.</p>
-<p>Format Finder presents you with <span>&#8230;<a href="/blog/2015/02/quick-tip-format-finder-for-net-date-strings/" class="continue">continue</a>.</span></p>
+<p>Format Finder presents you with a very <span>&#8230;<a href="/blog/2015/02/quick-tip-format-finder-for-net-date-strings/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -190,14 +230,14 @@
 </nav>
 <article>
     <h1>Haskell's Elegant Fibonacci Implementation in C#</h1>
-    <p><a class="reference external" href="http://www.haskell.org/haskellwiki/Introduction">Haskell</a> is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the <a class="reference external" href="http://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci series</a> algorithm:</p>
+    <p><a class="reference external" href="http://www.haskell.org/haskellwiki/Introduction">Haskell</a> is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the <a class="reference external" href="http://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci series</a>&nbsp;algorithm:</p>
 <div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">fib</span> <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="n">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fib</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span>
 </pre></div>
-<p>This creates a variable called <tt class="docutils literal">fib</tt> that contains an infinite sequence of Fibonacci numbers. We could print this variable, but our program would start trying to print an infinite number of elements. A better approach is to choose a finite number of elements from the sequence:</p>
+<p>This creates a variable called <tt class="docutils literal">fib</tt> that contains an infinite sequence of Fibonacci numbers. We could print this variable, but our program would start trying to print an infinite number of elements. A better approach is to choose a finite number of elements from the&nbsp;sequence:</p>
 <div class="highlight"><pre><span></span><span class="nf">take</span> <span class="mi">10</span> <span class="n">fib</span>
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="mi">55</span><span class="p">]</span>
 </pre></div>
-<p>The above implementation of <tt class="docutils literal">fib</tt> fascinates me, so I decided to try my <span>&#8230;<a href="/blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="continue">continue</a>.</span></p>
+<p>The above implementation of <tt class="docutils literal">fib</tt> fascinates me, so I decided to try my hand at <span>&#8230;<a href="/blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as

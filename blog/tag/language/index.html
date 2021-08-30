@@ -39,10 +39,10 @@
 </nav>
 <article>
     <h1>A Lesser-Known C# Feature: Nested Object Initializers</h1>
-    <p>I've been writing C# for quite some time now, but only recently found out about the &quot;nested object initializers&quot; syntax in C#. Nested object initializers elegantly solve problems for which I've previously used workarounds. It's not a new feature; it was introduced in C# 3.0, under section 7.5.10.2 of the language specification:</p>
+    <p>I&#8217;ve been writing C# for quite some time now, but only recently found out about the &quot;nested object initializers&quot; syntax in C#. Nested object initializers elegantly solve problems for which I&#8217;ve previously used workarounds. It&#8217;s not a new feature; it was introduced in C# 3.0, under section 7.5.10.2 of the language&nbsp;specification:</p>
 <blockquote>
 An object initializer after the equals sign is a nested object initializer, i.e. an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property.</blockquote>
-<p>In case <span>&#8230;<a href="/blog/2020/12/a-lesser-known-csharp-feature-nested-object-initializers/" class="continue">continue</a>.</span></p>
+<p>In case the <span>&#8230;<a href="/blog/2020/12/a-lesser-known-csharp-feature-nested-object-initializers/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -65,15 +65,17 @@ An object initializer after the equals sign is a nested object initializer, i.e.
 </nav>
 <article>
     <h1>The Implementation of C# Local Functions</h1>
-    <p>C# 7 local functions provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). In addition, some articles have mentioned that local functions compile down to normal methods, thus reducing GC allocations when compared to System.Func.</p>
-<p>I was curious about that last part. How does it work? Let's open up the dotPeek decompiler and find out!</p>
-<p>First, here's a simple test program using a local function:</p>
+    <p>C# 7 local functions provide a more intuitive syntax over creating verbose System.Func delegates, as well as being more capable (they support ref and out parameters, async, generics, etc). In addition, some articles have mentioned that local functions compile down to normal methods, thus reducing <span class="caps">GC</span> allocations when compared to&nbsp;System.Func.</p>
+<p>I was curious about that last part. How does it work? Let&#8217;s open up the dotPeek decompiler and find&nbsp;out!</p>
+<p>First, here&#8217;s a simple test program using a local&nbsp;function:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Program</span>
 <span class="p">{</span>
     <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">AddFive</span><span class="p">(</span><span class="m">7</span><span class="p">));</span>
-  </pre><span>&#8230;<a href="/blog/2017/07/the-implementation-of-csharp-local-functions/" class="continue">continue</a>.</span></div>
+    <span class="p">}</span>
+
+ </pre><span>&#8230;<a href="/blog/2017/07/the-implementation-of-csharp-local-functions/" class="continue">continue</a>.</span></div>
     <div class="tags">
         
             tagged as

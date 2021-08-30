@@ -1,397 +1,413 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://fuqua.io/blog//tag/analysis/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <loc>https://fuqua.io/blog//tag/linq/</loc>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/fibonacci/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://fuqua.io/blog//tag/ndepend/</loc>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2017/12/parsing-powershell-programatically/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/reagent/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/language/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//articles/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2019/11/net-conf-thailand-2019/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/virtualenv/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/powershell/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2016/08/finding-dead-csharp-code-in-aspnet/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/acrylamid/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/wasm/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2017/06/splitting-thai-words-with-browser-apis/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/html5/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/korma/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2014/03/haskells-elegant-fibonacci-in-csharp/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//rss.xml</loc>
-    <lastmod>2021-07-06</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/sql/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/database/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/continuous-integration/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2015/02/quick-tip-format-finder-for-net-date-strings/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2017/07/the-implementation-of-csharp-local-functions/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2020/05/microsoft-build-2020-highlights-for-net-developers/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2020/02/native-websockets-with-blazor-webassembly/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2016/06/increasing-code-quality-with-sonarqube/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/ring/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>https://fuqua.io/blog//2021/08/analyzing-code-quality-with-linq-and-ndepend/</loc>
+    <lastmod>2021-08-30</lastmod>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
     <loc>https://fuqua.io/blog//2017/01/solving-the-zebra-puzzle-with-linq-and-c-7/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/compojure/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2018/11/net-conf-thailand-2018/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/sonarqube/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//atom.xml</loc>
-    <lastmod>2021-07-06</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/asp-net/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/promise/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/functional/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/websockets/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/sente/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/razor/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2015/04/a-software-developer-learning-thai/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/dates/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://fuqua.io/blog//tag/analysis/</loc>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/tools/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2018/07/rendering-an-asp-net-core-mvc-action-to-a-string/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/lobos/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/zsh/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2018/10/cross-platform-ci-with-corert-and-appveyor/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/javascript/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/blazor/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2020/12/a-lesser-known-csharp-feature-nested-object-initializers/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/presentation/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/python/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/csharp/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2019/03/troubleshooting-assembly-binding-issues-in-net/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/visual-studio/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2016/06/vim-presentation/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/csharp/2/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2017/08/level-up-your-vsvim/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/appveyor/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2014/02/native-javascript-promises-and-browser-apis/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/web/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/dotnet/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/haskell/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/thai/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2019/01/a-caching-http-proxy-using-titanium-web-proxy/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/vim/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/datomic/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/windows-terminal/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/clojure/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2021/05/tips-for-using-the-windows-command-line-effectively/</loc>
-    <lastmod>2021-07-06</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2014/05/pushing-database-changes-to-the-web-with-datomic/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/opencover/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2013/12/rest-apis-and-relational-databases-in-clojure/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fuqua.io/blog//tag/corert/</loc>
-    <lastmod>2021-05-18</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://fuqua.io/blog//2013/09/acrylamid-with-virtualenv-and-pip/</loc>
-    <lastmod>2021-05-10</lastmod>
+    <lastmod>2021-08-30</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
   </url>

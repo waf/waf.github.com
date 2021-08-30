@@ -38,24 +38,21 @@
     </ul>
 </nav>
 <article>
-    <h1>Haskell's Elegant Fibonacci Implementation in C#</h1>
-    <p><a class="reference external" href="http://www.haskell.org/haskellwiki/Introduction">Haskell</a> is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the <a class="reference external" href="http://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci series</a>&nbsp;algorithm:</p>
-<div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">fib</span> <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="n">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fib</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span>
-</pre></div>
-<p>This creates a variable called <tt class="docutils literal">fib</tt> that contains an infinite sequence of Fibonacci numbers. We could print this variable, but our program would start trying to print an infinite number of elements. A better approach is to choose a finite number of elements from the&nbsp;sequence:</p>
-<div class="highlight"><pre><span></span><span class="nf">take</span> <span class="mi">10</span> <span class="n">fib</span>
-<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="mi">55</span><span class="p">]</span>
-</pre></div>
-<p>The above implementation of <tt class="docutils literal">fib</tt> fascinates me, so I decided to try my hand at <span>&#8230;<a href="/blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="continue">continue</a>.</span></p>
+    <h1>Analyzing Code Quality with LINQ and NDepend</h1>
+    <p>I&#8217;ve been building an open-source personal project (<a class="reference external" href="https://github.com/waf/CSharpRepl">C# <span class="caps">REPL</span></a>) and spending a good chunk of time on code quality. I self-impose a zero-warning policy, use nullable reference types, track unit test coverage,&nbsp;etc.</p>
+<p>After ensuring all the Visual Studio / Roslyn code analyzer warnings were fixed, I thought I&#8217;d try out NDepend to get a second opinion, and also understand its capabilities. After downloading <a class="reference external" href="https://www.ndepend.com/download">a free trial of NDepend</a> and spending some time with it, I was pretty impressed with its technical underpinnings as they&#8217;re exposed to the end user. Spoilers: <em>It&#8217;s <span class="caps">LINQ</span> all the way down</em>.</p>
+<div class="section" id="static-analysis-with-linq">
+<h2>Static Analysis with&nbsp;<span class="caps">LINQ</span></h2>
+<p>Out of the box, <span>&#8230;<a href="/blog/2021/08/analyzing-code-quality-with-linq-and-ndepend/" class="continue">continue</a>.</span></p></div>
     <div class="tags">
         
             tagged as
-                <a href="/blog/tag/haskell/" rel="tag">haskell</a>,
                 <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
-                <a href="/blog/tag/fibonacci/" rel="tag">fibonacci</a>
+                <a href="/blog/tag/analysis/" rel="tag">analysis</a>,
+                <a href="/blog/tag/linq/" rel="tag">linq</a>
                     and
                     
-                <a href="/blog/tag/functional/" rel="tag">functional</a>
+                <a href="/blog/tag/ndepend/" rel="tag">ndepend</a>
                 
         
     </div>

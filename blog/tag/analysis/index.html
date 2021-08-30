@@ -38,15 +38,44 @@
     </ul>
 </nav>
 <article>
+    <h1>Analyzing Code Quality with LINQ and NDepend</h1>
+    <p>I&#8217;ve been building an open-source personal project (<a class="reference external" href="https://github.com/waf/CSharpRepl">C# <span class="caps">REPL</span></a>) and spending a good chunk of time on code quality. I self-impose a zero-warning policy, use nullable reference types, track unit test coverage,&nbsp;etc.</p>
+<p>After ensuring all the Visual Studio / Roslyn code analyzer warnings were fixed, I thought I&#8217;d try out NDepend to get a second opinion, and also understand its capabilities. After downloading <a class="reference external" href="https://www.ndepend.com/download">a free trial of NDepend</a> and spending some time with it, I was pretty impressed with its technical underpinnings as they&#8217;re exposed to the end user. Spoilers: <em>It&#8217;s <span class="caps">LINQ</span> all the way down</em>.</p>
+<div class="section" id="static-analysis-with-linq">
+<h2>Static Analysis with&nbsp;<span class="caps">LINQ</span></h2>
+<p>Out of the box, <span>&#8230;<a href="/blog/2021/08/analyzing-code-quality-with-linq-and-ndepend/" class="continue">continue</a>.</span></p></div>
+    <div class="tags">
+        
+            tagged as
+                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
+                <a href="/blog/tag/analysis/" rel="tag">analysis</a>,
+                <a href="/blog/tag/linq/" rel="tag">linq</a>
+                    and
+                    
+                <a href="/blog/tag/ndepend/" rel="tag">ndepend</a>
+                
+        
+    </div>
+    
+</article>
+        
+            <nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+<article>
     <h1>Finding Dead C# Code in an ASP.NET application</h1>
-    <p>Large, long-lasting codebases tend to accumulate unused code, or dead code, over time. This happens as features are added, changed and removed.</p>
-<p>Some types of dead code, like unreferenced methods, are easy to detect with Visual Studio's out-of-the-box static analysis. However, other types of dead code are trickier; maybe there's a method that's only referenced by unit tests, or it's referenced under a condition that's never valid:</p>
+    <p>Large, long-lasting codebases tend to accumulate unused code, or dead code, over time. This happens as features are added, changed and&nbsp;removed.</p>
+<p>Some types of dead code, like unreferenced methods, are easy to detect with Visual Studio&#8217;s out-of-the-box static analysis. However, other types of dead code are trickier; maybe there&#8217;s a method that&#8217;s only referenced by unit tests, or it&#8217;s referenced under a condition that&#8217;s never&nbsp;valid:</p>
 <div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span> <span class="p">&lt;</span> <span class="k">new</span> <span class="n">DateTime</span><span class="p">(</span><span class="m">1970</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
 <span class="p">{</span>
     <span class="c1">// some dead code</span>
 <span class="p">}</span>
 </pre></div>
-<p>How can we detect this type of dead code? Rather than using static analysis to detect it, we can use dynamic analysis---the <span>&#8230;<a href="/blog/2016/08/finding-dead-csharp-code-in-aspnet/" class="continue">continue</a>.</span></p>
+<p>How can we detect this type of dead code? Rather than using static analysis to detect it, we can use dynamic analysis&#8212;the same technique <span>&#8230;<a href="/blog/2016/08/finding-dead-csharp-code-in-aspnet/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
@@ -70,7 +99,7 @@
 </nav>
 <article>
     <h1>Increasing Code Quality with SonarQube</h1>
-    <p>I just posted an article about SonarQube, an open source static analysis tool, and how we set it up to scan every incoming GitHub pull request at work.</p>
+    <p>I just posted an article about SonarQube, an open source static analysis tool, and how we set it up to scan every incoming GitHub pull request at&nbsp;work.</p>
 <p>You can <a class="reference external" href="http://techblog.jetabroad.com/2016/06/increasing-code-quality-with-sonarqube.html">read it at the Jetabroad Tech Blog</a>.</p>
 
     <div class="tags">

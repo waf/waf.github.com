@@ -41,12 +41,12 @@
     <h1>Level up your VsVim</h1>
     
 
-<p>If you're like me, you installed Visual Studio, installed <a class="reference external" href="https://github.com/jaredpar/VsVim">VsVim</a>, and then happily started coding. However, did you know that Visual Studio's semantic understanding and manipulation of your code is exposed to VsVim?</p>
-<p>For example, you might already know that pressing <tt class="docutils literal">gd</tt> in VsVim will &quot;go to the definition&quot; of a method. But what if we want to &quot;go to the implementation&quot; e.g. through an interface to the underlying concrete method? The standard <tt class="docutils literal"><span class="pre">Ctrl-F12</span></tt> requires some contortions, and maybe requires glancing down at your keyboard.</p>
-<p>It's easy to fix this; just add this mapping to your <tt class="docutils literal">~\_vsvimrc</tt>:</p>
-<div class="highlight"><pre><span></span>map gi :vsc Edit.GoToImplementation&lt;CR&gt;
+<p>If you&#8217;re like me, you installed Visual Studio, installed <a class="reference external" href="https://github.com/jaredpar/VsVim">VsVim</a>, and then happily started coding. However, did you know that Visual Studio&#8217;s semantic understanding and manipulation of your code is exposed to&nbsp;VsVim?</p>
+<p>For example, you might already know that pressing <tt class="docutils literal">gd</tt> in VsVim will &quot;go to the definition&quot; of a method. But what if we want to &quot;go to the implementation&quot; e.g. through an interface to the underlying concrete method? The standard <tt class="docutils literal"><span class="pre">Ctrl-F12</span></tt> requires some contortions, and maybe requires glancing down at your&nbsp;keyboard.</p>
+<p>It&#8217;s easy to fix this; just add this mapping to your <tt class="docutils literal">~\_vsvimrc</tt>:</p>
+<div class="highlight"><pre><span></span>map gi :vsc Edit.GoToImplementation&lt;<span class="caps">CR</span>&gt;
 </pre></div>
-<p>Let's break this <span>&#8230;<a href="/blog/2017/08/level-up-your-vsvim/" class="continue">continue</a>.</span></p>
+<p>Let&#8217;s break this down. The <span>&#8230;<a href="/blog/2017/08/level-up-your-vsvim/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as

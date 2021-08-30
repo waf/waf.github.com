@@ -11,8 +11,69 @@
     <link rel="self" type="application/atom+xml" href="https://fuqua.io/blog/atom.xml" />
     <icon>https://fuqua.io/blog/favicon.ico</icon>
     <logo>https://fuqua.io/blog/feed-logo.png</logo>
-    <updated>2021-05-09T17:00:00Z</updated>
+    <updated>2021-08-29T17:00:00Z</updated>
     <generator uri="https://github.com/posativ/acrylamid/" version="0.7.10">acrylamid</generator>
+        <entry>
+        <title>Analyzing Code Quality with LINQ and NDepend</title>
+        <link rel="alternate" type="text/html" href="https://fuqua.io/blog/2021/08/analyzing-code-quality-with-linq-and-ndepend/" />
+        <id>tag:fuqua.io/blog,2021-08-30:/2021/08/analyzing-code-quality-with-linq-and-ndepend</id>
+        <updated>2021-08-29T17:00:00Z</updated>
+        <category term="csharp" />
+        <category term="analysis" />
+        <category term="linq" />
+        <category term="ndepend" />
+        
+        <author>
+            <name>Will Fuqua</name>
+            <uri>https://fuqua.io/blog/</uri>
+            <email>info@example.com</email>
+        </author>
+        <content type="html">&lt;p&gt;I&amp;#8217;ve been building an open-source personal project (&lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/CSharpRepl&#34;&gt;C# &lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt;&lt;/a&gt;) and spending a good chunk of time on code quality. I self-impose a zero-warning policy, use nullable reference types, track unit test coverage,&amp;nbsp;etc.&lt;/p&gt;
+&lt;p&gt;After ensuring all the Visual Studio / Roslyn code analyzer warnings were fixed, I thought I&amp;#8217;d try out NDepend to get a second opinion, and also understand its capabilities. After downloading &lt;a class=&#34;reference external&#34; href=&#34;https://www.ndepend.com/download&#34;&gt;a free trial of NDepend&lt;/a&gt; and spending some time with it, I was pretty impressed with its technical underpinnings as they&amp;#8217;re exposed to the end user. Spoilers: &lt;em&gt;It&amp;#8217;s &lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt; all the way down&lt;/em&gt;.&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;static-analysis-with-linq&#34;&gt;
+&lt;h3&gt;Static Analysis with&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;Out of the box, there&amp;#8217;s a large collection of static analysis rules; they&amp;#8217;re mostly focused on finding software design flaws. For example, it includes a rule that warns against assigning a field from too many methods; it&amp;#8217;s a sign that there&amp;#8217;s some bug-prone mutation, and a better design could be&amp;nbsp;possible:&lt;/p&gt;
+&lt;img alt=&#34;A rule UI that says not to assign a field from many methods. It&#39;s a symptom of bug-prone code.&#34; class=&#34;align-center&#34; src=&#34;https://fuqua.io/blog/img/ndepend/1-too-many-methods.png&#34; style=&#34;width: 90%;&#34;/&gt;
+&lt;p&gt;This screen may look like a typical static analysis rule, but there&amp;#8217;s more going on under-the-hood. If we click the &lt;cite&gt;View Source Code&lt;/cite&gt; button, we&amp;#8217;ll see the following, editable rule&amp;nbsp;code:&lt;/p&gt;
+&lt;div class=&#34;figure align-center&#34;&gt;
+&lt;a class=&#34;reference external image-reference&#34; href=&#34;https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1906&#34;&gt;&lt;img alt=&#34;A LINQ statement. warnif count &amp;gt; 0 from f in JustMyCode.Fields where !f.IsEnumValue &amp;amp;&amp;amp; !f.IsImmutable &amp;amp;&amp;amp; !f.IsInitOnly &amp;amp;&amp;amp; !f.IsGeneratedByCompiler &amp;amp;&amp;amp; !f.IsEventDelegateObject let methodsAssigningMe = f.MethodsAssigningMe.Where(m =&amp;gt; !m.IsConstructor) where methodsAssigningMe.Count() &amp;gt;= (!f.IsStatic ? 4 : 2) select new { f, methodsAssigningMe, f.MethodsReadingMeButNotAssigningMe, f.MethodsUsingMe, Debt = (4+(f.IsStatic ? 10 : 5)).ToMinutes().ToDebt(), Severity = Severity.High}&#34; src=&#34;https://fuqua.io/blog/img/ndepend/2-too-many-methods-linq.png&#34; style=&#34;width: 90%;&#34;/&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;small class=&#34;align-center&#34; style=&#34;display:block;color:#888&#34;&gt;&lt;a href=&#34;https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1906&#34;&gt;Rule &lt;span class=&#34;caps&#34;&gt;ND1906&lt;/span&gt;&lt;/a&gt; – click to view the full rule description and code&lt;/small&gt;&lt;p&gt;Hey, that&amp;#8217;s&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt;!&lt;/p&gt;
+&lt;p&gt;Technically, it&amp;#8217;s called &lt;a class=&#34;reference external&#34; href=&#34;https://www.ndepend.com/docs/cqlinq-syntax#Introduction&#34;&gt;CQLinq&lt;/a&gt; (Code Query &lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt;), which is &lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt; with additional static analysis keywords, and running over an object model that represents a codebase. Conceptually, it&amp;#8217;s similar to Roslyn&amp;#8217;s syntax/semantic model, but with a bunch of nice affordances and predefined properties that make it simpler to do solution-wide static analysis. The CQLinq object model represents an entire&amp;nbsp;application.&lt;/p&gt;
+&lt;p&gt;For example, here&amp;#8217;s a predefined calculation for cyclomatic complexity. It runs across all methods in the application using the &lt;tt class=&#34;docutils literal&#34;&gt;Application.Methods&lt;/tt&gt; property; there&amp;#8217;s no need to recursively find all files or&amp;nbsp;classes:&lt;/p&gt;
+&lt;img alt=&#34;from m in Application.Methods where m.CyclomaticComplexity &amp;gt; 20 &amp;amp;&amp;amp; !m.IsAbstract orderby m.CyclomaticComplexity descending select new { m, m.CyclomaticComplexity }&#34; class=&#34;align-center&#34; src=&#34;https://fuqua.io/blog/img/ndepend/3-cyclomatic-complexity-query.png&#34; style=&#34;width: 90%;&#34;/&gt;
+&lt;p&gt;Notice that the rule uses a &lt;tt class=&#34;docutils literal&#34;&gt;CyclomaticComplexity&lt;/tt&gt; property that already exists on the method. We can use intellisense to explore other properties in the CQLinq object&amp;nbsp;model:&lt;/p&gt;
+&lt;img alt=&#34;The CQLinq query editor open, with an intellisense menu showing properties like ReadsMutableObjectState, PercentageCoverage, PercentageComment, ShouldBePublic, and many more.&#34; class=&#34;align-center&#34; src=&#34;https://fuqua.io/blog/img/ndepend/4-intellisense.png&#34; style=&#34;width: 94%;&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;analyzing-code-evolution-over-time-with-linq&#34;&gt;
+&lt;h3&gt;Analyzing code evolution over time with&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;CQLinq also supports comparing the current version of the code with past versions of the code. Analyzing code once will create a &lt;em&gt;baseline;&lt;/em&gt; future analyses can refer to this baseline with the &lt;tt class=&#34;docutils literal&#34;&gt;.OlderVersion()&lt;/tt&gt; helper method. Here&amp;#8217;s how we can identify mutability being introduced as part of a code&amp;nbsp;change:&lt;/p&gt;
+&lt;a class=&#34;reference external image-reference&#34; href=&#34;https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1108&#34;&gt;&lt;img alt=&#34;A CQLinq statement that reads: Avoid transforming an immutable type into a mutable one. warnif count &amp;gt; 0 from t in Application.Types where t.CodeWasChanged() &amp;amp;&amp;amp; t.OlderVersion().IsImmutable &amp;amp;&amp;amp; !t.IsImmutable &amp;amp;&amp;amp; !t.IsStatic let culpritFields = t.InstanceFields.Where(f =&amp;gt; !f.IsImmutable) select new { t, culpritFields, Debt = (10 + 10*culpritFields.Count()).ToMinutes().ToDebt(), Severity = Severity.High }&#34; class=&#34;align-center&#34; src=&#34;https://fuqua.io/blog/img/ndepend/5-baseline-mutability-detection.png&#34; style=&#34;width: 90%;&#34;/&gt;&lt;/a&gt;
+&lt;small class=&#34;align-center&#34; style=&#34;display:block;color:#888&#34;&gt;&lt;a href=&#34;https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1108&#34;&gt;Rule &lt;span class=&#34;caps&#34;&gt;ND1108&lt;/span&gt;&lt;/a&gt; – click to view the full rule description and code&lt;/small&gt;&lt;p&gt;There are a &lt;a class=&#34;reference external&#34; href=&#34;https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1105#!&#34;&gt;bunch of prebuilt rules&lt;/a&gt; that take advantage of this baseline-comparison feature. For example, we can define and identify breaking changes in a code change to a library, so we don&amp;#8217;t accidentally break downstream users, and can better manage &lt;abbr title=&#34;Semantic Versioning&#34;&gt;semver&lt;/abbr&gt;:&lt;/p&gt;
+&lt;a class=&#34;reference external image-reference&#34; href=&#34;https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1500&#34;&gt;&lt;img alt=&#34;A CQLinq statement that fades out to white. warnif count &amp;gt; 0 from m in codeBase.OlderVersion().Application.Methods where m.IsPubliclyVisible &amp;amp;&amp;amp; ((m.WasRemoved() &amp;amp;&amp;amp; !m.ParentType.WasRemoved() &amp;amp;&amp;amp; !m.IsObsolete) || (!m.WasRemoved() &amp;amp;&amp;amp; !m.NewerVersion().IsPubliclyVisible &amp;amp;&amp;amp; m.ParentType.NewerVersion().IsPubliclyVisible) || (!m.WasRemoved() &amp;amp;&amp;amp; m.ReturnType != null &amp;amp;&amp;amp; m.NewerVersion().ReturnType != null &amp;amp;&amp;amp; m.ReturnType.FullName != m.NewerVersion().ReturnType.FullName))&#34; class=&#34;align-center&#34; src=&#34;https://fuqua.io/blog/img/ndepend/6-breaking-changes.png&#34; style=&#34;width: 100%;&#34;/&gt;&lt;/a&gt;
+&lt;small class=&#34;align-center&#34; style=&#34;display:block;color:#888&#34;&gt;&lt;a href=&#34;https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1500&#34;&gt;Rule &lt;span class=&#34;caps&#34;&gt;ND1500&lt;/span&gt;&lt;/a&gt; – click to view the full rule description and code&lt;/small&gt;&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;identifying-high-severity-issues-with-linq&#34;&gt;
+&lt;h3&gt;Identifying high-severity issues with&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;The CQLinq object model doesn&amp;#8217;t just make our application source code queryable, it also makes static analysis rules and their violations queryable as well. This gets a bit meta; by using the &lt;tt class=&#34;docutils literal&#34;&gt;Issues&lt;/tt&gt; object model we can query for violations of rules defined by other &lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt;&amp;nbsp;statements:&lt;/p&gt;
+&lt;img alt=&#34;from issue in Issues where issue.Severity &amp;gt; Severity.Info orderby issue.Severity descending select new { issue, issue.Severity, issue.CodeElement }&#34; class=&#34;align-center&#34; src=&#34;https://fuqua.io/blog/img/ndepend/7-issues-query.png&#34; style=&#34;width: 90%;&#34;/&gt;
+&lt;p&gt;This can be combined with the previous section on code evolution to find new issues, or get an idea of how issues are being introduced or resolved over time. We can use the &lt;tt class=&#34;docutils literal&#34;&gt;failif&lt;/tt&gt; CQLinq keyword to set hard limits based on our issues and rules; these are known as &lt;cite&gt;Quality Gates&lt;/cite&gt; and are useful for continuous integration scenarios. The syntax is the same as the &lt;tt class=&#34;docutils literal&#34;&gt;warnif&lt;/tt&gt; keyword we saw in the earlier CQLinq&amp;nbsp;rules.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;using-the-ui-for-parameterized-linq-queries&#34;&gt;
+&lt;h3&gt;Using the &lt;span class=&#34;caps&#34;&gt;UI&lt;/span&gt; for parameterized &lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt;&amp;nbsp;queries&lt;/h3&gt;
+&lt;p&gt;So far we&amp;#8217;ve been focused on the code editor, but there&amp;#8217;s also a pretty slick &lt;span class=&#34;caps&#34;&gt;UI&lt;/span&gt;; by setting up our &lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt; statements to have parameters, we can explore ranges of these parameters in a live-updating, auto-generated&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;UI&lt;/span&gt;:&lt;/p&gt;
+&lt;img alt=&#34;A UI with several form elements, like input fields, dropdown lists, and sliders. Each form element corresponds to a highlighted placeholder in the LINQ query.&#34; class=&#34;align-center&#34; src=&#34;https://fuqua.io/blog/img/ndepend/8-coupling-queries.png&#34; style=&#34;width: 90%;&#34;/&gt;
+&lt;p&gt;The NDepend &lt;span class=&#34;caps&#34;&gt;UI&lt;/span&gt; has a lot of prebuilt views for understanding, categorizing and prioritizing issues. In addition to the typical column views that we&amp;#8217;ve seen in this post, they also have some more &lt;a class=&#34;reference external&#34; href=&#34;https://www.ndepend.com/docs/visual-studio-dependency-graph&#34;&gt;advanced graphical dependency views&lt;/a&gt; that are also powered by CQLinq. All the typical static analysis workflows can be done via the &lt;span class=&#34;caps&#34;&gt;UI&lt;/span&gt; if you don&amp;#8217;t want to get into the &lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt; side of things&amp;#8212;but where&amp;#8217;s the fun in&amp;nbsp;that?&lt;/p&gt;
+&lt;p&gt;If the command line is your preferred form of &lt;span class=&#34;caps&#34;&gt;UI&lt;/span&gt;, there&amp;#8217;s also a command line runner for all these CQLinq statements, which is also useful for integrating with other&amp;nbsp;software.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;summary&#34;&gt;
+&lt;h3&gt;Summary&lt;/h3&gt;
+&lt;p&gt;This blog post focused solely on the CQLinq part of NDepend, but there&amp;#8217;s a bunch more &lt;a class=&#34;reference external&#34; href=&#34;https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html&#34;&gt;rules&lt;/a&gt;, &lt;a class=&#34;reference external&#34; href=&#34;https://www.ndepend.com/sample-reports/&#34;&gt;reports&lt;/a&gt;, and &lt;a class=&#34;reference external&#34; href=&#34;https://www.ndepend.com/features/code-complexity#Diagrams&#34;&gt;data visualizations&lt;/a&gt;&amp;nbsp;available.&lt;/p&gt;
+&lt;p&gt;I&amp;#8217;ve personally always been interested in static analysis tools, programming language syntax trees, and &lt;span class=&#34;caps&#34;&gt;LINQ&lt;/span&gt;; so it was great to see NDepend use CQLinq to combine all three into a well-packaged static analysis&amp;nbsp;tool.&lt;/p&gt;
+&lt;p&gt;More practically, it helped me identify a good set of fixes for C# &lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt;. I was able to refactor towards immutability, better structure some confusing namespaces, and improve the general design of the&amp;nbsp;application.&lt;/p&gt;
+&lt;/div&gt;
+</content>
+    </entry>
+    
         <entry>
         <title>Tips for using the Windows Command Line effectively</title>
         <link rel="alternate" type="text/html" href="https://fuqua.io/blog/2021/05/tips-for-using-the-windows-command-line-effectively/" />
@@ -1153,6 +1214,7 @@ nnoremap cia :vsc Refactor.ReorderParameters&amp;lt;cr&amp;gt;
         <id>tag:fuqua.io/blog,2017-01-02:/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7</id>
         <updated>2017-01-01T17:00:00Z</updated>
         <category term="csharp" />
+        <category term="linq" />
         
         <author>
             <name>Will Fuqua</name>
@@ -2270,99 +2332,6 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 &lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; curl -X &lt;span class=&#34;caps&#34;&gt;DELETE&lt;/span&gt; http://localhost:3000/api/todos/1
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We now have a simple &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; over a relational database. We can manage our database schema using Lobos migrations, and query our database using elegant, idiomatic Clojure via&amp;nbsp;Korma.&lt;/p&gt;
-&lt;/div&gt;
-</content>
-    </entry>
-    
-        <entry>
-        <title>Acrylamid with virtualenv and pip</title>
-        <link rel="alternate" type="text/html" href="https://fuqua.io/blog/2013/09/acrylamid-with-virtualenv-and-pip/" />
-        <id>tag:fuqua.io/blog,2013-09-10:/2013/09/acrylamid-with-virtualenv-and-pip</id>
-        <updated>2013-09-09T17:00:00Z</updated>
-        <category term="acrylamid" />
-        <category term="blog" />
-        <category term="python" />
-        <category term="virtualenv" />
-        
-        <author>
-            <name>Will Fuqua</name>
-            <uri>https://fuqua.io/blog/</uri>
-            <email>info@example.com</email>
-        </author>
-        <content type="html">&lt;p&gt;Every two years or so, I decide that I should probably have a tech blog, even if it&amp;#8217;s just a place for me to post notes on languages and systems I&amp;#8217;m experimenting with.
-That time has rolled around again, so I spent some time playing with &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/&#34;&gt;Acrylamid&lt;/a&gt;, a &lt;em&gt;static blog generator&lt;/em&gt; written in Python. From Acrylamid&amp;#8217;s&amp;nbsp;website:&lt;/p&gt;
-&lt;blockquote&gt;
-With Acrylamid you can write your weblog entries with your editor of choice in Markdown, reStructuredText or textile. With several content filters you can pimp your &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; (typography, math, hyphenation). Acrylamid provides a very sophisticated &lt;span class=&#34;caps&#34;&gt;CLI&lt;/span&gt; and integrates perfectly with any DVCes. It generates completely static &lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt; you can host everywhere.&lt;/blockquote&gt;
-&lt;p&gt;As of September 2013, the Acrylamid website recommends using the older easy_install installation method, but I much prefer to use a standard virtualenv/pip-based setup. I&amp;#8217;ve detailed the installation and configuration steps&amp;nbsp;below.&lt;/p&gt;
-&lt;div class=&#34;section&#34; id=&#34;up-and-running&#34;&gt;
-&lt;h3&gt;Up and&amp;nbsp;Running&lt;/h3&gt;
-&lt;p&gt;The first thing we need to do is install &lt;a class=&#34;reference external&#34; href=&#34;https://pypi.python.org/pypi/virtualenv&#34;&gt;virtualenv&lt;/a&gt;. You can find the virtualenv command in your &lt;span class=&#34;caps&#34;&gt;OS&lt;/span&gt;&amp;#8217;s repositories. Make sure you get the Python2 version, as Acrylamid is a Python2&amp;nbsp;application.&lt;/p&gt;
-&lt;p&gt;After we have virtualenv installed, let&amp;#8217;s use it to create our empty Python virtual&amp;nbsp;environment:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; virtualenv2 blog-project
-&lt;span class=&#34;go&#34;&gt;New python executable in blog-project/bin/python2&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;Also creating executable in blog-project/bin/python&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;Installing setuptools............done.&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;Installing pip...............done.&lt;/span&gt;
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; blog-project
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; bin/activate
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If you&amp;#8217;re not familiar with Python virtual environments, all we&amp;#8217;re doing here is creating a directory (called &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt;) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are installed into the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt; directory, and not system-wide. When we source the &lt;tt class=&#34;docutils literal&#34;&gt;bin/activate&lt;/tt&gt; script it modifies the &lt;tt class=&#34;docutils literal&#34;&gt;$&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;&lt;/tt&gt; variable to point to the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;blog-project&lt;/span&gt;&lt;/tt&gt; Python libraries. This &lt;tt class=&#34;docutils literal&#34;&gt;$&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;&lt;/tt&gt; modification only lasts for the duration of your terminal&amp;nbsp;session.&lt;/p&gt;
-&lt;p&gt;Now, let&amp;#8217;s install Acrylamid and create our blog. For more information on what&amp;#8217;s going on here, check out Acrylamid&amp;#8217;s &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/usage.html&#34;&gt;getting started guide&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install acrylamid
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; acrylamid init myblog
-&lt;span class=&#34;go&#34;&gt;create  myblog/content/sample-entry.txt&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  myblog/theme/base.html&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  myblog/theme/main.html&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  myblog/theme/entry.html&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  myblog/theme/articles.html&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  myblog/theme/atom.xml&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  myblog/theme/rss.xml&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  myblog/theme/style.css&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;create  myblog/conf.py&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;Created your fresh new blog at &amp;#39;myblog&amp;#39;. Enjoy!&lt;/span&gt;
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; acrylamid autocompile
-&lt;span class=&#34;go&#34;&gt;* Running on http://127.0.0.1:8000/&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;At this point we have a fully-functioning static blog served up on port 8000! Next step?&amp;nbsp;Configuration!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;section&#34; id=&#34;adding-some-flare&#34;&gt;
-&lt;h3&gt;Adding some&amp;nbsp;Flare&lt;/h3&gt;
-&lt;p&gt;Acrylamid has great, in-depth &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/conf.py.html&#34;&gt;configuration documentation&lt;/a&gt;. There are a couple of filters and modules we can install via pip into our virtualenv&amp;nbsp;environment:&lt;/p&gt;
-&lt;div class=&#34;section&#34; id=&#34;restructuredtext&#34;&gt;
-&lt;h4&gt;reStructuredText&lt;/h4&gt;
-&lt;p&gt;Acrylamid uses Markdown by default for the authoring of blog posts. However, the &lt;a class=&#34;reference external&#34; href=&#34;http://en.wikipedia.org/wiki/Markdown&#34;&gt;reStructuredText&lt;/a&gt; filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to reStructuredText by installing the docutils&amp;nbsp;package:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install docutils
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Now, find the filters list in &lt;tt class=&#34;docutils literal&#34;&gt;conf.py&lt;/tt&gt; and replace Markdown with&amp;nbsp;reStructuredText:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;&lt;span class=&#34;caps&#34;&gt;FILTERS&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;reStructuredText&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;hyphenate&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;section&#34; id=&#34;syntax-highlighting&#34;&gt;
-&lt;h4&gt;Syntax&amp;nbsp;Highlighting&lt;/h4&gt;
-&lt;p&gt;We can add code syntax highlighting to our blog by installing &lt;a class=&#34;reference external&#34; href=&#34;http://pygments.org/&#34;&gt;Pygments&lt;/a&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install pygments
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; classes to individual tokens. To designate a code-block in reStructuredText, use the&amp;nbsp;syntax:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;..&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;code-block&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;::&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;python&lt;/span&gt;
-
-    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
-        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;foo&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We&amp;#8217;ll want to grab a Pygments theme, which is just a &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; file. Phil Tysoe has a good &lt;a class=&#34;reference external&#34; href=&#34;http://igniteflow.com/pygments/themes/&#34;&gt;list of themes&lt;/a&gt; on his blog, though we need to rename the wrapper class from &lt;tt class=&#34;docutils literal&#34;&gt;codehilite&lt;/tt&gt; to the class that Acrylamid uses, &lt;tt class=&#34;docutils literal&#34;&gt;highlight&lt;/tt&gt;. Include the &lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt; file in your Acrylamid&amp;nbsp;theme.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;section&#34; id=&#34;advanced-typography&#34;&gt;
-&lt;h4&gt;Advanced&amp;nbsp;Typography&lt;/h4&gt;
-&lt;p&gt;Since we&amp;#8217;re authoring our blog in a text editor, it can be challenging to include proper punctuation like em/en dashes and ellipses. To fix this we can enable the &amp;#8216;typography&amp;#8217; filter, which will add these typographical flares to our text. For example, it replaces three periods with an ellipsis, and replaces two hyphens with an en&amp;nbsp;dash.&lt;/p&gt;
-&lt;p&gt;All we have to do is install the smartypants module, and add the filter to our &lt;tt class=&#34;docutils literal&#34;&gt;conf.py&lt;/tt&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; pip install smartypants
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;&lt;span class=&#34;caps&#34;&gt;FILTERS&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;reStructuredText&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;hyphenate&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;typography&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;h1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;section&#34; id=&#34;what-s-next&#34;&gt;
-&lt;h3&gt;What&amp;#8217;s&amp;nbsp;next?&lt;/h3&gt;
-&lt;p&gt;I&amp;#8217;ve covered a few of the more interesting Acrylamid customization options and Python modules, but there are many, many more. Take a look at the &lt;a class=&#34;reference external&#34; href=&#34;http://posativ.org/acrylamid/filters.html&#34;&gt;Acrylamid filter documentation&lt;/a&gt; for an exhaustive&amp;nbsp;list!&lt;/p&gt;
 &lt;/div&gt;
 </content>
     </entry>
