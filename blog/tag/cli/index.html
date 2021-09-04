@@ -38,47 +38,23 @@
     </ul>
 </nav>
 <article>
-    <h1>Level up your VsVim</h1>
-    
-
-<p>If you're like me, you installed Visual Studio, installed <a class="reference external" href="https://github.com/jaredpar/VsVim">VsVim</a>, and then happily started coding. However, did you know that Visual Studio's semantic understanding and manipulation of your code is exposed to VsVim?</p>
-<p>For example, you might already know that pressing <tt class="docutils literal">gd</tt> in VsVim will &quot;go to the definition&quot; of a method. But what if we want to &quot;go to the implementation&quot; e.g. through an interface to the underlying concrete method? The standard <tt class="docutils literal"><span class="pre">Ctrl-F12</span></tt> requires some contortions, and maybe requires glancing down at your keyboard.</p>
-<p>It's easy to fix this; just add this mapping to your <tt class="docutils literal">~\_vsvimrc</tt>:</p>
-<div class="highlight"><pre><span></span>map gi :vsc Edit.GoToImplementation&lt;CR&gt;
-</pre></div>
-<p>Let's break this <span>&#8230;<a href="/blog/2017/08/level-up-your-vsvim/" class="continue">continue</a>.</span></p>
+    <h1>Enabling Command Line Completions with dotnet-suggest</h1>
+    <p>I recently removed the hand-written command line parser from <a class="reference external" href="https://github.com/waf/CSharpRepl">C# <span class="caps">REPL</span></a> and replaced it with the more standard System.CommandLine NuGet package. As part of this, it gained dotnet-suggest support. I couldn&#8217;t find much online discussion about dotnet-suggest, so I&#8217;m jotting down some notes&nbsp;here.</p>
+<p>There are two parts to&nbsp;dotnet-suggest:</p>
+<ul class="simple">
+<li>As an end-user, we configure our shell to enable dotnet-suggest shell&nbsp;completions.</li>
+<li>As a developer, we use System.CommandLine to provide rich completions to our end&nbsp;users.</li>
+</ul>
+<p>We&#8217;ll be covering both parts in this blog post, as well as how it all works under the hood. At the end, we&#8217;ll look at an interesting way all this functionality is <span>&#8230;<a href="/blog/2021/09/enabling-command-line-completions-with-dotnet-suggest/" class="continue">continue</a>.</span></p>
     <div class="tags">
         
             tagged as
                 <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
-                <a href="/blog/tag/vim/" rel="tag">vim</a>
+                <a href="/blog/tag/dotnet/" rel="tag">dotnet</a>,
+                <a href="/blog/tag/cli/" rel="tag">cli</a>
                     and
                     
-                <a href="/blog/tag/visual-studio/" rel="tag">visual-studio</a>
-                
-        
-    </div>
-    
-</article>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>Vim Presentation</h1>
-    <p>I recently gave a presentation on thinking in vim, which tries to bring people to that &quot;Aha!&quot; moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is useful!</p>
-<iframe style="width:100%" src="https://docs.google.com/presentation/d/1WzjWgKrrlN0BRnP0a99jomsnNX2xRUhvCSVLVWFfpyw/embed?start=false&amp;loop=false&amp;delayms=60000" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
-    <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/vim/" rel="tag">vim</a>
-                    and
-                    
-                <a href="/blog/tag/presentation/" rel="tag">presentation</a>
+                <a href="/blog/tag/csharprepl/" rel="tag">csharprepl</a>
                 
         
     </div>

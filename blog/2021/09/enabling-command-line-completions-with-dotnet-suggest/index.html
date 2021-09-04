@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>Enabling Command Line Completions with dotnet-suggest</title>
+        <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
+        <link media="all" href="/blog/style/main.css" rel="stylesheet" />
+        <link href="/favicon.ico" rel="shortcut icon" />
+        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
+        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
+        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-38553935-1']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    <meta name="description" content="I recently removed the hand-written command line p..." />
+    <meta name="keywords" content="csharp, dotnet, cli, csharprepl" />
+    </head>
+    <body>
+        <header>
+            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        </header>
+        
+        <nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+<article>
+    <h1>Enabling Command Line Completions with dotnet-suggest</h1>
+    <p>I recently removed the hand-written command line parser from <a class="reference external" href="https://github.com/waf/CSharpRepl">C# <span class="caps">REPL</span></a> and replaced it with the more standard System.CommandLine NuGet package. As part of this, it gained dotnet-suggest support. I couldn&#8217;t find much online discussion about dotnet-suggest, so I&#8217;m jotting down some notes&nbsp;here.</p>
+<p>There are two parts to&nbsp;dotnet-suggest:</p>
+<ul class="simple">
+<li>As an end-user, we configure our shell to enable dotnet-suggest shell&nbsp;completions.</li>
+<li>As a developer, we use System.CommandLine to provide rich completions to our end&nbsp;users.</li>
+</ul>
+<p>We&#8217;ll be covering both parts in this blog post, as well as how it all works under the hood. At the end, we&#8217;ll look at an interesting way all this functionality is used (or abused?) in C#&nbsp;<span class="caps">REPL</span>.</p>
+<div class="section" id="why-would-we-want-to-enable-dotnet-suggest">
+<h2>Why would we want to enable&nbsp;dotnet-suggest?</h2>
+<p>By configuring our system to take advantage of dotnet-suggest, we&#8217;ll unlock automatic command line completion for applications built with System.CommandLine. Quite a few applications in the dotnet ecosystem are built with System.CommandLine, and it&#8217;s especially prevalent in dotnet global tools. It&#8217;s cross-platform and works across Windows, Mac <span class="caps">OS</span>, and&nbsp;Linux.</p>
+<p>For example, say we&#8217;re using the <tt class="docutils literal"><span class="pre">dotnet-trace</span></tt> tool to gather performance traces of a running process. If we&#8217;ve configured dotnet-suggest in our shell, we get the following&nbsp;experience:</p>
+<video controls style="width:100%; border-radius: 4px;">
+    <source src="/img/dotnet-suggest/dotnet-trace-completions.mp4" type="video/mp4">
+    Sorry, the current browser doesn&#8217;t support embedded <span class="caps">MP4</span> videos.
+</video><p>It&#8217;s a nice experience; we have our subcommands, command line flags, and any enumeration values tab-completed for&nbsp;us.</p>
+<p>To enable this, we need to do a quick, one-time configuration of our&nbsp;shell:</p>
+<ol class="arabic">
+<li><p class="first">Install the dotnet-suggest global tool by running the following&nbsp;command:</p>
+<div class="highlight"><pre><span></span><span class="gp">&gt;</span> dotnet tool install -g dotnet-suggest
+</pre></div>
+</li>
+<li><p class="first">Add either <a class="reference external" href="https://github.com/dotnet/command-line-api/blob/main/src/System.CommandLine.Suggest/dotnet-suggest-shim.ps1">this PowerShell snippet</a> or <a class="reference external" href="https://github.com/dotnet/command-line-api/blob/main/src/System.CommandLine.Suggest/dotnet-suggest-shim.bash">this Bash snippet</a> to our shell configuration file. In PowerShell, our shell configuration file path is available in the <tt class="docutils literal">$profile</tt> variable, and for Bash or <span class="caps">ZSH</span> it&#8217;s <tt class="docutils literal"><span class="pre">~/.bash_profile</span></tt> or <tt class="docutils literal"><span class="pre">~/.zshrc</span></tt>,&nbsp;respectively.</p>
+</li>
+</ol>
+<p>And we&#8217;re done! When we use applications written with System.CommandLine, like <a class="reference external" href="https://github.com/waf/CSharpRepl">C# <span class="caps">REPL</span></a> and <a class="reference external" href="https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace">dotnet-trace</a>, we can enjoy a first-rate tab completion&nbsp;experience.</p>
+<p>Next, we&#8217;ll look at how to add dotnet-suggest support to our own tools. Spoiler, it&#8217;s&nbsp;trivial.</p>
+</div>
+<div class="section" id="using-system-commandline-and-dotnet-suggest-as-a-developer">
+<h2>Using System.CommandLine and dotnet-suggest as a&nbsp;developer</h2>
+<p>We&#8217;ll be using System.CommandLine to handle our command line parsing. A full tutorial on this library would get a bit lengthy, so we&#8217;ll only cover the very basics needed to add dotnet-suggest support. For a full walkthrough of System.CommandLine, see the <a class="reference external" href="https://github.com/dotnet/command-line-api#readme"><span class="caps">README</span></a>.</p>
+<p>Despite System.CommandLine being around for a while now, it&#8217;s still listed as pre-release, so we&#8217;ll need to install it with the pre-release&nbsp;flag:</p>
+<div class="highlight"><pre><span></span><span class="gp">&gt;</span> dotnet add package System.CommandLine --prerelease
+</pre></div>
+<p>Next, we&#8217;ll use System.CommandLine in our application to define and parse our application&#8217;s command line&nbsp;arguments:</p>
+<ol class="arabic simple">
+<li>Define a root command and its&nbsp;options.</li>
+<li>Optionally define subcommands. This is useful when there are different sets of command line options. Using Git as an example, <tt class="docutils literal">git</tt> is a root command, and <tt class="docutils literal">git clone</tt> is a sub-command that takes a different set of&nbsp;options.</li>
+<li>Pass your root command to a <tt class="docutils literal">CommandLineBuilder</tt>, which provides a fluent way to add functionality to your command. It can autogenerate <tt class="docutils literal"><span class="pre">--help</span></tt> and <tt class="docutils literal"><span class="pre">--version</span></tt> commands, as well as set up dotnet-suggest&nbsp;integration.</li>
+<li>Define a callback that will invoke your app; the parameters of the callback correspond with the command line options you defined in Step&nbsp;1.</li>
+<li>Invoke the root command, providing the args supplied to your&nbsp;program.</li>
+</ol>
+<p>A simple yet fully-working application might look like the following. It has autogenerated help and full dotnet-suggest&nbsp;support:</p>
+<div class="highlight"><pre><span></span><span class="k">using</span> <span class="nn">System.CommandLine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.CommandLine.Builder</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.CommandLine.Invocation</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.CommandLine.Parsing</span><span class="p">;</span>
+
+<span class="c1">// define our 3 command line parameters.</span>
+<span class="c1">// the command can be invoked like MyApp --animal Cat --Emotion Normal &quot;Hello&quot;</span>
+<span class="kt">var</span> <span class="n">rootCommand</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RootCommand</span><span class="p">(</span><span class="s">&quot;a little greeter app&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">new</span> <span class="n">Option</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span><span class="s">&quot;--animal&quot;</span><span class="p">,</span>
+        <span class="n">getDefaultValue</span><span class="p">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="s">&quot;Cat&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="s">&quot;Which animal should say the message&quot;</span>
+    <span class="p">)</span>
+    <span class="c1">// we have suggestions for the animal, but do not constrain</span>
+    <span class="c1">// it to only these options. We could also pass a function</span>
+    <span class="c1">// to dynamically generate the suggestions.</span>
+    <span class="p">.</span><span class="n">AddSuggestions</span><span class="p">(</span><span class="s">&quot;Cat&quot;</span><span class="p">,</span> <span class="s">&quot;Dog&quot;</span><span class="p">,</span> <span class="s">&quot;Velociraptor&quot;</span><span class="p">),</span>
+
+    <span class="c1">// by using an enum, we constrain the options. We could also use</span>
+    <span class="c1">// FromAmong(), similar to AddSuggestions() above, if we wanted</span>
+    <span class="c1">// to use Strings instead of an Enum</span>
+    <span class="k">new</span> <span class="n">Option</span><span class="p">&lt;</span><span class="n">Emotion</span><span class="p">&gt;(</span><span class="s">&quot;--emotion&quot;</span><span class="p">,</span>
+        <span class="n">getDefaultValue</span><span class="p">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Emotion</span><span class="p">.</span><span class="n">Normal</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="s">&quot;How excited they should be when saying the message&quot;</span>
+    <span class="p">),</span>
+
+    <span class="c1">// This is a positional argument; no command line flag is required.</span>
+    <span class="k">new</span> <span class="n">Argument</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span>
+        <span class="s">&quot;Message&quot;</span><span class="p">,</span>
+        <span class="n">getDefaultValue</span><span class="p">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="s">&quot;Hello&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="s">&quot;The message to say&quot;</span>
+    <span class="p">)</span>
+<span class="p">};</span>
+
+<span class="c1">// define our actual application. The callback arguments match the</span>
+<span class="c1">// options and arguments defined above.</span>
+<span class="n">rootCommand</span><span class="p">.</span><span class="n">Handler</span> <span class="p">=</span> <span class="n">CommandHandler</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span>
+    <span class="p">(</span><span class="kt">string</span> <span class="n">animal</span><span class="p">,</span> <span class="n">Emotion</span> <span class="n">emotion</span><span class="p">,</span> <span class="kt">string</span> <span class="n">message</span><span class="p">)</span> <span class="p">=&gt;</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">output</span> <span class="p">=</span> <span class="err">$</span><span class="s">@&quot;The {animal} says {message}&quot;</span>
+            <span class="p">+</span> <span class="n">emotion</span> <span class="k">switch</span>
+            <span class="p">{</span>
+                <span class="n">Emotion</span><span class="p">.</span><span class="n">Normal</span> <span class="p">=&gt;</span> <span class="s">&quot;.&quot;</span><span class="p">,</span>
+                <span class="n">Emotion</span><span class="p">.</span><span class="n">Excited</span> <span class="p">=&gt;</span> <span class="s">&quot;!&quot;</span><span class="p">,</span>
+                <span class="n">Emotion</span><span class="p">.</span><span class="n">Ecstatic</span> <span class="p">=&gt;</span> <span class="s">&quot;!!!!!!!!!!&quot;</span>
+            <span class="p">};</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">output</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">);</span>
+
+<span class="c1">// set up common functionality like --help, --version, and dotnet-suggest support</span>
+<span class="kt">var</span> <span class="n">commandLine</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CommandLineBuilder</span><span class="p">(</span><span class="n">rootCommand</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">UseDefaults</span><span class="p">()</span> <span class="c1">// automatically configures dotnet-suggest</span>
+    <span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+
+<span class="c1">// invokes our handler callback and actually runs our application</span>
+<span class="k">await</span> <span class="n">commandLine</span><span class="p">.</span><span class="n">InvokeAsync</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+
+<span class="k">enum</span> <span class="n">Emotion</span>
+<span class="p">{</span>
+    <span class="n">Normal</span><span class="p">,</span> <span class="n">Excited</span><span class="p">,</span> <span class="n">Ecstatic</span>
+<span class="p">}</span>
+</pre></div>
+<p>The first time we run this program, the program will register itself with dotnet-suggest. Subsequent terminal windows will then be able to take advantage of the dotnet-suggest support automatically, assuming we&#8217;ve done the shell setup earlier in this&nbsp;post.</p>
+<p>From a development perspective, we&#8217;re done! That&#8217;s all we have to do to enable dotnet-suggest in our application. For the remainder of this blog post, we&#8217;ll look into what&#8217;s going on &quot;under the&nbsp;hood.&quot;</p>
+</div>
+<div class="section" id="how-dotnet-suggest-works">
+<h2>How dotnet-suggest&nbsp;works</h2>
+<p>Ultimately, dotnet-suggest uses shell-specific functionality to provide its autocompletions. In PowerShell, for example, it uses <tt class="docutils literal"><span class="pre">Register-ArgumentCompleter</span></tt>. In this section, we&#8217;ll see how dotnet-suggest determines the completions it provides to these shell-specific hooks, but we won&#8217;t actually go into the shell-specific&nbsp;functionality.</p>
+<p>In our above program, we called <tt class="docutils literal">.UseDefaults()</tt>. This function in turn called the following two functions (among&nbsp;others):</p>
+<div class="highlight"><pre><span></span><span class="p">.</span><span class="n">RegisterWithDotnetSuggest</span><span class="p">()</span>
+<span class="p">.</span><span class="n">UseSuggestDirective</span><span class="p">()</span>
+</pre></div>
+<p>Once we understand both these functions, we&#8217;ll fully understand how dotnet-suggest&nbsp;works!</p>
+<p><strong>RegisterWithDotnetSuggest()</strong></p>
+<p>As the name implies, this line will register our application with dotnet-suggest. Applications that are .<span class="caps">NET</span> Global Tools will be automatically discovered (by nature of being in the .<span class="caps">NET</span> Global Tool installation directory), but this line is needed when running our own binaries elsewhere on the&nbsp;filesystem.</p>
+<p>Registration happens by writing to the <tt class="docutils literal"><span class="pre">~/.dotnet-suggest-registration.txt</span></tt> file. This file is simply a list of executables and their paths. It&#8217;s read by the code snippet we put in our shell profile, so dotnet-suggest doesn&#8217;t try to autocomplete every application on our system; only the ones that actually support&nbsp;it.</p>
+<p>This registration only happens once; when registration is complete a file will be written to our filesystem, and future registrations will be skipped if this file already exists. On Windows, this file is in <tt class="docutils literal"><span class="pre">~/AppData/Local/Temp/system-commandline-sentinel-files</span></tt>. More generally, it&#8217;s in the path returned by <tt class="docutils literal">Path.GetTempPath()</tt>.</p>
+<p><strong>UseSuggestDirective()</strong></p>
+<p>This function allows dotnet-suggest to query our application for available commandline options. dotnet-suggest will send queries to our application as special command line parameters, and our application responds by writing to stdout (i.e. it uses&nbsp;Console.WriteLine).</p>
+<p>We can see how this works by pretending to be dotnet-suggest and sending our own command line parameter queries. We&#8217;ll use what System.CommandLine calls a &quot;directive&quot; which is just a keyword surrounded by square brackets, used as in-band&nbsp;signalling:</p>
+<div class="highlight"><pre><span></span><span class="gp">&gt;</span> .<span class="se">\M</span>yApp.exe <span class="o">[</span>suggest<span class="o">]</span>
+<span class="go">--animal</span>
+<span class="go">--emotion</span>
+<span class="go">--help</span>
+<span class="go">--version</span>
+<span class="go">-?</span>
+<span class="go">-h</span>
+<span class="go">/?</span>
+<span class="go">/h</span>
+</pre></div>
+<p>We sent the <tt class="docutils literal">[suggest]</tt> directive, and our application returned the list of supported command line parameters. This is why we needed to implement our program as a callback function, so System.CommandLine could &quot;own&quot; the pipeline, and insert its own&nbsp;middleware.</p>
+<p>We can also test completing substrings. Here, we&#8217;ll ask for completions of the string &quot;<tt class="docutils literal"><span class="pre">--</span></tt>&quot; when our caret position is at index&nbsp;2:</p>
+<div class="highlight"><pre><span></span><span class="gp">&gt;</span> .<span class="se">\M</span>yApp.exe <span class="o">[</span>suggest:2<span class="o">]</span> <span class="s2">&quot;--&quot;</span>
+<span class="go">--animal</span>
+<span class="go">--emotion</span>
+<span class="go">--help</span>
+<span class="go">--version</span>
+</pre></div>
+<p>Asking for option values works the same way; here we typed <tt class="docutils literal"><span class="pre">--animal</span></tt> and the only completion that makes sense would be the required type of&nbsp;animal:</p>
+<div class="highlight"><pre><span></span><span class="gp">&gt;</span> .<span class="se">\M</span>yApp.exe <span class="o">[</span>suggest:9<span class="o">]</span> <span class="s2">&quot;--animal &quot;</span>
+<span class="go">Cat</span>
+<span class="go">Dog</span>
+<span class="go">Velociraptor</span>
+</pre></div>
+<p>So, that about sums up how dotnet-suggest works. We register our application (or it&#8217;s auto registered), dotnet-suggest queries our application for available completions, and then uses our shell&#8217;s tab completion facility to supply these when we&#8217;re&nbsp;typing.</p>
+</div>
+<div class="section" id="a-fun-use-of-dotnet-suggest-in-c-repl">
+<h2>A fun use of dotnet-suggest in C#&nbsp;<span class="caps">REPL</span></h2>
+<p>The fact that dotnet-suggest will query our application for each tab completion request is pretty cool; it unlocks some interesting&nbsp;possibilities.</p>
+<p>One neat usage in C# <span class="caps">REPL</span> is for the <tt class="docutils literal"><span class="pre">--using</span></tt> command line parameter. This parameter allows you to supply one or more C# namespaces to be included on startup of the <span class="caps">REPL</span>. For example, you might want to start the <span class="caps">REPL</span> with both <tt class="docutils literal">System.Collections.Immutable</tt> and <tt class="docutils literal">System.<span class="caps">IO</span>.Pipes</tt>. Since we can define a delegate to supply suggestions, we can easily allow tab completion of .<span class="caps">NET</span> namespaces from the command&nbsp;line!</p>
+<video controls style="width:100%; border-radius: 4px;">
+    <source src="/img/dotnet-suggest/csharprepl-completions.mp4" type="video/mp4">
+    Sorry, the current browser doesn&#8217;t support embedded <span class="caps">MP4</span> videos.
+</video><p>Another place I found it useful was for the <tt class="docutils literal"><span class="pre">--framework</span></tt> command line option; this parameter needs to be a <a class="reference external" href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/metapackage-app?view=aspnetcore-5.0">.<span class="caps">NET</span> Shared Framework</a> that is installed on the local computer. Rather than making the user go figure out what shared frameworks are locally installed, C# <span class="caps">REPL</span> can simply query on behalf of the user, and allow them to be easily&nbsp;tab-completed.</p>
+</div>
+
+    <div class="tags">
+        
+            tagged as
+                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
+                <a href="/blog/tag/dotnet/" rel="tag">dotnet</a>,
+                <a href="/blog/tag/cli/" rel="tag">cli</a>
+                    and
+                    
+                <a href="/blog/tag/csharprepl/" rel="tag">csharprepl</a>
+                
+        
+    </div>
+    
+        <div id="comments"></div>
+        <script src="/blog/script/comments.js?issue=6"></script>
+    
+</article>
+        <div class="pager">
+        
+            <a href="/blog/2021/08/analyzing-code-quality-with-linq-and-ndepend/" class="prev">
+            Analyzing Code Quality with LINQ and ... &#x21DD;
+            </a>
+        
+        
+        </div>
+<script src="/blog/script/list.min.js"></script>
+    </body>
+</html>

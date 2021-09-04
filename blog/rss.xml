@@ -5,9 +5,175 @@
         <link>https://fuqua.io/blog/</link>
         <description></description>
         <language>en</language>
-        <pubDate>Sun, 29 Aug 2021 17:00:00 GMT</pubDate>
+        <pubDate>Fri, 03 Sep 2021 17:00:00 GMT</pubDate>
         <docs>https://fuqua.io/blog/rss.xml</docs>
         <generator>acrylamid 0.7.10</generator>
+        
+            <item>
+        <title>Enabling Command Line Completions with dotnet-suggest</title>
+        <link>https://fuqua.io/blog/2021/09/enabling-command-line-completions-with-dotnet-suggest/</link>
+        <description>&lt;p&gt;I recently removed the hand-written command line parser from &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/CSharpRepl&#34;&gt;C# &lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt;&lt;/a&gt; and replaced it with the more standard System.CommandLine NuGet package. As part of this, it gained dotnet-suggest support. I couldn&amp;#8217;t find much online discussion about dotnet-suggest, so I&amp;#8217;m jotting down some notes&amp;nbsp;here.&lt;/p&gt;
+&lt;p&gt;There are two parts to&amp;nbsp;dotnet-suggest:&lt;/p&gt;
+&lt;ul class=&#34;simple&#34;&gt;
+&lt;li&gt;As an end-user, we configure our shell to enable dotnet-suggest shell&amp;nbsp;completions.&lt;/li&gt;
+&lt;li&gt;As a developer, we use System.CommandLine to provide rich completions to our end&amp;nbsp;users.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We&amp;#8217;ll be covering both parts in this blog post, as well as how it all works under the hood. At the end, we&amp;#8217;ll look at an interesting way all this functionality is used (or abused?) in C#&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt;.&lt;/p&gt;
+&lt;div class=&#34;section&#34; id=&#34;why-would-we-want-to-enable-dotnet-suggest&#34;&gt;
+&lt;h3&gt;Why would we want to enable&amp;nbsp;dotnet-suggest?&lt;/h3&gt;
+&lt;p&gt;By configuring our system to take advantage of dotnet-suggest, we&amp;#8217;ll unlock automatic command line completion for applications built with System.CommandLine. Quite a few applications in the dotnet ecosystem are built with System.CommandLine, and it&amp;#8217;s especially prevalent in dotnet global tools. It&amp;#8217;s cross-platform and works across Windows, Mac &lt;span class=&#34;caps&#34;&gt;OS&lt;/span&gt;, and&amp;nbsp;Linux.&lt;/p&gt;
+&lt;p&gt;For example, say we&amp;#8217;re using the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;dotnet-trace&lt;/span&gt;&lt;/tt&gt; tool to gather performance traces of a running process. If we&amp;#8217;ve configured dotnet-suggest in our shell, we get the following&amp;nbsp;experience:&lt;/p&gt;
+&lt;video controls style=&#34;width:100%; border-radius: 4px;&#34;&gt;
+    &lt;source src=&#34;/img/dotnet-suggest/dotnet-trace-completions.mp4&#34; type=&#34;video/mp4&#34;&gt;
+    Sorry, the current browser doesn&amp;#8217;t support embedded &lt;span class=&#34;caps&#34;&gt;MP4&lt;/span&gt; videos.
+&lt;/video&gt;&lt;p&gt;It&amp;#8217;s a nice experience; we have our subcommands, command line flags, and any enumeration values tab-completed for&amp;nbsp;us.&lt;/p&gt;
+&lt;p&gt;To enable this, we need to do a quick, one-time configuration of our&amp;nbsp;shell:&lt;/p&gt;
+&lt;ol class=&#34;arabic&#34;&gt;
+&lt;li&gt;&lt;p class=&#34;first&#34;&gt;Install the dotnet-suggest global tool by running the following&amp;nbsp;command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; dotnet tool install -g dotnet-suggest
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class=&#34;first&#34;&gt;Add either &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/dotnet/command-line-api/blob/main/src/System.CommandLine.Suggest/dotnet-suggest-shim.ps1&#34;&gt;this PowerShell snippet&lt;/a&gt; or &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/dotnet/command-line-api/blob/main/src/System.CommandLine.Suggest/dotnet-suggest-shim.bash&#34;&gt;this Bash snippet&lt;/a&gt; to our shell configuration file. In PowerShell, our shell configuration file path is available in the &lt;tt class=&#34;docutils literal&#34;&gt;$profile&lt;/tt&gt; variable, and for Bash or &lt;span class=&#34;caps&#34;&gt;ZSH&lt;/span&gt; it&amp;#8217;s &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;~/.bash_profile&lt;/span&gt;&lt;/tt&gt; or &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;~/.zshrc&lt;/span&gt;&lt;/tt&gt;,&amp;nbsp;respectively.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;And we&amp;#8217;re done! When we use applications written with System.CommandLine, like &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/waf/CSharpRepl&#34;&gt;C# &lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt;&lt;/a&gt; and &lt;a class=&#34;reference external&#34; href=&#34;https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace&#34;&gt;dotnet-trace&lt;/a&gt;, we can enjoy a first-rate tab completion&amp;nbsp;experience.&lt;/p&gt;
+&lt;p&gt;Next, we&amp;#8217;ll look at how to add dotnet-suggest support to our own tools. Spoiler, it&amp;#8217;s&amp;nbsp;trivial.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;using-system-commandline-and-dotnet-suggest-as-a-developer&#34;&gt;
+&lt;h3&gt;Using System.CommandLine and dotnet-suggest as a&amp;nbsp;developer&lt;/h3&gt;
+&lt;p&gt;We&amp;#8217;ll be using System.CommandLine to handle our command line parsing. A full tutorial on this library would get a bit lengthy, so we&amp;#8217;ll only cover the very basics needed to add dotnet-suggest support. For a full walkthrough of System.CommandLine, see the &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/dotnet/command-line-api#readme&#34;&gt;&lt;span class=&#34;caps&#34;&gt;README&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Despite System.CommandLine being around for a while now, it&amp;#8217;s still listed as pre-release, so we&amp;#8217;ll need to install it with the pre-release&amp;nbsp;flag:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; dotnet add package System.CommandLine --prerelease
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Next, we&amp;#8217;ll use System.CommandLine in our application to define and parse our application&amp;#8217;s command line&amp;nbsp;arguments:&lt;/p&gt;
+&lt;ol class=&#34;arabic simple&#34;&gt;
+&lt;li&gt;Define a root command and its&amp;nbsp;options.&lt;/li&gt;
+&lt;li&gt;Optionally define subcommands. This is useful when there are different sets of command line options. Using Git as an example, &lt;tt class=&#34;docutils literal&#34;&gt;git&lt;/tt&gt; is a root command, and &lt;tt class=&#34;docutils literal&#34;&gt;git clone&lt;/tt&gt; is a sub-command that takes a different set of&amp;nbsp;options.&lt;/li&gt;
+&lt;li&gt;Pass your root command to a &lt;tt class=&#34;docutils literal&#34;&gt;CommandLineBuilder&lt;/tt&gt;, which provides a fluent way to add functionality to your command. It can autogenerate &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;--help&lt;/span&gt;&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;--version&lt;/span&gt;&lt;/tt&gt; commands, as well as set up dotnet-suggest&amp;nbsp;integration.&lt;/li&gt;
+&lt;li&gt;Define a callback that will invoke your app; the parameters of the callback correspond with the command line options you defined in Step&amp;nbsp;1.&lt;/li&gt;
+&lt;li&gt;Invoke the root command, providing the args supplied to your&amp;nbsp;program.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;A simple yet fully-working application might look like the following. It has autogenerated help and full dotnet-suggest&amp;nbsp;support:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;System.CommandLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;System.CommandLine.Builder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;System.CommandLine.Invocation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;System.CommandLine.Parsing&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// define our 3 command line parameters.&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;// the command can be invoked like MyApp --animal Cat --Emotion Normal &amp;quot;Hello&amp;quot;&lt;/span&gt;
+&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rootCommand&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RootCommand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;a little greeter app&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Option&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;--animal&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;getDefaultValue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Cat&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Which animal should say the message&amp;quot;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// we have suggestions for the animal, but do not constrain&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// it to only these options. We could also pass a function&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// to dynamically generate the suggestions.&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AddSuggestions&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Cat&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Dog&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Velociraptor&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// by using an enum, we constrain the options. We could also use&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// FromAmong(), similar to AddSuggestions() above, if we wanted&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// to use Strings instead of an Enum&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Option&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Emotion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;--emotion&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;getDefaultValue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Emotion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Normal&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;How excited they should be when saying the message&amp;quot;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// This is a positional argument; no command line flag is required.&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Argument&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;
+        &lt;span class=&#34;s&#34;&gt;&amp;quot;Message&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;getDefaultValue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Hello&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;The message to say&amp;quot;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// define our actual application. The callback arguments match the&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;// options and arguments defined above.&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;rootCommand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Handler&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CommandHandler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Create&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;animal&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Emotion&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;emotion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;output&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;@&amp;quot;The {animal} says {message}&amp;quot;&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;emotion&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;switch&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;Emotion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Normal&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;.&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;Emotion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Excited&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;!&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;Emotion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Ecstatic&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;!!!!!!!!!!&amp;quot;&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;Console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WriteLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;output&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// set up common functionality like --help, --version, and dotnet-suggest support&lt;/span&gt;
+&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;commandLine&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CommandLineBuilder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rootCommand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UseDefaults&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// automatically configures dotnet-suggest&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Build&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// invokes our handler callback and actually runs our application&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;await&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;commandLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;InvokeAsync&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;enum&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Emotion&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Normal&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Excited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Ecstatic&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The first time we run this program, the program will register itself with dotnet-suggest. Subsequent terminal windows will then be able to take advantage of the dotnet-suggest support automatically, assuming we&amp;#8217;ve done the shell setup earlier in this&amp;nbsp;post.&lt;/p&gt;
+&lt;p&gt;From a development perspective, we&amp;#8217;re done! That&amp;#8217;s all we have to do to enable dotnet-suggest in our application. For the remainder of this blog post, we&amp;#8217;ll look into what&amp;#8217;s going on &amp;quot;under the&amp;nbsp;hood.&amp;quot;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;how-dotnet-suggest-works&#34;&gt;
+&lt;h3&gt;How dotnet-suggest&amp;nbsp;works&lt;/h3&gt;
+&lt;p&gt;Ultimately, dotnet-suggest uses shell-specific functionality to provide its autocompletions. In PowerShell, for example, it uses &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;Register-ArgumentCompleter&lt;/span&gt;&lt;/tt&gt;. In this section, we&amp;#8217;ll see how dotnet-suggest determines the completions it provides to these shell-specific hooks, but we won&amp;#8217;t actually go into the shell-specific&amp;nbsp;functionality.&lt;/p&gt;
+&lt;p&gt;In our above program, we called &lt;tt class=&#34;docutils literal&#34;&gt;.UseDefaults()&lt;/tt&gt;. This function in turn called the following two functions (among&amp;nbsp;others):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RegisterWithDotnetSuggest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UseSuggestDirective&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Once we understand both these functions, we&amp;#8217;ll fully understand how dotnet-suggest&amp;nbsp;works!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;RegisterWithDotnetSuggest()&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;As the name implies, this line will register our application with dotnet-suggest. Applications that are .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Global Tools will be automatically discovered (by nature of being in the .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Global Tool installation directory), but this line is needed when running our own binaries elsewhere on the&amp;nbsp;filesystem.&lt;/p&gt;
+&lt;p&gt;Registration happens by writing to the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;~/.dotnet-suggest-registration.txt&lt;/span&gt;&lt;/tt&gt; file. This file is simply a list of executables and their paths. It&amp;#8217;s read by the code snippet we put in our shell profile, so dotnet-suggest doesn&amp;#8217;t try to autocomplete every application on our system; only the ones that actually support&amp;nbsp;it.&lt;/p&gt;
+&lt;p&gt;This registration only happens once; when registration is complete a file will be written to our filesystem, and future registrations will be skipped if this file already exists. On Windows, this file is in &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;~/AppData/Local/Temp/system-commandline-sentinel-files&lt;/span&gt;&lt;/tt&gt;. More generally, it&amp;#8217;s in the path returned by &lt;tt class=&#34;docutils literal&#34;&gt;Path.GetTempPath()&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;UseSuggestDirective()&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This function allows dotnet-suggest to query our application for available commandline options. dotnet-suggest will send queries to our application as special command line parameters, and our application responds by writing to stdout (i.e. it uses&amp;nbsp;Console.WriteLine).&lt;/p&gt;
+&lt;p&gt;We can see how this works by pretending to be dotnet-suggest and sending our own command line parameter queries. We&amp;#8217;ll use what System.CommandLine calls a &amp;quot;directive&amp;quot; which is just a keyword surrounded by square brackets, used as in-band&amp;nbsp;signalling:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; .&lt;span class=&#34;se&#34;&gt;\M&lt;/span&gt;yApp.exe &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;suggest&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;--animal&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;--emotion&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;--help&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;--version&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;-?&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;-h&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;/?&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;/h&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We sent the &lt;tt class=&#34;docutils literal&#34;&gt;[suggest]&lt;/tt&gt; directive, and our application returned the list of supported command line parameters. This is why we needed to implement our program as a callback function, so System.CommandLine could &amp;quot;own&amp;quot; the pipeline, and insert its own&amp;nbsp;middleware.&lt;/p&gt;
+&lt;p&gt;We can also test completing substrings. Here, we&amp;#8217;ll ask for completions of the string &amp;quot;&lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;--&lt;/span&gt;&lt;/tt&gt;&amp;quot; when our caret position is at index&amp;nbsp;2:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; .&lt;span class=&#34;se&#34;&gt;\M&lt;/span&gt;yApp.exe &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;suggest:2&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;--&amp;quot;&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;--animal&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;--emotion&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;--help&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;--version&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Asking for option values works the same way; here we typed &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;--animal&lt;/span&gt;&lt;/tt&gt; and the only completion that makes sense would be the required type of&amp;nbsp;animal:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; .&lt;span class=&#34;se&#34;&gt;\M&lt;/span&gt;yApp.exe &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;suggest:9&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;--animal &amp;quot;&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;Cat&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;Dog&lt;/span&gt;
+&lt;span class=&#34;go&#34;&gt;Velociraptor&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So, that about sums up how dotnet-suggest works. We register our application (or it&amp;#8217;s auto registered), dotnet-suggest queries our application for available completions, and then uses our shell&amp;#8217;s tab completion facility to supply these when we&amp;#8217;re&amp;nbsp;typing.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;section&#34; id=&#34;a-fun-use-of-dotnet-suggest-in-c-repl&#34;&gt;
+&lt;h3&gt;A fun use of dotnet-suggest in C#&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;The fact that dotnet-suggest will query our application for each tab completion request is pretty cool; it unlocks some interesting&amp;nbsp;possibilities.&lt;/p&gt;
+&lt;p&gt;One neat usage in C# &lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt; is for the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;--using&lt;/span&gt;&lt;/tt&gt; command line parameter. This parameter allows you to supply one or more C# namespaces to be included on startup of the &lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt;. For example, you might want to start the &lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt; with both &lt;tt class=&#34;docutils literal&#34;&gt;System.Collections.Immutable&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;System.&lt;span class=&#34;caps&#34;&gt;IO&lt;/span&gt;.Pipes&lt;/tt&gt;. Since we can define a delegate to supply suggestions, we can easily allow tab completion of .&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; namespaces from the command&amp;nbsp;line!&lt;/p&gt;
+&lt;video controls style=&#34;width:100%; border-radius: 4px;&#34;&gt;
+    &lt;source src=&#34;/img/dotnet-suggest/csharprepl-completions.mp4&#34; type=&#34;video/mp4&#34;&gt;
+    Sorry, the current browser doesn&amp;#8217;t support embedded &lt;span class=&#34;caps&#34;&gt;MP4&lt;/span&gt; videos.
+&lt;/video&gt;&lt;p&gt;Another place I found it useful was for the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;--framework&lt;/span&gt;&lt;/tt&gt; command line option; this parameter needs to be a &lt;a class=&#34;reference external&#34; href=&#34;https://docs.microsoft.com/en-us/aspnet/core/fundamentals/metapackage-app?view=aspnetcore-5.0&#34;&gt;.&lt;span class=&#34;caps&#34;&gt;NET&lt;/span&gt; Shared Framework&lt;/a&gt; that is installed on the local computer. Rather than making the user go figure out what shared frameworks are locally installed, C# &lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt; can simply query on behalf of the user, and allow them to be easily&amp;nbsp;tab-completed.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Fri, 03 Sep 2021 17:00:00 GMT</pubDate>
+        <guid isPermaLink="false">tag:fuqua.io/blog,2021-09-04:/2021/09/enabling-command-line-completions-with-dotnet-suggest</guid>
+    </item>
         
             <item>
         <title>Analyzing Code Quality with LINQ and NDepend</title>
@@ -1898,204 +2064,6 @@ A Datomic database stores a collection of facts. The facts in a database are imm
 </description>
         <pubDate>Fri, 21 Feb 2014 17:00:00 GMT</pubDate>
         <guid isPermaLink="false">tag:fuqua.io/blog,2014-02-22:/2014/02/native-javascript-promises-and-browser-apis</guid>
-    </item>
-        
-            <item>
-        <title>REST APIs and Relational Databases in Clojure</title>
-        <link>https://fuqua.io/blog/2013/12/rest-apis-and-relational-databases-in-clojure/</link>
-        <description>&lt;p&gt;I&amp;#8217;ve found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational&amp;nbsp;databases.&lt;/p&gt;
-&lt;p&gt;In this post we&amp;#8217;ll create a simple &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; for a todo list web application. We&amp;#8217;ll use &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure&#34;&gt;Compojure&lt;/a&gt; to create a &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;, &lt;a class=&#34;reference external&#34; href=&#34;http://budu.github.io/lobos/&#34;&gt;Lobos&lt;/a&gt; to create and manage our database tables, and &lt;a class=&#34;reference external&#34; href=&#34;http://sqlkorma.com/&#34;&gt;Korma&lt;/a&gt; to query a PostgreSQL&amp;nbsp;database.&lt;/p&gt;
-&lt;div class=&#34;section&#34; id=&#34;generating-a-compojure-application&#34;&gt;
-&lt;h3&gt;Generating a Compojure&amp;nbsp;Application&lt;/h3&gt;
-&lt;p&gt;The first thing we&amp;#8217;ll do is &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure/wiki/Getting-Started&#34;&gt;set up a Compojure web application&lt;/a&gt;. Use Leiningen to create and spin up an empty web&amp;nbsp;application:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; lein new compojure todoapp
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; todoapp
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; lein ring server
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;After issuing the &lt;tt class=&#34;docutils literal&#34;&gt;lein ring server&lt;/tt&gt; command, your browser should open up a &amp;quot;Hello World&amp;quot; page on &lt;a class=&#34;reference external&#34; href=&#34;http://localhost:3000/&#34;&gt;http://localhost:3000/&lt;/a&gt;. Let&amp;#8217;s make that a little bit more interesting! Keeping the server running, open the generated &lt;tt class=&#34;docutils literal&#34;&gt;src/todoapp/handler.clj&lt;/tt&gt; file in your favorite editor and examine the&amp;nbsp;contents:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.handler&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:use&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;compojure.core&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.handler&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.route&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
-
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defroutes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/resources&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/not-found&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Not Found&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;app&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;handler/site&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The &lt;tt class=&#34;docutils literal&#34;&gt;defroutes&lt;/tt&gt; line is setting up our &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/weavejester/compojure/wiki/Routes-In-Detail&#34;&gt;&lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; request handlers&lt;/a&gt;. An &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; request handler defines our application&amp;#8217;s response for a given &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; request. Currently, we&amp;#8217;re defining a &amp;quot;Hello World&amp;quot; response for &lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt; requests to the root &lt;span class=&#34;caps&#34;&gt;URL&lt;/span&gt;. If the incoming request is for some other resource, say &lt;tt class=&#34;docutils literal&#34;&gt;/foo.txt&lt;/tt&gt;, the server attempts to find a static resource by that name (in the directory &lt;tt class=&#34;docutils literal&#34;&gt;resources/public&lt;/tt&gt;, by default). If that fails, we&amp;#8217;ll return a 404 &amp;quot;Not Found&amp;quot;&amp;nbsp;message.&lt;/p&gt;
-&lt;p&gt;The &lt;tt class=&#34;docutils literal&#34;&gt;def app&lt;/tt&gt; line takes the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;app-routes&lt;/span&gt;&lt;/tt&gt; that we defined, and wraps them with the &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt; function. This Compojure function adds useful functionality (called &amp;quot;middleware&amp;quot;) for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the &lt;a class=&#34;reference external&#34; href=&#34;http://weavejester.github.io/compojure/compojure.handler.html&#34;&gt;Compojure documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;section&#34; id=&#34;setting-up-a-json-rest-api&#34;&gt;
-&lt;h3&gt;Setting up a &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt;&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&lt;/h3&gt;
-&lt;p&gt;Let&amp;#8217;s modify the middleware stack (the &lt;tt class=&#34;docutils literal&#34;&gt;def app&lt;/tt&gt; statement) to be more suitable for a &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. The default &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt; middleware assumes you&amp;#8217;re building a website; since we&amp;#8217;re building a &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;, we&amp;#8217;ll swap out &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt; for the more barebones &lt;tt class=&#34;docutils literal&#34;&gt;handler/api&lt;/tt&gt;, and add some middleware for parsing and returning&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;In our &lt;tt class=&#34;docutils literal&#34;&gt;project.clj&lt;/tt&gt; file, we&amp;#8217;ll add a dependency on the &lt;a class=&#34;reference external&#34; href=&#34;https://github.com/ring-clojure/ring-json&#34;&gt;ring-json&lt;/a&gt;&amp;nbsp;library:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:dependencies&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.clojure/clojure&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.5.1&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.1.6&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-               &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ring/ring-json&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.2.0&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Now we&amp;#8217;ll add a reference to ring-json in &lt;tt class=&#34;docutils literal&#34;&gt;handler.clj&lt;/tt&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.handler&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;compojure.route&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ring.middleware.json&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;And add the middleware to our application, as well as swapping out &lt;tt class=&#34;docutils literal&#34;&gt;handler/site&lt;/tt&gt; for the aforementioned &lt;tt class=&#34;docutils literal&#34;&gt;handler/api&lt;/tt&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;app&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;handler/api&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;json/wrap-json-params&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;json/wrap-json-response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;section&#34; id=&#34;stubbing-out-our-application&#34;&gt;
-&lt;h3&gt;Stubbing out our&amp;nbsp;application&lt;/h3&gt;
-&lt;p&gt;Next, let&amp;#8217;s stub out our &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;. We&amp;#8217;ll need our typical &lt;span class=&#34;caps&#34;&gt;CRUD&lt;/span&gt; operations, so let&amp;#8217;s remove the &amp;quot;Hello World&amp;quot; route and add the &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&amp;nbsp;stubs:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defroutes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: return all list items&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos/:id&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: return a single list item&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;POST&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: create a list item&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;PUT&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos/:id&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: update a list item&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;DELETE&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos/:id&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: delete a list item&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/resources&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/not-found&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Not Found&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;When we visit &lt;a class=&#34;reference external&#34; href=&#34;http://localhost:3000/api/todos&#34;&gt;http://localhost:3000/api/todos&lt;/a&gt; we should get our stub message &amp;quot;&lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: return all list items&amp;quot; back. However, since we deleted the &amp;quot;Hello World&amp;quot; route that responded to the root &lt;span class=&#34;caps&#34;&gt;URL&lt;/span&gt;, we&amp;#8217;ll get a 404 &amp;quot;Not Found&amp;quot; error when we visit &lt;a class=&#34;reference external&#34; href=&#34;http://localhost:3000/&#34;&gt;http://localhost:3000/&lt;/a&gt;. Since we specified a static resource route, we can fix the 404 error by adding an &amp;quot;index.html&amp;quot; placeholder resource in the &lt;tt class=&#34;docutils literal&#34;&gt;resources/public/&lt;/tt&gt; directory:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;&amp;lt;!&lt;span class=&#34;caps&#34;&gt;DOCTYPE&lt;/span&gt; html&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;lang&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&#34;caps&#34;&gt;TODO&lt;/span&gt;: Make a front-end :)
-&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;section&#34; id=&#34;connecting-to-a-database&#34;&gt;
-&lt;h3&gt;Connecting to a&amp;nbsp;Database&lt;/h3&gt;
-&lt;p&gt;Now that we have the &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; interface stubbed out, let&amp;#8217;s move on to the Postgres database layer. We&amp;#8217;ll be using the &lt;a class=&#34;reference external&#34; href=&#34;http://sqlkorma.com/&#34;&gt;Korma&lt;/a&gt; library to query our database and &lt;a class=&#34;reference external&#34; href=&#34;http://budu.github.io/lobos/&#34;&gt;Lobos&lt;/a&gt; to manage&amp;nbsp;migrations.&lt;/p&gt;
-&lt;p&gt;Rather than create our tables manually via &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;caps&#34;&gt;CREATE&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;TABLE&lt;/span&gt;&lt;/tt&gt; statements, let&amp;#8217;s use Lobos migrations. First we&amp;#8217;ll need to set up the database connection string, which we can use for both Korma and&amp;nbsp;Lobos.&lt;/p&gt;
-&lt;p&gt;In our &lt;tt class=&#34;docutils literal&#34;&gt;project.clj&lt;/tt&gt;, add a reference to Korma, Lobos, and the PostgreSQL&amp;nbsp;driver:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;korma&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;0.3.0-&lt;span class=&#34;caps&#34;&gt;RC5&lt;/span&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1.0.0-beta1&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;org.postgresql/postgresql&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;9.2-1002-jdbc4&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;In a new file, &lt;tt class=&#34;docutils literal&#34;&gt;src/todoapp/database.clj&lt;/tt&gt;, specify the database connection information. We&amp;#8217;re using an empty database called &amp;quot;todo&amp;quot; with the user &amp;quot;db-user&amp;quot; and the password&amp;nbsp;&amp;quot;SuperSecretPassword&amp;quot;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.database&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;korma.db&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;korma&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos.connectivity&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lobos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
-
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;db-connection-info&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:classname&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;org.postgresql.Driver&amp;quot;&lt;/span&gt;
-   &lt;span class=&#34;ss&#34;&gt;:subprotocol&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;postgresql&amp;quot;&lt;/span&gt;
-   &lt;span class=&#34;ss&#34;&gt;:user&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;db-user&amp;quot;&lt;/span&gt;
-   &lt;span class=&#34;ss&#34;&gt;:password&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;SuperSecretPassword&amp;quot;&lt;/span&gt;
-   &lt;span class=&#34;ss&#34;&gt;:subname&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;//localhost:5432/todo&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
-
-&lt;span class=&#34;c1&#34;&gt;; set up korma&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;korma/defdb&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;db&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;db-connection-info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;; set up lobos&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;lobos/open-global&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;db-connection-info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;That&amp;#8217;s it! Now Lobos and Korma know how to connect to our&amp;nbsp;database.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;section&#34; id=&#34;creating-database-tables-with-lobos&#34;&gt;
-&lt;h3&gt;Creating Database Tables with&amp;nbsp;Lobos&lt;/h3&gt;
-&lt;p&gt;Now, let&amp;#8217;s use Lobos to create a simple table named &amp;quot;items&amp;quot; with an integer primary key and varchar title. Make a new file called &lt;tt class=&#34;docutils literal&#34;&gt;src/todoapp/migrations.clj&lt;/tt&gt;, and add the&amp;nbsp;following:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.migrations&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:refer-clojure&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:exclude&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;alter drop &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;bigint&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;boolean char double float time &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;complement&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:use&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.database&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;migration&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;core&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;schema&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
-
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defmigration&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;add-todo-table&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;up &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:items&lt;/span&gt;
-                        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;integer&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:id&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:primary-key&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:auto-inc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;varchar&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:title&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;512&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;down &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;drop &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:items&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Unfortunately, one aspect of Lobos&amp;#8217;s design is rather unidiomatic: it provides a &lt;tt class=&#34;docutils literal&#34;&gt;(migrate)&lt;/tt&gt; function that, by default, only runs migrations in the &lt;tt class=&#34;docutils literal&#34;&gt;lobos.migrations&lt;/tt&gt; namespace. My personal preference is to keep my migrations for an application in that application&amp;#8217;s namespace. We can configure Lobos to run the migrations in our desired namespace by rebinding the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;lobos.migration/*migrations-namespace*&lt;/span&gt;&lt;/tt&gt; var, and running the &lt;tt class=&#34;docutils literal&#34;&gt;(migrate)&lt;/tt&gt; function in that&amp;nbsp;context:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;run-migrations&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;binding &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lobos.migration/*migrations-namespace*&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;todoapp.migrations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;migrate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We can run our migrations to generate our table by calling &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;(run-migrations)&lt;/span&gt;&lt;/tt&gt; in our&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;REPL&lt;/span&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; lein repl
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;use &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;todoapp.migrations&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;run-migrations&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;add-todo-table&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;nil&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Now, if you check out the database, you&amp;#8217;ll see we have a &lt;tt class=&#34;docutils literal&#34;&gt;items&lt;/tt&gt; table, ready for use! Just for kicks, let&amp;#8217;s add another migration that will add an &lt;tt class=&#34;docutils literal&#34;&gt;is_complete&lt;/tt&gt; column to our &lt;tt class=&#34;docutils literal&#34;&gt;items&lt;/tt&gt; table:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;let &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;is-complete&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:items&lt;/span&gt;
-                    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;boolean &lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:is_complete&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))]&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defmigration&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;add-is-complete-column&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;up &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;alter &lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:add&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;is-complete&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;down &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;alter &lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:drop&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;is-complete&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If we call &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;(run-migrations)&lt;/span&gt;&lt;/tt&gt; again, Lobos will intelligently alter our tables; it will only run the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;add-is-complete-column&lt;/span&gt;&lt;/tt&gt; migration, since it knows it already ran the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;add-todo-table&lt;/span&gt;&lt;/tt&gt; migration. Lobos has an &lt;a class=&#34;reference external&#34; href=&#34;http://budu.github.io/lobos/doc/uberdoc.frontend.html&#34;&gt;extensive &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;&lt;/a&gt; that provides many powerful table creation and migration&amp;nbsp;options.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;section&#34; id=&#34;querying-and-inserting-data-with-korma&#34;&gt;
-&lt;h3&gt;Querying and Inserting Data with&amp;nbsp;Korma&lt;/h3&gt;
-&lt;p&gt;Now that we have our database all ready to go, let&amp;#8217;s finish off our application! We&amp;#8217;ll be replacing our &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; stubs we built earlier with calls to our database, using the Korma&amp;nbsp;library.&lt;/p&gt;
-&lt;p&gt;We&amp;#8217;ll be creating a &lt;tt class=&#34;docutils literal&#34;&gt;src/todoapp/query.clj&lt;/tt&gt; file that contains our Korma statements. First up, we let Korma know about our &lt;tt class=&#34;docutils literal&#34;&gt;items&lt;/tt&gt; table using a &lt;tt class=&#34;docutils literal&#34;&gt;defentity&lt;/tt&gt; statement. Korma does not need any knowledge of our table&amp;#8217;s schema; it just needs to know that the table&amp;nbsp;exists:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;ns &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.query&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:require&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;todoapp.database&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-            &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;korma.core&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:refer&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:all&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]))&lt;/span&gt;
-
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defentity&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;items&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Korma provides a &lt;a class=&#34;reference external&#34; href=&#34;http://sqlkorma.com/docs#select&#34;&gt;nice, composable &lt;span class=&#34;caps&#34;&gt;DSL&lt;/span&gt;&lt;/a&gt; for querying our database. Let&amp;#8217;s define a couple of functions that interact with the &lt;tt class=&#34;docutils literal&#34;&gt;items&lt;/tt&gt; table:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;get-todos&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;select &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;items&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;add-todo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;insert&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;items&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;values&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:title&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;})))&lt;/span&gt;
-
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;delete-todo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;delete&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;items&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;where&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:id&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;= &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]})))&lt;/span&gt;
-
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;update-todo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;title&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;is-complete&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;update&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;items&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;set-fields&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:title&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;title&lt;/span&gt;
-                       &lt;span class=&#34;ss&#34;&gt;:is_complete&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;is-complete&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;where&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:id&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;= &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]})))&lt;/span&gt;
-
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;defn &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;get-todo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;first&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;select &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;items&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;where&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;:id&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;= &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]}))))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;There shouldn&amp;#8217;t be anything too shocking in these functions, except maybe how readable the Korma code is. The &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;get-todo&lt;/span&gt;&lt;/tt&gt; function uses the fact that &lt;tt class=&#34;docutils literal&#34;&gt;(first [])&lt;/tt&gt; is &lt;tt class=&#34;docutils literal&#34;&gt;nil&lt;/tt&gt;, so &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;get-todo&lt;/span&gt;&lt;/tt&gt; will return a single todo item, or &lt;tt class=&#34;docutils literal&#34;&gt;nil&lt;/tt&gt; if a todo item with the given id does not&amp;nbsp;exist.&lt;/p&gt;
-&lt;p&gt;These functions provide everything we need for our simple &lt;span class=&#34;caps&#34;&gt;CRUD&lt;/span&gt; interface, so let&amp;#8217;s hook up these queries to our Compojure route&amp;nbsp;handlers:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;defroutes&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;app-routes&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;get-todos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GET&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos/:id&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;get-todo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Integer/parseInt&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;POST&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;add-todo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;PUT&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos/:id&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;title&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;is_complete&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;update-todo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Integer/parseInt&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;title&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;is_complete&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;&lt;span class=&#34;caps&#34;&gt;DELETE&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/api/todos/:id&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;delete-todo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Integer/parseInt&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/resources&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;route/not-found&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Not Found&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We need to parse our &lt;tt class=&#34;docutils literal&#34;&gt;id&lt;/tt&gt; parameters from strings to integers, since they&amp;#8217;re being passed in via the &lt;span class=&#34;caps&#34;&gt;URL&lt;/span&gt;, so type info is lost. The ring-json library we added earlier allows us to specify our desired &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; fields (like &lt;tt class=&#34;docutils literal&#34;&gt;title&lt;/tt&gt; and &lt;tt class=&#34;docutils literal&#34;&gt;is_complete&lt;/tt&gt;) as route parameters. We can also pass our native Clojure datastructures to the Ring response function, and &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; serialization is done&amp;nbsp;automatically.&lt;/p&gt;
-&lt;p&gt;We can use the command line tool &lt;tt class=&#34;docutils literal&#34;&gt;curl&lt;/tt&gt; to test out our&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; curl -X &lt;span class=&#34;caps&#34;&gt;POST&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;quot;title&amp;quot;:&amp;quot;remember the milk&amp;quot;}&amp;#39;&lt;/span&gt; -H &lt;span class=&#34;s2&#34;&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; http://localhost:3000/api/todos
-&lt;span class=&#34;go&#34;&gt;{&amp;quot;is_complete&amp;quot;:false,&amp;quot;title&amp;quot;:&amp;quot;remember the milk&amp;quot;,&amp;quot;id&amp;quot;:1}&lt;/span&gt;
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; curl -X &lt;span class=&#34;caps&#34;&gt;PUT&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;quot;title&amp;quot;:&amp;quot;don&amp;#39;&lt;/span&gt;t forget the milk!&lt;span class=&#34;s2&#34;&gt;&amp;quot;, &amp;quot;&lt;/span&gt;is_complete&lt;span class=&#34;s2&#34;&gt;&amp;quot;:false}&amp;#39; -H &amp;quot;&lt;/span&gt;Content-Type: application/json&lt;span class=&#34;s2&#34;&gt;&amp;quot; http://localhost:3000/api/todos/1&lt;/span&gt;
-&lt;span class=&#34;go&#34;&gt;{&amp;quot;is_complete&amp;quot;:false,&amp;quot;title&amp;quot;:&amp;quot;don&amp;#39;t forget the milk!&amp;quot;,&amp;quot;id&amp;quot;:1}&lt;/span&gt;
-&lt;span class=&#34;gp&#34;&gt;&amp;gt;&lt;/span&gt; curl -X &lt;span class=&#34;caps&#34;&gt;DELETE&lt;/span&gt; http://localhost:3000/api/todos/1
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We now have a simple &lt;span class=&#34;caps&#34;&gt;JSON&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;REST&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;API&lt;/span&gt; over a relational database. We can manage our database schema using Lobos migrations, and query our database using elegant, idiomatic Clojure via&amp;nbsp;Korma.&lt;/p&gt;
-&lt;/div&gt;
-</description>
-        <pubDate>Tue, 03 Dec 2013 17:00:00 GMT</pubDate>
-        <guid isPermaLink="false">tag:fuqua.io/blog,2013-12-04:/2013/12/rest-apis-and-relational-databases-in-clojure</guid>
     </item>
         </channel>
 </rss>

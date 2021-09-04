@@ -9,8 +9,8 @@
 .highlight .x { color: #222222} /* Other */
 .highlight .p { color: #222222} /* Punctuation */
 .highlight .cm { color: #3F6B5B; font-weight: bold} /* Comment.Multiline */
-.highlight .cp { color: #aaa; font-weight: bold} /* Comment.Preproc */
-.highlight .c1 { color: #aaa;} /* Comment.Single */
+.highlight .cp { color: #888; font-weight: bold} /* Comment.Preproc */
+.highlight .c1 { color: #888;} /* Comment.Single */
 .highlight .cs { color: #3F6B5B; font-weight: bold} /* Comment.Special */
 .highlight .gd { color: #2020ff; } /* Generic.Deleted */
 .highlight .ge { color: #222222} /* Generic.Emph */

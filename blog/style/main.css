@@ -97,6 +97,9 @@ article time {
     float:right;
     color:#888;
 }
+article li {
+    margin: 0.2em 0;
+}
 .util-links {
     clear:both;
     text-align: center;
