@@ -87,7 +87,7 @@ A simple yet fully-working application might look like the following. It has aut
 
         // by using an enum, we constrain the options. We could also use
         // FromAmong(), similar to AddSuggestions() above, if we wanted
-        // to use Strings instead of an Enum
+        // to constrain with Strings instead of an Enum.
         new Option<Emotion>("--emotion",
             getDefaultValue: () => Emotion.Normal,
             description: "How excited they should be when saying the message"
