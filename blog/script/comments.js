@@ -36,7 +36,7 @@ fetch(githubApiURL, {
             .replaceAll("{{id}}", comment.id)
             .replaceAll("{{user.avatar_url}}", comment.user.avatar_url)
             .replaceAll("{{user.login}}", comment.user.login)
-            .replaceAll("{{user.url}}", comment.user.url)
+            .replaceAll("{{user.url}}", comment.user.html_url)
             .replaceAll("{{created_at}}", created.toLocaleString('en-US', createdFormat) + " at " + created.toLocaleTimeString())
             .replaceAll("{{body_html}}", comment.body_html)
         );

@@ -1,14 +1,29 @@
 html {
+    --background-color: #fff;
+    --code-background-color: #fff;
+    --text-color: #222;
+
+    --border-color: #ddd;
+
+    --accent-color: #F56017;
+    --accent-hover-color: hsl(20, 83%, 45%);
+
+    --nav-hover-color:#F7F7F7;
+    --nav-hover-border-color: #EEE;
+
+    --logo-text-color: #555;
+
     overflow-y: scroll;
+    background-color: var(--background-color);
 }
+
 body {
-    background-color: white;
     margin: 0 auto;
     padding:0;
     width: 700px;
     font-family:Droid Sans, sans-serif;
     font-size:12pt;
-    color:#222;
+    color:var(--text-color);
 }
 header {
     margin: 20px 0;
@@ -30,7 +45,7 @@ header::after { /* the horizontal line in the header */
 }
 header a { 
     text-decoration:none;
-    background-color:#fff;
+    background-color:var(--background-color);
     display:inline-block;
     padding:0px 12px 0 10px;
     position:relative;
@@ -43,7 +58,7 @@ header a::after,
 header a::before {
     content:"";
     display:block;
-    background-color:#FFF;
+    background-color:var(--background-color);
     width:0px;
     height:50%;
     position:absolute;
@@ -61,18 +76,18 @@ header a::before {
     right:100%;
 }
 a {
-    color:#F56017;
+    color:var(--accent-color);
     text-decoration:none;
     transition:color 0.2s ease;
 }
 a:hover {
-    color:#D15214;
+    color:var(--accent-hover-color);
 }
 .first-name {
-    color:#555;
+    color: var(--logo-text-color);
 }
 .last-name {
-    color:#F56017;
+    color:var(--accent-color);
 }
 article {
     text-align: justify;
@@ -80,7 +95,7 @@ article {
 }
 article h1 {
     margin:0 0 32px 0;
-    color:#F56017;
+    color:var(--accent-color);
     font-weight:normal;
     font-size:20pt;
     line-height:1em;
@@ -127,10 +142,11 @@ tt, code, kbd, samp {
     margin-bottom: 10px;
     margin-top: 10px;
     overflow: auto;
-    border-left: 5px solid #F56017;
+    border-left: 5px solid var(--accent-color);
+    background-color: var(--code-background-color);
 }
 .tags {
-    margin-top: 20px;
+    margin-top: 40px;
     text-align: center;
 }
 .pager {
@@ -150,7 +166,7 @@ tt, code, kbd, samp {
 }
 .search-box:focus {
     outline:none;
-    border: 1px solid #F56017;
+    border: 1px solid var(--accent-color);
 }
 .entry-list {
     margin:0;
@@ -170,7 +186,7 @@ tt, code, kbd, samp {
     color:#666;
 }
 .entry-list li:hover .title {
-    color:#D15214;
+    color:var(--accent-hover-color);
 }
 
 @media (max-width:820px) {
@@ -202,6 +218,37 @@ tt, code, kbd, samp {
         padding:5px 0;
     }
 }
+@media (prefers-color-scheme: dark) {
+    html {
+        --background-color: #282a36;
+        --code-background-color: #cccccc;
+        --text-color: #eef;
+        --accent-hover-color: #FF8043;
+
+        --border-color: #282a36;
+
+        --nav-hover-color:#44475a;
+        --nav-hover-border-color: #282a36;
+
+        --logo-text-color: #d0d0d0;
+    }
+}
+/* this is duplicated from the above dark-mode, for when the user manually toggles the dark/light mode button */
+html.dark {
+    --background-color: #282a36;
+    --code-background-color: #cccccc;
+    --text-color: #eef;
+
+    --border-color: #44475a;
+
+    --accent-hover-color: #FF8043;
+
+    --nav-hover-color:#44475a;
+    --nav-hover-border-color: #282a36;
+
+    --logo-text-color: #d0d0d0;
+}
+
 /* navigation */
 
 nav ul, nav li {
@@ -218,7 +265,7 @@ nav {
 nav a {
     display:inline-block;
     text-align:center;
-    border: 1px solid #fff;
+    border: 1px solid var(--background-color);
     font-size:20px;
     transition:none;
     vertical-align:middle;
@@ -231,7 +278,7 @@ nav .label {
     padding-left:10px;
     width:0;
     overflow:hidden;
-    background-color:#fff;
+    background-color:var(--background-color);
     color:#888;
     transition:none;
     vertical-align: middle;
@@ -241,23 +288,24 @@ nav li:hover .label {
     transition:width 0.2s linear;
 }
 nav:hover a {
-    background-color:#F7F7F7;
-    border: 1px solid #eee;
+    background-color:var(--nav-hover-color);
+    border: 1px solid var(--nav-hover-border-color);
 }
 nav a:hover {
-    background-color:#F56017;
-    color:#fff;
+    background-color:var(--accent-color);
+    color:var(--background-color);
 }
 
 .comment {
     margin-top:40px;
     margin-bottom:40px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     font-size: 0.9em;
-    box-shadow: 4px 4px 2px #ddd
+    box-shadow: 4px 4px 2px var(--border-color);
+    text-align: left;
 }
 .comment:target {
-    border: 1px solid #F56017;
+    border: 1px solid var(--accent-color);
 }
 .comment-avatar {
     width:40px;
@@ -289,5 +337,3 @@ img.align-center {
     margin-left: auto;
     margin-right: auto;
 }
-
-
