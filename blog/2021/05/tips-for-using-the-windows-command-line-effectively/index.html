@@ -38,7 +38,7 @@ Although the command line experi..." />
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -106,21 +106,27 @@ Although the command line experi..." />
 </embed></div>
 
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/windows-terminal/" rel="tag">windows-terminal</a>,
-                <a href="/blog/tag/powershell/" rel="tag">powershell</a>
-                    and
-                    
-                <a href="/blog/tag/zsh/" rel="tag">zsh</a>
-                
-        
+         tagged as <a href="/blog/tag/windows-terminal/" rel="tag">windows-terminal</a>, <a href="/blog/tag/powershell/" rel="tag">powershell</a> and  <a href="/blog/tag/zsh/" rel="tag">zsh</a>  
     </div>
     
-        <div id="comments"></div>
-        <script src="/blog/script/comments.js?issue=4"></script>
+    <div id="comments"></div>
+    <script src="/blog/script/comments.js?issue=4"></script>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         <div class="pager">
         
             <a href="/blog/2020/12/a-lesser-known-csharp-feature-nested-object-initializers/" class="prev">

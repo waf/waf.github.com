@@ -1,147 +1,216 @@
-html {
-    --background-color: #fff;
-    --code-background-color: #fff;
-    --text-color: #222;
+@media (prefers-color-scheme: dark) {
+    html {
+        --accent-hover-color: #FF8043;
+        --background-color: #282a36;
+        --background-variation-color: #44475a;
+        --border-variation-color: #44475a;
+        --code-background-color: #cccccc;
+        --logo-text-color: #d0d0d0;
+        --nav-hover-color: #44475a;
+        --text-color: #eef;
+    }
+}
 
+@media (prefers-color-scheme: light) {
+    html {
+        --accent-hover-color: hsl(20, 83%, 45%);
+        --background-color: #fff;
+        --background-variation-color: #eee;
+        --border-variation-color: #ddd;
+        --code-background-color: #fff;
+        --logo-text-color: #555;
+        --nav-hover-color: #F7F7F7;
+        --text-color: #222;
+    }
+}
+
+
+/* this is duplicated from the above dark-mode, for when the user manually toggles the dark/light mode button */
+
+html.dark {
+    --accent-hover-color: #FF8043;
+    --background-color: #282a36;
+    --background-variation-color: #44475a;
+    --border-variation-color: #44475a;
+    --code-background-color: #cccccc;
+    --logo-text-color: #d0d0d0;
+    --nav-hover-color: #44475a;
+    --text-color: #eef;
+}
+
+html.light {
+    --accent-hover-color: hsl(20, 83%, 45%);
+    --background-color: #fff;
     --background-variation-color: #eee;
     --border-variation-color: #ddd;
-
-    --accent-color: #F56017;
-    --accent-hover-color: hsl(20, 83%, 45%);
-
-    --nav-hover-color:#F7F7F7;
-
+    --code-background-color: #fff;
     --logo-text-color: #555;
+    --nav-hover-color: #F7F7F7;
+    --text-color: #222;
+}
 
+html {
+    --accent-color: #F56017;
     overflow-y: scroll;
     background-color: var(--background-color);
 }
 
 body {
     margin: 0 auto;
-    padding:0;
+    padding: 0;
     width: 700px;
-    font-family:Droid Sans, sans-serif;
-    font-size:12pt;
-    color:var(--text-color);
+    font-family: Droid Sans, sans-serif;
+    font-size: 12pt;
+    color: var(--text-color);
 }
+
 header {
     margin: 20px 0;
-    position:relative;
+    position: relative;
     text-decoration: none;
     text-align: center;
     font-family: Reenie Beanie, sans-serif;
-    font-size:26pt;
-    font-weight:bold;
+    font-size: 26pt;
+    font-weight: bold;
 }
-header::after { /* the horizontal line in the header */
-    content:"";
-    display:block;
-    border-bottom:1px solid #888;
-    position:absolute;
-    top:50%;
-    width:100%;
-    z-index:-1;
+
+header::after {
+    /* the horizontal line in the header */
+    content: "";
+    display: block;
+    border-bottom: 1px solid #888;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    z-index: -1;
 }
-header a { 
-    text-decoration:none;
-    background-color:var(--background-color);
-    display:inline-block;
-    padding:0px 12px 0 10px;
-    position:relative;
+
+header a {
+    text-decoration: none;
+    background-color: var(--background-color);
+    display: inline-block;
+    padding: 0px 12px 0 10px;
+    position: relative;
 }
+
+
 /* the animation that pulls back the horizontal header line
  * do this via absolute psuedoelements instead of padding animation
  * because the padding change / text-align:center was causing text jitter
  */
+
 header a::after,
 header a::before {
-    content:"";
-    display:block;
-    background-color:var(--background-color);
-    width:0px;
-    height:50%;
-    position:absolute;
-    top:25%;
+    content: "";
+    display: block;
+    background-color: var(--background-color);
+    width: 0px;
+    height: 50%;
+    position: absolute;
+    top: 25%;
     transition: width 0.2s ease;
 }
+
 header a:hover::after,
 header a:hover::before {
-    width:20px;
+    width: 20px;
 }
+
 header a::after {
-    left:100%;
+    left: 100%;
 }
+
 header a::before {
-    right:100%;
+    right: 100%;
 }
+
 a {
-    color:var(--accent-color);
-    text-decoration:none;
-    transition:color 0.2s ease;
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
+
 a:hover {
-    color:var(--accent-hover-color);
+    color: var(--accent-hover-color);
 }
+
 .first-name {
     color: var(--logo-text-color);
 }
+
 .last-name {
-    color:var(--accent-color);
+    color: var(--accent-color);
 }
+
 article {
     text-align: justify;
-    line-height:1.5em;
+    line-height: 1.5em;
 }
+
 article h1 {
-    margin:0 0 32px 0;
-    color:var(--accent-color);
-    font-weight:normal;
-    font-size:20pt;
-    line-height:1em;
+    margin: 0 0 32px 0;
+    color: var(--accent-color);
+    font-weight: normal;
+    font-size: 20pt;
+    line-height: 1em;
 }
+
 article h2 {
-    font-weight:normal;
-    font-size:16pt;
+    font-weight: normal;
+    font-size: 16pt;
 }
+
 article h3 {
-    font-weight:normal;
-    font-size:14pt;
+    font-weight: normal;
+    font-size: 14pt;
 }
+
 article time {
-    float:right;
-    color:#888;
+    float: right;
+    color: #888;
 }
+
 article li {
     margin: 0.2em 0;
 }
+
 .util-links {
-    clear:both;
+    clear: both;
     text-align: center;
-    margin:20px 0;
+    margin: 20px 0;
 }
+
 .util-links a {
-    color:#888;
-    display:inline-block;
+    color: #888;
+    display: inline-block;
     padding: 5px 10px;
-    text-align:center;
-    font-size:10pt;
+    text-align: center;
+    font-size: 10pt;
 }
+
 .util-links a:hover {
-    color:#666;
+    color: #666;
 }
+
 .highlight pre {
     font-family: Inconsolata, monospace;
-    line-height:1.2em;
+    line-height: 1.2em;
 }
-tt, code, kbd, samp {
-    font-family:Inconsolata, monospace;
+
+tt,
+code,
+kbd,
+samp {
+    font-family: Inconsolata, monospace;
 }
-.docutils.literal { /* inline code lines */
+
+.docutils.literal {
+    /* inline code lines */
     background-color: var(--background-variation-color);
     border: 1px solid var(--border-variation-color);
     padding: 0 2px;
 }
+
 .highlight {
     padding-left: 1em;
     margin-bottom: 10px;
@@ -150,200 +219,197 @@ tt, code, kbd, samp {
     border-left: 5px solid var(--accent-color);
     background-color: var(--code-background-color);
 }
+
 .tags {
     margin-top: 40px;
     text-align: center;
 }
+
 .pager {
-    overflow:auto;
+    overflow: auto;
     margin: 20px 0;
 }
-.prev { float: right }
-.next { float: left }
+
+.prev {
+    float: right
+}
+
+.next {
+    float: left
+}
+
 .search-box {
-    display:block;
+    display: block;
     margin: 20px auto 28px auto;
-    width:220px;
-    padding:5px;
+    width: 220px;
+    padding: 5px;
     border: 1px solid #999;
     transition: border 0.2s ease-in-out;
-    border-radius:0;
+    border-radius: 0;
 }
+
 .search-box:focus {
-    outline:none;
+    outline: none;
     border: 1px solid var(--accent-color);
 }
+
 .entry-list {
-    margin:0;
-    padding:0;
-    list-style:none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
+
 .entry-list li {
-    display:flex;
+    display: flex;
     justify-content: space-between;
-    padding:5px 0;
+    padding: 5px 0;
 }
+
 .entry-list .date {
-    color:#888;
+    color: #888;
 }
 
 .entry-list li:hover .date {
-    color:#666;
+    color: #666;
 }
+
 .entry-list li:hover .title {
-    color:var(--accent-hover-color);
+    color: var(--accent-hover-color);
 }
 
 @media (max-width:820px) {
-    nav { 
-        display:none;
+    nav {
+        display: none;
     }
     body {
-        width:98%;
-        padding:0 1%;
+        width: 98%;
+        padding: 0 1%;
     }
     article {
-        text-align:left;
+        text-align: left;
     }
     article h1 {
-        width:100%;
-        text-align:center;
+        width: 100%;
+        text-align: center;
     }
     article time {
-        width:100%;
-        text-align:center;
+        width: 100%;
+        text-align: center;
     }
 }
+
 @media (max-width:500px) {
     .entry-list .date {
-        display:none;
+        display: none;
     }
     .entry-list a {
-        display:inline-block;
-        padding:5px 0;
+        display: inline-block;
+        padding: 5px 0;
     }
 }
-@media (prefers-color-scheme: dark) {
-    html {
-        --background-color: #282a36;
-        --background-variation-color: #44475a;
-        --border-variation-color: #44475a;
 
-        --code-background-color: #cccccc;
-        --text-color: #eef;
-        --accent-hover-color: #FF8043;
-
-        --border-color: #44475a;
-
-        --nav-hover-color:#44475a;
-
-        --logo-text-color: #d0d0d0;
-    }
-}
-/* this is duplicated from the above dark-mode, for when the user manually toggles the dark/light mode button */
-html.dark {
-    --background-color: #282a36;
-    --background-variation-color: #44475a;
-    --border-variation-color: #44475a;
-
-    --code-background-color: #cccccc;
-    --text-color: #eef;
-    --accent-hover-color: #FF8043;
-
-    --border-color: #44475a;
-
-    --nav-hover-color:#44475a;
-
-    --logo-text-color: #d0d0d0;
-}
 
 /* navigation */
 
-nav ul, nav li {
-    margin:0;
-    padding:0;
-    list-style-type:none;
+nav ul,
+nav li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
 }
+
 nav {
-    position:fixed;
-    top:0;
-    left:0;
-    margin:10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 10px;
 }
+
 nav a {
-    display:inline-block;
-    text-align:center;
+    display: inline-block;
+    text-align: center;
     border: 1px solid var(--background-color);
-    font-size:20px;
-    transition:none;
-    vertical-align:middle;
-    padding:10px;
-    color:#ccc;
+    font-size: 20px;
+    transition: none;
+    vertical-align: middle;
+    padding: 10px;
+    color: #ccc;
     width: 24px;
     height: 24px;
 }
+
 nav .label {
-    line-height:40px;
-    display:inline-block;
-    padding-left:10px;
-    width:0;
-    overflow:hidden;
-    background-color:var(--background-color);
-    color:#888;
-    transition:none;
+    line-height: 40px;
+    display: inline-block;
+    padding-left: 10px;
+    width: 0;
+    overflow: hidden;
+    background-color: var(--background-color);
+    color: #888;
+    transition: none;
     vertical-align: middle;
 }
+
 nav li:hover .label {
-    width:90px;
-    transition:width 0.2s linear;
+    width: 90px;
+    transition: width 0.2s linear;
 }
+
 nav:hover a {
-    background-color:var(--nav-hover-color);
+    background-color: var(--nav-hover-color);
 }
+
 nav a:hover {
-    background-color:var(--accent-color);
-    color:var(--background-color);
+    background-color: var(--accent-color);
+    color: var(--background-color);
 }
 
 #comments {
     position: relative;
 }
+
 #comments::before {
     content: "";
     background-color: var(--border-variation-color);
-    height:100%;
-    width:2px;
-    left:50%;
+    height: 100%;
+    width: 2px;
+    left: 50%;
     position: absolute;
     z-index: -1;
 }
+
 .comment {
-    margin-top:40px;
-    margin-bottom:40px;
+    margin-top: 40px;
+    margin-bottom: 40px;
     background-color: var(--background-color);
     border: 1px solid var(--border-variation-color);
     font-size: 0.9em;
     text-align: left;
 }
+
 .comment:target {
     border-color: var(--accent-color);
 }
+
 .comment-avatar {
-    width:40px;
-    height:40px;
+    width: 40px;
+    height: 40px;
     padding-right: 15px;
 }
+
 .comment-metadata {
     height: 40px;
     display: flex;
     align-items: center;
     background-color: var(--background-variation-color);
 }
+
 .comment-content {
     padding: 0px 20px 0px 55px;
 }
+
 .comment-ongithub {
-    height:80px;
+    height: 80px;
     text-align: center;
     display: flex;
     align-items: center;
@@ -351,10 +417,13 @@ nav a:hover {
     border-width: 2px;
 }
 
+
 /* styles for use in blog posts */
+
 .align-center {
-    text-align:center;
+    text-align: center;
 }
+
 img.align-center {
     display: block;
     margin-left: auto;

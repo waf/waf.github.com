@@ -34,7 +34,7 @@
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -43,19 +43,24 @@
     <p>CoreRT is an ahead-of-time (AOT) compiler and runtime for .NET Core. It builds .NET Core applications into a single, small binary that runs without requiring .NET Core to be installed on the system. This makes distribution easy, especially to Mac OS and Linux, which may not have .NET Core installed. On all platforms, the program will have a faster start-up time and lower memory footprint.</p>
 <p>Like most developers, I have a pet static site generator I'm working on. As it's a command line utility that will be distributed to users that most likely won't have .NET Core installed, I decided to <span>&#8230;<a href="/blog/2018/10/cross-platform-ci-with-corert-and-appveyor/" class="continue">continue</a>.</span></p>
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
-                <a href="/blog/tag/corert/" rel="tag">corert</a>,
-                <a href="/blog/tag/appveyor/" rel="tag">appveyor</a>
-                    and
-                    
-                <a href="/blog/tag/continuous-integration/" rel="tag">continuous-integration</a>
-                
-        
+         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/corert/" rel="tag">corert</a>, <a href="/blog/tag/appveyor/" rel="tag">appveyor</a> and  <a href="/blog/tag/continuous-integration/" rel="tag">continuous-integration</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
 <script src="/blog/script/list.min.js"></script>
     </body>

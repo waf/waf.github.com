@@ -34,7 +34,7 @@
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -51,18 +51,24 @@
 <h2>The new Windows&nbsp;Terminal</h2>
 <p>Microsoft&#8217;s release of Windows Terminal, a modern, <span class="caps">GPU</span>-accelerated and open-source terminal application, is a real game changer. It can be installed and updated <a class="reference external" href="ms-windows-store://pdp/?ProductId=9n0dx20hk701">from the Microsoft store</a>, with other methods of <span>&#8230;<a href="/blog/2021/05/tips-for-using-the-windows-command-line-effectively/" class="continue">continue</a>.</span></p></div>
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/windows-terminal/" rel="tag">windows-terminal</a>,
-                <a href="/blog/tag/powershell/" rel="tag">powershell</a>
-                    and
-                    
-                <a href="/blog/tag/zsh/" rel="tag">zsh</a>
-                
-        
+         tagged as <a href="/blog/tag/windows-terminal/" rel="tag">windows-terminal</a>, <a href="/blog/tag/powershell/" rel="tag">powershell</a> and  <a href="/blog/tag/zsh/" rel="tag">zsh</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
 <script src="/blog/script/list.min.js"></script>
     </body>

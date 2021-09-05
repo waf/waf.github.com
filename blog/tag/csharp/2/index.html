@@ -34,7 +34,7 @@
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -44,23 +44,30 @@
 <p>Ideally all your PowerShell is properly orchestrated with <tt class="docutils literal"><span class="pre">-WhatIf</span></tt> and <tt class="docutils literal">SupportsShouldProcess</tt> functionality, but in my experience it's common for there to be large differences in behavior between <tt class="docutils literal"><span class="pre">-WhatIf</span></tt> execution and real execution.</p>
 <p>The <span>&#8230;<a href="/blog/2017/12/parsing-powershell-programatically/" class="continue">continue</a>.</span></p>
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/powershell/" rel="tag">powershell</a>
-                    and
-                    
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>
-                
-        
+         tagged as <a href="/blog/tag/powershell/" rel="tag">powershell</a> and  <a href="/blog/tag/csharp/" rel="tag">csharp</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
             <nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -75,24 +82,30 @@
 </pre></div>
 <p>Let's break this <span>&#8230;<a href="/blog/2017/08/level-up-your-vsvim/" class="continue">continue</a>.</span></p>
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
-                <a href="/blog/tag/vim/" rel="tag">vim</a>
-                    and
-                    
-                <a href="/blog/tag/visual-studio/" rel="tag">visual-studio</a>
-                
-        
+         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/vim/" rel="tag">vim</a> and  <a href="/blog/tag/visual-studio/" rel="tag">visual-studio</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
             <nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -108,23 +121,30 @@
         <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">AddFive</span><span class="p">(</span><span class="m">7</span><span class="p">));</span>
   </pre><span>&#8230;<a href="/blog/2017/07/the-implementation-of-csharp-local-functions/" class="continue">continue</a>.</span></div>
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>
-                    and
-                    
-                <a href="/blog/tag/language/" rel="tag">language</a>
-                
-        
+         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a> and  <a href="/blog/tag/language/" rel="tag">language</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
             <nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -151,23 +171,30 @@
 </ol>
 <p>Now, <span>&#8230;<a href="/blog/2017/01/solving-the-zebra-puzzle-with-linq-and-c-7/" class="continue">continue</a>.</span></p></blockquote>
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>
-                    and
-                    
-                <a href="/blog/tag/linq/" rel="tag">linq</a>
-                
-        
+         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a> and  <a href="/blog/tag/linq/" rel="tag">linq</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
             <nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -182,24 +209,30 @@
 </pre></div>
 <p>How can we detect this type of dead code? Rather than using static analysis to detect it, we can use dynamic analysis---the <span>&#8230;<a href="/blog/2016/08/finding-dead-csharp-code-in-aspnet/" class="continue">continue</a>.</span></p>
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
-                <a href="/blog/tag/analysis/" rel="tag">analysis</a>
-                    and
-                    
-                <a href="/blog/tag/opencover/" rel="tag">opencover</a>
-                
-        
+         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/analysis/" rel="tag">analysis</a> and  <a href="/blog/tag/opencover/" rel="tag">opencover</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
             <nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -209,24 +242,30 @@
 <p>You can <a class="reference external" href="http://techblog.jetabroad.com/2016/06/increasing-code-quality-with-sonarqube.html">read it at the Jetabroad Tech Blog</a>.</p>
 
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
-                <a href="/blog/tag/analysis/" rel="tag">analysis</a>
-                    and
-                    
-                <a href="/blog/tag/sonarqube/" rel="tag">sonarqube</a>
-                
-        
+         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/analysis/" rel="tag">analysis</a> and  <a href="/blog/tag/sonarqube/" rel="tag">sonarqube</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
             <nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -238,24 +277,30 @@
 <p>I plan on skewing those curves by sharing this tool. So, here it is: <a class="reference external" href="https://fuqua.io/format-finder/">Format Finder</a>.</p>
 <p>Format Finder presents you with <span>&#8230;<a href="/blog/2015/02/quick-tip-format-finder-for-net-date-strings/" class="continue">continue</a>.</span></p>
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
-                <a href="/blog/tag/tools/" rel="tag">tools</a>
-                    and
-                    
-                <a href="/blog/tag/dates/" rel="tag">dates</a>
-                
-        
+         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/tools/" rel="tag">tools</a> and  <a href="/blog/tag/dates/" rel="tag">dates</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
             <nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -270,19 +315,24 @@
 </pre></div>
 <p>The above implementation of <tt class="docutils literal">fib</tt> fascinates me, so I decided to try my <span>&#8230;<a href="/blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="continue">continue</a>.</span></p>
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/haskell/" rel="tag">haskell</a>,
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
-                <a href="/blog/tag/fibonacci/" rel="tag">fibonacci</a>
-                    and
-                    
-                <a href="/blog/tag/functional/" rel="tag">functional</a>
-                
-        
+         tagged as <a href="/blog/tag/haskell/" rel="tag">haskell</a>, <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/fibonacci/" rel="tag">fibonacci</a> and  <a href="/blog/tag/functional/" rel="tag">functional</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
         <div class="pager">
         

@@ -34,7 +34,7 @@
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
         <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="document.documentElement.classList.toggle('dark'); return false;"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
@@ -44,18 +44,24 @@
 <p>You can <a class="reference external" href="http://techblog.jetabroad.com/2016/06/increasing-code-quality-with-sonarqube.html">read it at the Jetabroad Tech Blog</a>.</p>
 
     <div class="tags">
-        
-            tagged as
-                <a href="/blog/tag/csharp/" rel="tag">csharp</a>,
-                <a href="/blog/tag/analysis/" rel="tag">analysis</a>
-                    and
-                    
-                <a href="/blog/tag/sonarqube/" rel="tag">sonarqube</a>
-                
-        
+         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/analysis/" rel="tag">analysis</a> and  <a href="/blog/tag/sonarqube/" rel="tag">sonarqube</a>  
     </div>
     
 </article>
+<script>
+    function toggleDarkMode() {
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
         
 <script src="/blog/script/list.min.js"></script>
     </body>
