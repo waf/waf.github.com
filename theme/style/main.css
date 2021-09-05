@@ -3,13 +3,13 @@ html {
     --code-background-color: #fff;
     --text-color: #222;
 
-    --border-color: #ddd;
+    --background-variation-color: #eee;
+    --border-variation-color: #ddd;
 
     --accent-color: #F56017;
     --accent-hover-color: hsl(20, 83%, 45%);
 
     --nav-hover-color:#F7F7F7;
-    --nav-hover-border-color: #EEE;
 
     --logo-text-color: #555;
 
@@ -137,6 +137,11 @@ article li {
 tt, code, kbd, samp {
     font-family:Inconsolata, monospace;
 }
+.docutils.literal { /* inline code lines */
+    background-color: var(--background-variation-color);
+    border: 1px solid var(--border-variation-color);
+    padding: 0 2px;
+}
 .highlight {
     padding-left: 1em;
     margin-bottom: 10px;
@@ -221,14 +226,16 @@ tt, code, kbd, samp {
 @media (prefers-color-scheme: dark) {
     html {
         --background-color: #282a36;
+        --background-variation-color: #44475a;
+        --border-variation-color: #44475a;
+
         --code-background-color: #cccccc;
         --text-color: #eef;
         --accent-hover-color: #FF8043;
 
-        --border-color: #282a36;
+        --border-color: #44475a;
 
         --nav-hover-color:#44475a;
-        --nav-hover-border-color: #282a36;
 
         --logo-text-color: #d0d0d0;
     }
@@ -236,15 +243,16 @@ tt, code, kbd, samp {
 /* this is duplicated from the above dark-mode, for when the user manually toggles the dark/light mode button */
 html.dark {
     --background-color: #282a36;
+    --background-variation-color: #44475a;
+    --border-variation-color: #44475a;
+
     --code-background-color: #cccccc;
     --text-color: #eef;
+    --accent-hover-color: #FF8043;
 
     --border-color: #44475a;
 
-    --accent-hover-color: #FF8043;
-
     --nav-hover-color:#44475a;
-    --nav-hover-border-color: #282a36;
 
     --logo-text-color: #d0d0d0;
 }
@@ -271,6 +279,8 @@ nav a {
     vertical-align:middle;
     padding:10px;
     color:#ccc;
+    width: 24px;
+    height: 24px;
 }
 nav .label {
     line-height:40px;
@@ -289,23 +299,34 @@ nav li:hover .label {
 }
 nav:hover a {
     background-color:var(--nav-hover-color);
-    border: 1px solid var(--nav-hover-border-color);
 }
 nav a:hover {
     background-color:var(--accent-color);
     color:var(--background-color);
 }
 
+#comments {
+    position: relative;
+}
+#comments::before {
+    content: "";
+    background-color: var(--border-variation-color);
+    height:100%;
+    width:2px;
+    left:50%;
+    position: absolute;
+    z-index: -1;
+}
 .comment {
     margin-top:40px;
     margin-bottom:40px;
-    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-variation-color);
     font-size: 0.9em;
-    box-shadow: 4px 4px 2px var(--border-color);
     text-align: left;
 }
 .comment:target {
-    border: 1px solid var(--accent-color);
+    border-color: var(--accent-color);
 }
 .comment-avatar {
     width:40px;
@@ -316,6 +337,7 @@ nav a:hover {
     height: 40px;
     display: flex;
     align-items: center;
+    background-color: var(--background-variation-color);
 }
 .comment-content {
     padding: 0px 20px 0px 55px;
@@ -326,6 +348,7 @@ nav a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-width: 2px;
 }
 
 /* styles for use in blog posts */
