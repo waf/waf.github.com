@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Microsoft Build 2020 – Highlights for .NET Developers</title>
+        <title>Microsoft Build 2020 – Highlights for .NET Developers - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,29 +21,38 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="Over the course of the last three days, Microsoft..." />
-    <meta name="keywords" content="dotnet, csharp, presentation" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="dotnet" />
+    <meta name="tags" content="csharp" />
+    <meta name="tags" content="presentation" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>Microsoft Build 2020 – Highlights for .NET Developers</h1>
+    <h1>Microsoft Build 2020 – Highlights for .<span class="caps">NET</span>&nbsp;Developers</h1>
     <p>Over the course of the last three days, Microsoft Build 2020 released a flood of news and announcements.
 For those of us who follow the .<span class="caps">NET</span> ecosystem, it can be difficult to wade through them&nbsp;all!</p>
 <p>I&#8217;ve collected a list of announcements that I think are interesting as a .<span class="caps">NET</span> developer, and added short
 summaries. The announcements are grouped into four categories: <span class="caps">ASP</span>.<span class="caps">NET</span>, .<span class="caps">NET</span>, Visual Studio and&nbsp;Windows.</p>
-<p>In addition, each category is split into &quot;released&quot; (you can use it now!) or &quot;preview / announced&quot;
+<p>In addition, each category is split into &#8220;released&#8221; (you can use it now!) or &#8220;preview / announced&#8221;
 (you can test it out now, or&nbsp;soon).</p>
 <div class="section" id="asp-net">
 <h2><span class="caps">ASP</span>.<span class="caps">NET</span></h2>
@@ -66,12 +72,12 @@ summaries. The announcements are grouped into four categories: <span class="caps
 </div>
 <div class="section" id="net">
 <h2>.<span class="caps">NET</span></h2>
-<div class="section" id="id1">
+<div class="section" id="preview-announced-1">
 <h3>Preview /&nbsp;Announced</h3>
 <ul class="simple">
 <li><a class="reference external" href="https://devblogs.microsoft.com/dotnet/announcing-net-5-preview-4-and-our-journey-to-one-net/">.<span class="caps">NET</span> 5 Preview 4</a> - C# 9 and F# 5 previews, source generators for compile-time code generation / introspection. Also some updates on publishing to a single file application. <span class="caps">ARM</span> processor support for Web / <span class="caps">UI</span>&nbsp;applications.</li>
 <li><a class="reference external" href="https://devblogs.microsoft.com/dotnet/welcome-to-c-9-0/">C# 9 Preview</a> - A lot of new functional features. This is just a preview &#8211; features listed in this article might not make it into the final release, or might have different syntax after all the design issues have been figured out. But it&#8217;s still exciting to see C# embrace&nbsp;immutability!</li>
-<li><a class="reference external" href="https://devblogs.microsoft.com/dotnet/f-5-update-for-net-5-preview-4/">F# 5 Preview</a> - Better tooling, faster compiling, interoperability with C#&#8217;s new &quot;default interface member&quot;&nbsp;feature.</li>
+<li><a class="reference external" href="https://devblogs.microsoft.com/dotnet/f-5-update-for-net-5-preview-4/">F# 5 Preview</a> - Better tooling, faster compiling, interoperability with C#&#8217;s new &#8220;default interface member&#8221;&nbsp;feature.</li>
 <li><a class="reference external" href="https://devblogs.microsoft.com/dotnet/introducing-net-multi-platform-app-ui/">As part of .<span class="caps">NET</span> 5, Xamarin.Forms library is now called <span class="caps">MAUI</span></a> - My guess is everyone will continue to call it Xamarin.Forms. This article also mentions that Xamarin.iOS and Xamarin.Android will be integrated into .<span class="caps">NET</span>&nbsp;6.</li>
 <li><a class="reference external" href="https://devblogs.microsoft.com/dotnet/introducing-yarp-preview-1/"><span class="caps">YARP</span> Reverse Proxy Preview</a> - High performance reverse proxy server. Think of it like an application load balancer / rewrite rules engine built as <span class="caps">ASP</span>.<span class="caps">NET</span> Core&nbsp;middleware.</li>
 <li><a class="reference external" href="https://github.com/microsoft/ProjectReunion">Project Reunion</a> - A polyfill library so you can use the same libraries (WinUI 3, WebView2, <span class="caps">MSIX</span>) on both WinForms and <span class="caps">UWP</span>&nbsp;platforms.</li>
@@ -80,31 +86,31 @@ summaries. The announcements are grouped into four categories: <span class="caps
 </div>
 <div class="section" id="visual-studio">
 <h2>Visual&nbsp;Studio</h2>
-<div class="section" id="id2">
+<div class="section" id="released-1">
 <h3>Released</h3>
 <ul class="simple">
-<li><a class="reference external" href="https://devblogs.microsoft.com/visualstudio/visual-studio-2019-v16-6-and-v16-7-preview-1-ship-today/"><span class="caps">VS2019</span> 16.6 released, with 16.7 in preview</a> - <span class="caps">VS2019</span> 16.6 contains a new &quot;.<span class="caps">NET</span> Async Tool&quot; for debugging applications. Better snapshot debugging and refactorings. Has a new &quot;Web Tools for Azure&quot; tool, as well as new C++ 20 standard library&nbsp;features.</li>
+<li><a class="reference external" href="https://devblogs.microsoft.com/visualstudio/visual-studio-2019-v16-6-and-v16-7-preview-1-ship-today/"><span class="caps">VS2019</span> 16.6 released, with 16.7 in preview</a> - <span class="caps">VS2019</span> 16.6 contains a new &#8220;.<span class="caps">NET</span> Async Tool&#8221; for debugging applications. Better snapshot debugging and refactorings. Has a new &#8220;Web Tools for Azure&#8221; tool, as well as new C++ 20 standard library&nbsp;features.</li>
 <li><a class="reference external" href="https://devblogs.microsoft.com/dotnet/windows-forms-designer-for-net-core-released/">Windows Forms Designer for .<span class="caps">NET</span> Core</a> - The WinForms designer now works with .<span class="caps">NET</span> Core WinForms&nbsp;applications.</li>
-<li><a class="reference external" href="https://devblogs.microsoft.com/dotnet/ml-net-model-builder-is-now-a-part-of-visual-studio/"><span class="caps">ML</span>.<span class="caps">NET</span> Model Builder in Visual Studio</a> - The existing <span class="caps">ML</span>.<span class="caps">NET</span> Model Builder extension (which is super cool) is now integrated into Visual Studio. Add &quot;Machine Learning&quot; with just two clicks! &#8230;plus years of&nbsp;study.</li>
+<li><a class="reference external" href="https://devblogs.microsoft.com/dotnet/ml-net-model-builder-is-now-a-part-of-visual-studio/"><span class="caps">ML</span>.<span class="caps">NET</span> Model Builder in Visual Studio</a> - The existing <span class="caps">ML</span>.<span class="caps">NET</span> Model Builder extension (which is super cool) is now integrated into Visual Studio. Add &#8220;Machine Learning&#8221; with just two clicks! &#8230;plus years of&nbsp;study.</li>
 </ul>
 </div>
-<div class="section" id="id3">
+<div class="section" id="preview-announced-2">
 <h3>Preview /&nbsp;Announced</h3>
 <ul class="simple">
-<li><a class="reference external" href="https://devblogs.microsoft.com/visualstudio/expanding-visual-studio-2019-support-for-visual-studio-codespaces/">Visual Studio 2019 can be used with Codespaces</a> - Visual Studio Online is renamed to Visual Studio Codespaces. Visual Studio 2019 can now serve as a &quot;client ui&quot; to a codespace in the&nbsp;cloud.</li>
+<li><a class="reference external" href="https://devblogs.microsoft.com/visualstudio/expanding-visual-studio-2019-support-for-visual-studio-codespaces/">Visual Studio 2019 can be used with Codespaces</a> - Visual Studio Online is renamed to Visual Studio Codespaces. Visual Studio 2019 can now serve as a &#8220;client ui&#8221; to a codespace in the&nbsp;cloud.</li>
 <li><a class="reference external" href="https://devblogs.microsoft.com/dotnet/using-visual-studio-codespaces-with-net-core/">How to use .<span class="caps">NET</span> Core with Visual Studio Codespaces</a> - A tour of the editing / testing / debugging experience of .<span class="caps">NET</span> Core with Visual Studio <span class="strike">Online</span>&nbsp;Codespaces.</li>
 </ul>
 </div>
 </div>
 <div class="section" id="windows">
 <h2>Windows</h2>
-<div class="section" id="id4">
+<div class="section" id="released-2">
 <h3>Released</h3>
 <ul class="simple">
 <li><a class="reference external" href="https://devblogs.microsoft.com/commandline/windows-terminal-1-0/">The new Windows Terminal hit 1.0</a> - Supports tabs and split panes. <span class="caps">GPU</span> accelerated rendering will display your compile errors blazing&nbsp;fast.</li>
 </ul>
 </div>
-<div class="section" id="id5">
+<div class="section" id="preview-announced-3">
 <h3>Preview /&nbsp;Announced</h3>
 <ul class="simple">
 <li><a class="reference external" href="https://devblogs.microsoft.com/commandline/windows-package-manager-preview/">winget - a new windows package manager</a> - Windows command line package manager like chocolately. As far as I can tell, it does not manage dependencies or updates&nbsp;(yet?).</li>
@@ -120,15 +126,27 @@ summaries. The announcements are grouped into four categories: <span class="caps
 </div>
 
     <div class="tags">
-         tagged as <a href="/blog/tag/dotnet/" rel="tag">dotnet</a>, <a href="/blog/tag/csharp/" rel="tag">csharp</a> and  <a href="/blog/tag/presentation/" rel="tag">presentation</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/dotnet/">dotnet</a>,            <a href="../../../../blog/tag/csharp/">csharp</a> and             <a href="../../../../blog/tag/presentation/">presentation</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue=2"></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2020/02/native-websockets-with-blazor-webassembly/" class="prev">
+        Native Websockets with...
+        &#x21DD;
+        </a>
+        <a href="../../../../blog/2020/12/a-lesser-known-csharp-feature-nested-object-initializers/" class="next">
+        &#x21DC;
+        A Lesser-Known C# Feature: Nested...
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -141,17 +159,7 @@ summaries. The announcements are grouped into four categories: <span class="caps
         return false;
     }
 </script>
-        <div class="pager">
-        
-            <a href="/blog/2020/02/native-websockets-with-blazor-webassembly/" class="prev">
-            Native Websockets with Blazor ... &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2020/12/a-lesser-known-csharp-feature-nested-object-initializers/" class="next">
-            &#x21DC; A Lesser-Known C# Feature: Nested ...
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

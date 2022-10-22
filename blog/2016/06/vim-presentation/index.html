@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Vim Presentation</title>
+        <title>Vim Presentation - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,36 +21,56 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="I recently gave a presentation on thinking in vim,..." />
-    <meta name="keywords" content="vim, presentation" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="vim" />
+    <meta name="tags" content="presentation" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>Vim Presentation</h1>
-    <p>I recently gave a presentation on thinking in vim, which tries to bring people to that &quot;Aha!&quot; moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is&nbsp;useful!</p>
+    <h1>Vim&nbsp;Presentation</h1>
+    <p>I recently gave a presentation on thinking in vim, which tries to bring people to that &#8220;Aha!&#8221; moment with Vim. The presentation should be useful to follow, even without the speaking portion. Hope this is&nbsp;useful!</p>
 <iframe style="width:100%" src="https://docs.google.com/presentation/d/1WzjWgKrrlN0BRnP0a99jomsnNX2xRUhvCSVLVWFfpyw/embed?start=false&loop=false&delayms=60000" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
     <div class="tags">
-         tagged as <a href="/blog/tag/vim/" rel="tag">vim</a> and  <a href="/blog/tag/presentation/" rel="tag">presentation</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/vim/">vim</a> and             <a href="../../../../blog/tag/presentation/">presentation</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue="></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2015/04/a-software-developer-learning-thai/" class="prev">
+        A Software Developer Learning&nbsp;Thai
+        &#x21DD;
+        </a>
+        <a href="../../../../blog/2016/06/increasing-code-quality-with-sonarqube/" class="next">
+        &#x21DC;
+        Increasing Code Quality with&nbsp;SonarQube
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -66,17 +83,7 @@
         return false;
     }
 </script>
-        <div class="pager">
-        
-            <a href="/blog/2015/04/a-software-developer-learning-thai/" class="prev">
-            A Software Developer Learning Thai &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2016/06/increasing-code-quality-with-sonarqube/" class="next">
-            &#x21DC; Increasing Code Quality with SonarQube
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

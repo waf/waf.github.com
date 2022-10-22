@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Blog - Will Fuqua</title>
+        <title>Blog - Will Fuqua - reagent tag</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,47 +21,43 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
-        </header>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>Pushing Database Changes to the Web with Datomic</h1>
-    <p>Lately I've been playing around with <a class="reference external" href="http://www.datomic.com">Datomic</a>, a database invented by Rich Hickey, the creator of Clojure.
-Datomic feels like a natural extension of Clojure's immutable, persistent datastructures. From Datomic's <a class="reference external" href="http://docs.datomic.com/architecture.html">architecture documentation</a>:</p>
-<blockquote>
-A Datomic database stores a collection of facts. The facts in a database are immutable; once stored, they do not change. However, old facts can be superseded by new facts over time. The state of the database is a value defined by the set of facts in effect at a given moment in time.</blockquote>
-<p>Daniel Higginbotham wrote a great tutorial on the basics of Datomic called <a class="reference external" href="http://www.flyingmachinestudios.com/programming/datomic-for-five-year-olds/">Datomic for Five Year Olds</a>, <span>&#8230;<a href="/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" class="continue">continue</a>.</span></p>
-    <div class="tags">
-         tagged as <a href="/blog/tag/clojure/" rel="tag">clojure</a>, <a href="/blog/tag/datomic/" rel="tag">datomic</a>, <a href="/blog/tag/reagent/" rel="tag">reagent</a>, <a href="/blog/tag/sente/" rel="tag">sente</a>, <a href="/blog/tag/websockets/" rel="tag">websockets</a> and  <a href="/blog/tag/web/" rel="tag">web</a>  
-    </div>
-    
-</article>
-<script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+</head>
 
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        </header>
+
+<div class="util-links">
+    <a href="https://twitter.com/wafuqua" rel="me">twitter</a>
+    <a href="https://github.com/waf" rel="me">github</a>
+    <a href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate">blog feed</a>
+</div>
+
+<div id="entries-search">
+    <input class="search-box" type="search" placeholder="Filter&hellip;" />
+    <ul class="entry-list">
+        <li>
+
+	    <a class="title tags-filter" data-tags="clojure datomic reagent sente websockets web" href="../../../blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" rel="bookmark">Pushing Database Changes to the Web with&nbsp;Datomic</a>
+
+            <span class="date">25 May 2014</span>
+        </li>
+
+    </ul>
+</div>
+<script>
+    window.addEventListener("load", function() {
+        new List('entries-search', { 
+            valueNames: ['title', { name: 'tags-filter', attr: 'data-tags' } ],
+            searchClass: 'search-box',
+            listClass: 'entry-list'
+        });
+    }, false);
 </script>
-        
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

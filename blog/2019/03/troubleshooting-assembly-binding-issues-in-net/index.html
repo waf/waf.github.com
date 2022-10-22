@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Troubleshooting Assembly Binding Issues in .NET</title>
+        <title>Troubleshooting Assembly Binding Issues in .NET - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,24 +21,32 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="If you&#39;ve developed .NET for any length of time, c..." />
-    <meta name="keywords" content="dotnet, csharp" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="dotnet" />
+    <meta name="tags" content="csharp" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>Troubleshooting Assembly Binding Issues in .NET</h1>
+    <h1>Troubleshooting Assembly Binding Issues in .<span class="caps">NET</span></h1>
     <p>If you&#8217;ve developed .<span class="caps">NET</span> for any length of time, chances are you&#8217;ve run into a gnarly error like&nbsp;this:</p>
 <p><em>System.<span class="caps">IO</span>.FileLoadException: Could not load file or assembly &#8216;AcmeCorp.Foobar.Utilities, Version=1.2.0, Culture=neutral, PublicKeyToken=367d582291c765f7&#8217; or one of its dependencies.
 The located assembly&#8217;s manifest definition does not match the assembly&nbsp;reference.</em></p>
@@ -49,46 +54,58 @@ The located assembly&#8217;s manifest definition does not match the assembly&nbs
 <p>There are a couple of gotchas when troubleshooting these types of&nbsp;errors.</p>
 <div class="section" id="ensure-you-don-t-have-any-version-mismatches">
 <h2>Ensure you don&#8217;t have any version&nbsp;mismatches</h2>
-<p>As a first step, ensure that all projects in your solution reference the same version of the problematic <span class="caps">DLL</span> or NuGet package. This is by far the easiest fix. For NuGet packages in Visual Studio, you can right-click your Solution, choose &quot;Manage NuGet Packages for Solution&quot; and use the &quot;Consolidate&quot; tab to fix the&nbsp;issue.</p>
+<p>As a first step, ensure that all projects in your solution reference the same version of the problematic <span class="caps">DLL</span> or NuGet package. This is by far the easiest fix. For NuGet packages in Visual Studio, you can right-click your Solution, choose &#8220;Manage NuGet Packages for Solution&#8221; and use the &#8220;Consolidate&#8221; tab to fix the&nbsp;issue.</p>
 </div>
 <div class="section" id="use-fusion-logs-to-better-understand-the-problem">
 <h2>Use Fusion Logs to better understand the&nbsp;problem</h2>
-<p>.<span class="caps">NET</span> will log more details about the problem to the &quot;Fusion Logs&quot; system. By default, it&#8217;s disabled. Enable it by opening your &quot;Developer Command Prompt for Visual Studio&quot; from the start menu <strong>as administrator</strong>. Type the command <tt class="docutils literal">fuslogvw</tt> to start the &quot;Fusion Log&nbsp;Viewer.&quot;</p>
-<img alt="/img/fuslogvw.png" class="align-center" src="/img/fuslogvw.png" style="width: 80%;" />
-<p>Click the settings button, choose &quot;Log bind failures to disk&quot; and then click <span class="caps">OK</span>. Start your application again and you should see more details about the bind failures show up in the Fusion Log&nbsp;Viewer.</p>
+<p>.<span class="caps">NET</span> will log more details about the problem to the &#8220;Fusion Logs&#8221; system. By default, it&#8217;s disabled. Enable it by opening your &#8220;Developer Command Prompt for Visual Studio&#8221; from the start menu <strong>as administrator</strong>. Type the command <tt class="docutils literal">fuslogvw</tt> to start the &#8220;Fusion Log&nbsp;Viewer.&#8221;</p>
+<img alt="" class="align-center" src="/img/fuslogvw.png" style="width: 80%;" />
+<p>Click the settings button, choose &#8220;Log bind failures to disk&#8221; and then click <span class="caps">OK</span>. Start your application again and you should see more details about the bind failures show up in the Fusion Log&nbsp;Viewer.</p>
 <p>If you don&#8217;t see any log entries show up, there are a few things you can&nbsp;try:</p>
 <ul class="simple">
 <li>First try restarting your application and, if you&#8217;re developing a web application, restarting your App&nbsp;Pool.</li>
-<li>The Fusion Log Viewer surprisingly uses the Internet Explorer cache, so you can try clearing the cache by going to &quot;Internet Options → Browsing History → Delete&quot; and deleting the Temporary Internet Files option. Weird but&nbsp;true!</li>
+<li>The Fusion Log Viewer surprisingly uses the Internet Explorer cache, so you can try clearing the cache by going to &#8220;Internet Options → Browsing History → Delete&#8221; and deleting the Temporary Internet Files option. Weird but&nbsp;true!</li>
 <li>If you&#8217;re using <span class="caps">ASP</span>.<span class="caps">NET</span>, you&#8217;ll see additional error information on your <span class="caps">ASP</span>.<span class="caps">NET</span> error page simply by having Fusion Logs&nbsp;enabled.</li>
 </ul>
 <p>Don&#8217;t forget to disable Fusion Logs when you&#8217;re done! There&#8217;s a performance impact for having it&nbsp;enabled.</p>
 </div>
 <div class="section" id="create-an-assembly-binding-redirect">
 <h2>Create an Assembly Binding&nbsp;Redirect</h2>
-<p>Finally, you can add an <a class="reference external" href="https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/redirect-assembly-versions">Assembly Binding Redirect</a> to your App.config or Web.config of your entry project by using the <a class="reference external" href="https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/runtime/bindingredirect-element">bindingRedirect</a> element. This only works if there are no breaking changes between the two different versions of the&nbsp;<span class="caps">DLL</span>.</p>
-<div class="highlight"><pre><span></span><span class="c">&lt;!-- the following should be placed under the hierarchy &lt;configuration&gt;&lt;runtime&gt;&lt;assemblyBinding&gt; --&gt;</span>
+<p>Finally, you can add an <a class="reference external" href="https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/redirect-assembly-versions">Assembly Binding Redirect</a> to your App.config or Web.config of your entry project by using the <a class="reference external" href="https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/runtime/bindingredirect-element">bindingRedirect</a> element. This only works if there are no breaking changes between the two different versions of the <span class="caps">DLL</span>.</p>
+<div class="highlight"><pre><span></span><span class="cm">&lt;!-- the following should be placed under the hierarchy &lt;configuration&gt;&lt;runtime&gt;&lt;assemblyBinding&gt; --&gt;</span>
 <span class="nt">&lt;dependentAssembly&gt;</span>
   <span class="nt">&lt;assemblyIdentity</span> <span class="na">name=</span><span class="s">&quot;AcmeCorp.Foobar.Utilities&quot;</span> <span class="na">publicKeyToken=</span><span class="s">&quot;367d582291c765f7&quot;</span> <span class="na">culture=</span><span class="s">&quot;neutral&quot;</span> <span class="nt">/&gt;</span>
   <span class="nt">&lt;bindingRedirect</span> <span class="na">oldVersion=</span><span class="s">&quot;0.0.0.0-1.3.0.0&quot;</span> <span class="na">newVersion=</span><span class="s">&quot;1.3.0.0&quot;</span> <span class="nt">/&gt;</span>
 <span class="nt">&lt;/dependentAssembly&gt;</span>
 </pre></div>
-<p>The above configuration states &quot;If you find an AcmeCorp.Foobar.Utilities.dll with a version between 0.0.0.0 and 1.3.0.0, redirect it to&nbsp;1.3.0.0.&quot;</p>
+<p>The above configuration states &#8220;If you find an AcmeCorp.Foobar.Utilities.dll with a version between 0.0.0.0 and 1.3.0.0, redirect it to&nbsp;1.3.0.0.&#8221;</p>
 <p><strong>publicKeyToken</strong> can be retrieved using the <tt class="docutils literal">sn</tt> utility. From your Developer Command Prompt, <tt class="docutils literal">cd</tt> to the location of your <span class="caps">DLL</span>, and run <tt class="docutils literal">sn <span class="pre">-T</span> YourDll.dll</tt>. It will display the public key&nbsp;token.</p>
 <p><strong>oldVersion / newVersion</strong> can be confusing. There are many different types of versions that a <span class="caps">DLL</span> can have. What we care about is version in the assembly manifest. From your Developer Command Prompt, <tt class="docutils literal">cd</tt> to the location of your <span class="caps">DLL</span> and run <tt class="docutils literal">ildasm YourDll.dll</tt>. <span class="caps">ILDASM</span> will open your assembly. Click on the <tt class="docutils literal"><span class="caps">MANIFEST</span></tt> node, and you&#8217;ll see a version like <tt class="docutils literal">.ver 1:3:0:0</tt> which would correspond to version <tt class="docutils literal">1.3.0.0</tt> in your&nbsp;App/Web.config.</p>
 <p>These are all the tricks I&#8217;ve learned to troubleshooting various assembly binding issues. Ideally you can have consistent versions of each <span class="caps">DLL</span> in your application, but hey, the world is a complex&nbsp;place!</p>
 </div>
 
     <div class="tags">
-         tagged as <a href="/blog/tag/dotnet/" rel="tag">dotnet</a> and  <a href="/blog/tag/csharp/" rel="tag">csharp</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/dotnet/">dotnet</a> and             <a href="../../../../blog/tag/csharp/">csharp</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue="></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2019/01/a-caching-http-proxy-using-titanium-web-proxy/" class="prev">
+        A Caching <span...
+        &#x21DD;
+        </a>
+        <a href="../../../../blog/2019/11/net-conf-thailand-2019/" class="next">
+        &#x21DC;
+        .<span class="caps">NET</span> Conf...
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -101,17 +118,7 @@ The located assembly&#8217;s manifest definition does not match the assembly&nbs
         return false;
     }
 </script>
-        <div class="pager">
-        
-            <a href="/blog/2019/01/a-caching-http-proxy-using-titanium-web-proxy/" class="prev">
-            A Caching HTTP Proxy using Titanium Web ... &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2019/11/net-conf-thailand-2019/" class="next">
-            &#x21DC; .NET Conf Thailand 2019
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

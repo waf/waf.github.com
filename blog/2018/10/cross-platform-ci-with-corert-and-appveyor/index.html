@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Cross Platform CI with CoreRT and AppVeyor</title>
+        <title>Cross Platform CI with CoreRT and AppVeyor - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,94 +21,104 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="CoreRT is an ahead-of-time (AOT) compiler and runt..." />
-    <meta name="keywords" content="csharp, corert, appveyor, continuous-integration" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="csharp" />
+    <meta name="tags" content="corert" />
+    <meta name="tags" content="appveyor" />
+    <meta name="tags" content="continuous-integration" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>Cross Platform CI with CoreRT and AppVeyor</h1>
+    <h1>Cross Platform <span class="caps">CI</span> with CoreRT and&nbsp;AppVeyor</h1>
     <p>CoreRT is an ahead-of-time (<span class="caps">AOT</span>) compiler and runtime for .<span class="caps">NET</span> Core. It builds .<span class="caps">NET</span> Core applications into a single, small binary that runs without requiring .<span class="caps">NET</span> Core to be installed on the system. This makes distribution easy, especially to Mac <span class="caps">OS</span> and Linux, which may not have .<span class="caps">NET</span> Core installed. On all platforms, the program will have a faster start-up time and lower memory&nbsp;footprint.</p>
 <p>Like most developers, I have a pet static site generator I&#8217;m working on. As it&#8217;s a command line utility that will be distributed to users that most likely won&#8217;t have .<span class="caps">NET</span> Core installed, I decided to try CoreRT. The <a class="reference external" href="https://github.com/dotnet/corert/blob/master/Documentation/intro-to-corert.md">initial setup</a> was simple, but it took some time to figure out how to set up continuous integration (<span class="caps">CI</span>) on AppVeyor. I wanted the <span class="caps">CI</span> process to produce binaries artifacts from the <tt class="docutils literal">master</tt> branch for each platform. As a bonus, if I tag a commit, it should build a release for each platform and post them to the GitHub Releases&nbsp;page.</p>
 <p>One drawback of AppVeyor is that it does not yet support Mac <span class="caps">OS</span>. However, there are plans to support it <cite>sometime this year</cite>. I figure that if I have it working on both Windows and Linux, it should hopefully not be too difficult to add Mac <span class="caps">OS</span>&nbsp;support.</p>
 <p>AppVeyor uses a <span class="caps">YAML</span> file for its configuration, and like most <span class="caps">CI</span> platforms, there&#8217;s more than one way to accomplish your goal. I found that the following configuration is a nice mixture of Don&#8217;t-Repeat-Yourself and&nbsp;maintainability:</p>
-<div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;0.0.{build}&#39;</span>
-<span class="nt">clone_depth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="nt">image</span><span class="p">:</span>
-  <span class="c1"># Windows with <span class="caps">VS2017</span></span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Visual Studio 2017</span>
-  <span class="c1"># default version of &#39;ubuntu&#39; is old for compatibility reasons. Specify the newest <span class="caps">LTS</span>.</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ubuntu1804</span>
-<span class="nt">branches</span><span class="p">:</span>
-  <span class="nt">only</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">master</span>
-<span class="c1"># items prefixed with &#39;cmd:&#39; run only on Windows</span>
-<span class="c1"># items prefixed with &#39;sh:&#39; run only on Ubuntu</span>
-<span class="nt">init</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">cmd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">git config --global core.autocrlf true</span>
-<span class="nt">install</span><span class="p">:</span>
-  <span class="c1"># application dependencies</span>
-  <span class="p p-Indicator">-</span> <span class="nt">cmd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">choco install pandoc</span>
-  <span class="p p-Indicator">-</span> <span class="nt">sh</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">wget https://github.com/jgm/pandoc/releases/download/2.3.1/pandoc-2.3.1-1-amd64.deb &amp;&amp; sudo dpkg -i pandoc-2.3.1-1-amd64.deb</span>
-  <span class="c1"># corert dependencies https://github.com/dotnet/corert/blob/master/Documentation/prerequisites-for-building.md</span>
-  <span class="p p-Indicator">-</span> <span class="nt">sh</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">sudo apt-get install -y clang libkrb5-dev</span>
-<span class="nt">before_build</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dotnet --version</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dotnet restore --verbosity m</span>
-<span class="nt">build_script</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dotnet build</span>
-<span class="nt">test_script</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">cd Nessie.Tests</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dotnet test</span>
-<span class="nt">after_test</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">cd ..</span>
-  <span class="p p-Indicator">-</span> <span class="nt">cmd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dotnet publish -c release -r win-x64 -o dist/windows</span>
-  <span class="c1"># specifying the absolute path here is required to remove paths from archive</span>
-  <span class="p p-Indicator">-</span> <span class="nt">cmd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">7z a Nessie/dist/windows/nessie-windows-x64.zip %APPVEYOR_BUILD_FOLDER%/Nessie/dist/windows/nessie.exe</span>
-  <span class="c1"># by default, CoreRT on linux tries to use clang-3.9, reset this to version independent</span>
-  <span class="c1"># https://github.com/dotnet/corert/issues/5654</span>
-  <span class="p p-Indicator">-</span> <span class="nt">sh</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">export CppCompilerAndLinker=clang</span>
-  <span class="p p-Indicator">-</span> <span class="nt">sh</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">dotnet publish -c release -r linux-x64 -o dist/linux</span>
-  <span class="p p-Indicator">-</span> <span class="nt">sh</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">7z a Nessie/dist/linux/nessie-linux-x64.zip $APPVEYOR_BUILD_FOLDER/Nessie/dist/linux/Nessie</span>
-<span class="c1"># for / matrix docs</span>
-<span class="c1"># https://www.appveyor.com/blog/2018/04/25/specialized-build-matrix-configuration-in-appveyor/</span>
-<span class="nt">for</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span>
-    <span class="nt">matrix</span><span class="p">:</span>
-      <span class="nt">only</span><span class="p">:</span>
-        <span class="p p-Indicator">-</span> <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Visual Studio 2017</span>
-    <span class="nt">artifacts</span><span class="p">:</span>
-     <span class="p p-Indicator">-</span> <span class="nt">path</span><span class="p">:</span> <span class="s">&#39;Nessie/dist/windows/nessie-windows-x64.zip&#39;</span>
-       <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nessie-windows</span>
+<div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0.0.{build}&#39;</span><span class="w"></span>
+<span class="nt">clone_depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="nt">image</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># Windows with VS2017</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Visual Studio 2017</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># default version of &#39;ubuntu&#39; is old for compatibility reasons. Specify the newest LTS.</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu1804</span><span class="w"></span>
+<span class="nt">branches</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">only</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span><span class="w"></span>
+<span class="c1"># items prefixed with &#39;cmd:&#39; run only on Windows</span><span class="w"></span>
+<span class="c1"># items prefixed with &#39;sh:&#39; run only on Ubuntu</span><span class="w"></span>
+<span class="nt">init</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git config --global core.autocrlf true</span><span class="w"></span>
+<span class="nt">install</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># application dependencies</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">choco install pandoc</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sh</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">wget https://github.com/jgm/pandoc/releases/download/2.3.1/pandoc-2.3.1-1-amd64.deb &amp;&amp; sudo dpkg -i pandoc-2.3.1-1-amd64.deb</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># corert dependencies https://github.com/dotnet/corert/blob/master/Documentation/prerequisites-for-building.md</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sh</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">sudo apt-get install -y clang libkrb5-dev</span><span class="w"></span>
+<span class="nt">before_build</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet --version</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet restore --verbosity m</span><span class="w"></span>
+<span class="nt">build_script</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet build</span><span class="w"></span>
+<span class="nt">test_script</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cd Nessie.Tests</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet test</span><span class="w"></span>
+<span class="nt">after_test</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cd ..</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet publish -c release -r win-x64 -o dist/windows</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># specifying the absolute path here is required to remove paths from archive</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7z a Nessie/dist/windows/nessie-windows-x64.zip %APPVEYOR_BUILD_FOLDER%/Nessie/dist/windows/nessie.exe</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># by default, CoreRT on linux tries to use clang-3.9, reset this to version independent</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># https://github.com/dotnet/corert/issues/5654</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sh</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">export CppCompilerAndLinker=clang</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sh</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">dotnet publish -c release -r linux-x64 -o dist/linux</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sh</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">7z a Nessie/dist/linux/nessie-linux-x64.zip $APPVEYOR_BUILD_FOLDER/Nessie/dist/linux/Nessie</span><span class="w"></span>
+<span class="c1"># for / matrix docs</span><span class="w"></span>
+<span class="c1"># https://www.appveyor.com/blog/2018/04/25/specialized-build-matrix-configuration-in-appveyor/</span><span class="w"></span>
+<span class="nt">for</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">    </span><span class="nt">matrix</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">only</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Visual Studio 2017</span><span class="w"></span>
+<span class="w">    </span><span class="nt">artifacts</span><span class="p">:</span><span class="w"></span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Nessie/dist/windows/nessie-windows-x64.zip&#39;</span><span class="w"></span>
+<span class="w">       </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nessie-windows</span><span class="w"></span>
 
-  <span class="p p-Indicator">-</span>
-    <span class="nt">matrix</span><span class="p">:</span>
-      <span class="nt">only</span><span class="p">:</span>
-        <span class="p p-Indicator">-</span> <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ubuntu1804</span>
-    <span class="nt">artifacts</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">path</span><span class="p">:</span> <span class="s">&#39;Nessie/dist/linux/nessie-linux-x64.zip&#39;</span>
-        <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nessie-linux</span>
-<span class="nt">deploy</span><span class="p">:</span>
-  <span class="nt">provider</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitHub</span>
-  <span class="c1"># encrypted token, it&#39;s ok to be in version control</span>
-  <span class="c1"># https://ci.appveyor.com/tools/encrypt</span>
-  <span class="nt">auth_token</span><span class="p">:</span>
-    <span class="nt">secure</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zQl909f8bNxmaKdpgiE730kw9vjsNvoV0SjwN/fk3lv9dy7d9cdhgo0/iz/apRqc</span>
-  <span class="nt">artifact</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nessie-windows, nessie-linux</span>
-  <span class="nt">prerelease</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">on</span><span class="p">:</span>
-    <span class="nt">appveyor_repo_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">    </span><span class="nt">matrix</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">only</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu1804</span><span class="w"></span>
+<span class="w">    </span><span class="nt">artifacts</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Nessie/dist/linux/nessie-linux-x64.zip&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nessie-linux</span><span class="w"></span>
+<span class="nt">deploy</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GitHub</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># encrypted token, it&#39;s ok to be in version control</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># https://ci.appveyor.com/tools/encrypt</span><span class="w"></span>
+<span class="w">  </span><span class="nt">auth_token</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">secure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zQl909f8bNxmaKdpgiE730kw9vjsNvoV0SjwN/fk3lv9dy7d9cdhgo0/iz/apRqc</span><span class="w"></span>
+<span class="w">  </span><span class="nt">artifact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nessie-windows, nessie-linux</span><span class="w"></span>
+<span class="w">  </span><span class="nt">prerelease</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">  </span><span class="nt">on</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">appveyor_repo_tag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
 </pre></div>
 <p>I won&#8217;t go through this line-by-line, as hopefully the comments make everything clear. Here are the things that took me a while to figure&nbsp;out:</p>
 <ul class="simple">
@@ -132,15 +139,27 @@
 <p>This is more of a brain dump than a blog post, but I hope this ends up being useful to other people out there working with CoreRT and&nbsp;AppVeyor!</p>
 
     <div class="tags">
-         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/corert/" rel="tag">corert</a>, <a href="/blog/tag/appveyor/" rel="tag">appveyor</a> and  <a href="/blog/tag/continuous-integration/" rel="tag">continuous-integration</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/csharp/">csharp</a>,            <a href="../../../../blog/tag/corert/">corert</a>,            <a href="../../../../blog/tag/appveyor/">appveyor</a> and             <a href="../../../../blog/tag/continuous-integration/">continuous-integration</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue="></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2018/07/rendering-an-aspnet-core-mvc-action-to-a-string/" class="prev">
+        Rendering an <span...
+        &#x21DD;
+        </a>
+        <a href="../../../../blog/2018/11/net-conf-thailand-2018/" class="next">
+        &#x21DC;
+        .<span class="caps">NET</span> Conf...
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -153,17 +172,7 @@
         return false;
     }
 </script>
-        <div class="pager">
-        
-            <a href="/blog/2018/07/rendering-an-asp-net-core-mvc-action-to-a-string/" class="prev">
-            Rendering an ASP.NET Core MVC action to ... &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2018/11/net-conf-thailand-2018/" class="next">
-            &#x21DC; .NET Conf Thailand 2018
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

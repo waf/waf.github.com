@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Quick Tip: Format Finder for .NET date strings</title>
+        <title>Quick Tip: Format Finder for .NET date strings - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,41 +21,62 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="If you&#39;ve written C# for any length of time, chanc..." />
-    <meta name="keywords" content="csharp, tools, dates" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="csharp" />
+    <meta name="tags" content="tools" />
+    <meta name="tags" content="dates" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>Quick Tip: Format Finder for .NET date strings</h1>
+    <h1>Quick Tip: Format Finder for .<span class="caps">NET</span> date&nbsp;strings</h1>
     <p>If you&#8217;ve written C# for any length of time, chances are you&#8217;ve become very familiar with the <span class="caps">MSDN</span> documentation pages about <a class="reference external" href="https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx">Standard Date and Time Format Strings</a> and <a class="reference external" href="https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx">Custom Date and Time Format Strings</a>. Any time you need to format a <tt class="docutils literal">DateTime</tt>, those pages are&nbsp;invaluable.</p>
 <p>I don&#8217;t find myself reading those pages often enough to warrant memorizing the strings, but I do read them often enough that it&#8217;s worth automating the lookup. So I wrote a simple webapp to do&nbsp;it.</p>
-<img alt="http://imgs.xkcd.com/comics/automation.png" class="align-center" src="http://imgs.xkcd.com/comics/automation.png" style="width: 50%;" />
+<img alt="" class="align-center" src="http://imgs.xkcd.com/comics/automation.png" style="width: 50%;" />
 <p>I plan on skewing those curves by sharing this tool. So, here it is: <a class="reference external" href="https://fuqua.io/format-finder/">Format Finder</a>.</p>
 <p>Format Finder presents you with a very specific point in time: Monday, March 1st, 2009 at 8:<span class="caps">04AM</span>. You then provide the desired output of that date, and Format Finder will provide the formatting strings for you. For example, if you type in <tt class="docutils literal"><span class="pre">2009-03-01</span></tt>, Format Finder will return a custom format string of <tt class="docutils literal"><span class="pre">yyyy-<span class="caps">MM</span>-dd</span></tt> along with a explanation of each part. Alternatively, if you type in <tt class="docutils literal">3/01/2009</tt>, Format Finder will return the standard format string of <tt class="docutils literal">d</tt>.</p>
 <p>I hope other people find this as useful as I do. Let&#8217;s skew that <span class="caps">XKCD</span>&nbsp;curve!</p>
 
     <div class="tags">
-         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/tools/" rel="tag">tools</a> and  <a href="/blog/tag/dates/" rel="tag">dates</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/csharp/">csharp</a>,            <a href="../../../../blog/tag/tools/">tools</a> and             <a href="../../../../blog/tag/dates/">dates</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue="></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" class="prev">
+        Pushing Database Changes to the Web...
+        &#x21DD;
+        </a>
+        <a href="../../../../blog/2015/04/a-software-developer-learning-thai/" class="next">
+        &#x21DC;
+        A Software Developer Learning&nbsp;Thai
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -71,17 +89,7 @@
         return false;
     }
 </script>
-        <div class="pager">
-        
-            <a href="/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" class="prev">
-            Pushing Database Changes to the Web ... &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2015/04/a-software-developer-learning-thai/" class="next">
-            &#x21DC; A Software Developer Learning Thai
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

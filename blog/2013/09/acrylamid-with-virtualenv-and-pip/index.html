@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Acrylamid with virtualenv and pip</title>
+        <title>Acrylamid with virtualenv and pip - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,24 +21,34 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="Every two years or so, I decide that I should prob..." />
-    <meta name="keywords" content="acrylamid, blog, python, virtualenv" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="acrylamid" />
+    <meta name="tags" content="blog" />
+    <meta name="tags" content="python" />
+    <meta name="tags" content="virtualenv" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>Acrylamid with virtualenv and pip</h1>
+    <h1>Acrylamid with virtualenv and&nbsp;pip</h1>
     <p>Every two years or so, I decide that I should probably have a tech blog, even if it&#8217;s just a place for me to post notes on languages and systems I&#8217;m experimenting with.
 That time has rolled around again, so I spent some time playing with <a class="reference external" href="http://posativ.org/acrylamid/">Acrylamid</a>, a <em>static blog generator</em> written in Python. From Acrylamid&#8217;s&nbsp;website:</p>
 <blockquote>
@@ -51,18 +58,18 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <h2>Up and&nbsp;Running</h2>
 <p>The first thing we need to do is install <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">virtualenv</a>. You can find the virtualenv command in your <span class="caps">OS</span>&#8217;s repositories. Make sure you get the Python2 version, as Acrylamid is a Python2&nbsp;application.</p>
 <p>After we have virtualenv installed, let&#8217;s use it to create our empty Python virtual&nbsp;environment:</p>
-<div class="highlight"><pre><span></span><span class="gp">&gt;</span> virtualenv2 blog-project
+<div class="highlight"><pre><span></span><span class="go">&gt; virtualenv2 blog-project</span>
 <span class="go">New python executable in blog-project/bin/python2</span>
 <span class="go">Also creating executable in blog-project/bin/python</span>
 <span class="go">Installing setuptools............done.</span>
 <span class="go">Installing pip...............done.</span>
-<span class="gp">&gt;</span> <span class="nb">cd</span> blog-project
-<span class="gp">&gt;</span> <span class="nb">source</span> bin/activate
+<span class="go">&gt; cd blog-project</span>
+<span class="go">&gt; source bin/activate</span>
 </pre></div>
 <p>If you&#8217;re not familiar with Python virtual environments, all we&#8217;re doing here is creating a directory (called <tt class="docutils literal"><span class="pre">blog-project</span></tt>) that has a self-contained set of Python packages. This way, when we install Acrylamid and its supporting packages, they are installed into the <tt class="docutils literal"><span class="pre">blog-project</span></tt> directory, and not system-wide. When we source the <tt class="docutils literal">bin/activate</tt> script it modifies the <tt class="docutils literal">$<span class="caps">PATH</span></tt> variable to point to the <tt class="docutils literal"><span class="pre">blog-project</span></tt> Python libraries. This <tt class="docutils literal">$<span class="caps">PATH</span></tt> modification only lasts for the duration of your terminal&nbsp;session.</p>
 <p>Now, let&#8217;s install Acrylamid and create our blog. For more information on what&#8217;s going on here, check out Acrylamid&#8217;s <a class="reference external" href="http://posativ.org/acrylamid/usage.html">getting started guide</a>.</p>
-<div class="highlight"><pre><span></span><span class="gp">&gt;</span> pip install acrylamid
-<span class="gp">&gt;</span> acrylamid init myblog
+<div class="highlight"><pre><span></span><span class="go">&gt; pip install acrylamid</span>
+<span class="go">&gt; acrylamid init myblog</span>
 <span class="go">create  myblog/content/sample-entry.txt</span>
 <span class="go">create  myblog/theme/base.html</span>
 <span class="go">create  myblog/theme/main.html</span>
@@ -73,7 +80,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <span class="go">create  myblog/theme/style.css</span>
 <span class="go">create  myblog/conf.py</span>
 <span class="go">Created your fresh new blog at &#39;myblog&#39;. Enjoy!</span>
-<span class="gp">&gt;</span> acrylamid autocompile
+<span class="go">&gt; acrylamid autocompile</span>
 <span class="go">* Running on http://127.0.0.1:8000/</span>
 </pre></div>
 <p>At this point we have a fully-functioning static blog served up on port 8000! Next step?&nbsp;Configuration!</p>
@@ -84,16 +91,16 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <div class="section" id="restructuredtext">
 <h3>reStructuredText</h3>
 <p>Acrylamid uses Markdown by default for the authoring of blog posts. However, the <a class="reference external" href="http://en.wikipedia.org/wiki/Markdown">reStructuredText</a> filter includes some nice features, such as easy Gist, YouTube, and Vimeo embedding. We can switch over to reStructuredText by installing the docutils&nbsp;package:</p>
-<div class="highlight"><pre><span></span><span class="gp">&gt;</span> pip install docutils
+<div class="highlight"><pre><span></span><span class="go">&gt; pip install docutils</span>
 </pre></div>
 <p>Now, find the filters list in <tt class="docutils literal">conf.py</tt> and replace Markdown with&nbsp;reStructuredText:</p>
-<div class="highlight"><pre><span></span><span class="n"><span class="caps">FILTERS</span></span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s1">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s1">&#39;h1&#39;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n">FILTERS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s1">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s1">&#39;h1&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="section" id="syntax-highlighting">
 <h3>Syntax&nbsp;Highlighting</h3>
 <p>We can add code syntax highlighting to our blog by installing <a class="reference external" href="http://pygments.org/">Pygments</a>:</p>
-<div class="highlight"><pre><span></span><span class="gp">&gt;</span> pip install pygments
+<div class="highlight"><pre><span></span><span class="go">&gt; pip install pygments</span>
 </pre></div>
 <p>Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add <span class="caps">CSS</span> classes to individual tokens. To designate a code-block in reStructuredText, use the&nbsp;syntax:</p>
 <div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">code-block</span><span class="p">::</span> <span class="k">python</span>
@@ -107,9 +114,9 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <h3>Advanced&nbsp;Typography</h3>
 <p>Since we&#8217;re authoring our blog in a text editor, it can be challenging to include proper punctuation like em/en dashes and ellipses. To fix this we can enable the &#8216;typography&#8217; filter, which will add these typographical flares to our text. For example, it replaces three periods with an ellipsis, and replaces two hyphens with an en&nbsp;dash.</p>
 <p>All we have to do is install the smartypants module, and add the filter to our <tt class="docutils literal">conf.py</tt>.</p>
-<div class="highlight"><pre><span></span><span class="gp">&gt;</span> pip install smartypants
+<div class="highlight"><pre><span></span><span class="go">&gt; pip install smartypants</span>
 </pre></div>
-<div class="highlight"><pre><span></span><span class="n"><span class="caps">FILTERS</span></span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s1">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s1">&#39;typography&#39;</span><span class="p">,</span> <span class="s1">&#39;h1&#39;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n">FILTERS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;reStructuredText&#39;</span><span class="p">,</span> <span class="s1">&#39;hyphenate&#39;</span><span class="p">,</span> <span class="s1">&#39;typography&#39;</span><span class="p">,</span> <span class="s1">&#39;h1&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -119,15 +126,23 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 </div>
 
     <div class="tags">
-         tagged as <a href="/blog/tag/acrylamid/" rel="tag">acrylamid</a>, <a href="/blog/tag/blog/" rel="tag">blog</a>, <a href="/blog/tag/python/" rel="tag">python</a> and  <a href="/blog/tag/virtualenv/" rel="tag">virtualenv</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/acrylamid/">acrylamid</a>,            <a href="../../../../blog/tag/blog/">blog</a>,            <a href="../../../../blog/tag/python/">python</a> and             <a href="../../../../blog/tag/virtualenv/">virtualenv</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue="></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="next">
+        &#x21DC;
+        <span class="caps">REST</span> APIs...
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -140,13 +155,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
         return false;
     }
 </script>
-        <div class="pager">
-        
-        
-            <a href="/blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="next">
-            &#x21DC; REST APIs and Relational Databases in ...
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

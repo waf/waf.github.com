@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Analyzing Code Quality with LINQ and NDepend</title>
+        <title>Analyzing Code Quality with LINQ and NDepend - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,35 +21,45 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="I&#39;ve been building an open-source personal project..." />
-    <meta name="keywords" content="csharp, analysis, linq, ndepend" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="csharp" />
+    <meta name="tags" content="analysis" />
+    <meta name="tags" content="linq" />
+    <meta name="tags" content="ndepend" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>Analyzing Code Quality with LINQ and NDepend</h1>
+    <h1>Analyzing Code Quality with <span class="caps">LINQ</span> and&nbsp;NDepend</h1>
     <p>I&#8217;ve been building an open-source personal project (<a class="reference external" href="https://github.com/waf/CSharpRepl">C# <span class="caps">REPL</span></a>) and spending a good chunk of time on code quality. I self-impose a zero-warning policy, use nullable reference types, track unit test coverage,&nbsp;etc.</p>
 <p>After ensuring all the Visual Studio / Roslyn code analyzer warnings were fixed, I thought I&#8217;d try out NDepend to get a second opinion, and also understand its capabilities. After downloading <a class="reference external" href="https://www.ndepend.com/download">a free trial of NDepend</a> and spending some time with it, I was pretty impressed with its technical underpinnings as they&#8217;re exposed to the end user. Spoilers: <em>It&#8217;s <span class="caps">LINQ</span> all the way down</em>.</p>
 <div class="section" id="static-analysis-with-linq">
-<h2>Static Analysis with&nbsp;<span class="caps">LINQ</span></h2>
+<h2>Static Analysis with <span class="caps">LINQ</span></h2>
 <p>Out of the box, there&#8217;s a large collection of static analysis rules; they&#8217;re mostly focused on finding software design flaws. For example, it includes a rule that warns against assigning a field from too many methods; it&#8217;s a sign that there&#8217;s some bug-prone mutation, and a better design could be&nbsp;possible:</p>
 <img alt="A rule UI that says not to assign a field from many methods. It's a symptom of bug-prone code." class="align-center" src="/img/ndepend/1-too-many-methods.png" style="width: 90%;" />
 <p>This screen may look like a typical static analysis rule, but there&#8217;s more going on under-the-hood. If we click the <cite>View Source Code</cite> button, we&#8217;ll see the following, editable rule&nbsp;code:</p>
 <div class="figure align-center">
 <a class="reference external image-reference" href="https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1906"><img alt="A LINQ statement. warnif count &gt; 0 from f in JustMyCode.Fields where !f.IsEnumValue &amp;&amp; !f.IsImmutable &amp;&amp; !f.IsInitOnly &amp;&amp; !f.IsGeneratedByCompiler &amp;&amp; !f.IsEventDelegateObject let methodsAssigningMe = f.MethodsAssigningMe.Where(m =&gt; !m.IsConstructor) where methodsAssigningMe.Count() &gt;= (!f.IsStatic ? 4 : 2) select new { f, methodsAssigningMe, f.MethodsReadingMeButNotAssigningMe, f.MethodsUsingMe, Debt = (4+(f.IsStatic ? 10 : 5)).ToMinutes().ToDebt(), Severity = Severity.High}" src="/img/ndepend/2-too-many-methods-linq.png" style="width: 90%;" /></a>
 </div>
-<small class="align-center" style="display:block;color:#888"><a href="https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1906">Rule <span class="caps">ND1906</span></a> – click to view the full rule description and code</small><p>Hey, that&#8217;s&nbsp;<span class="caps">LINQ</span>!</p>
+<small class="align-center" style="display:block;color:#888"><a href="https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1906">Rule <span class="caps">ND1906</span></a> – click to view the full rule description and code</small><p>Hey, that&#8217;s <span class="caps">LINQ</span>!</p>
 <p>Technically, it&#8217;s called <a class="reference external" href="https://www.ndepend.com/docs/cqlinq-syntax#Introduction">CQLinq</a> (Code Query <span class="caps">LINQ</span>), which is <span class="caps">LINQ</span> with additional static analysis keywords, and running over an object model that represents a codebase. Conceptually, it&#8217;s similar to Roslyn&#8217;s syntax/semantic model, but with a bunch of nice affordances and predefined properties that make it simpler to do solution-wide static analysis. The CQLinq object model represents an entire&nbsp;application.</p>
 <p>For example, here&#8217;s a predefined calculation for cyclomatic complexity. It runs across all methods in the application using the <tt class="docutils literal">Application.Methods</tt> property; there&#8217;s no need to recursively find all files or&nbsp;classes:</p>
 <img alt="from m in Application.Methods where m.CyclomaticComplexity &gt; 20 &amp;&amp; !m.IsAbstract orderby m.CyclomaticComplexity descending select new { m, m.CyclomaticComplexity }" class="align-center" src="/img/ndepend/3-cyclomatic-complexity-query.png" style="width: 90%;" />
@@ -60,21 +67,21 @@
 <img alt="The CQLinq query editor open, with an intellisense menu showing properties like ReadsMutableObjectState, PercentageCoverage, PercentageComment, ShouldBePublic, and many more." class="align-center" src="/img/ndepend/4-intellisense.png" style="width: 94%;" />
 </div>
 <div class="section" id="analyzing-code-evolution-over-time-with-linq">
-<h2>Analyzing code evolution over time with&nbsp;<span class="caps">LINQ</span></h2>
+<h2>Analyzing code evolution over time with <span class="caps">LINQ</span></h2>
 <p>CQLinq also supports comparing the current version of the code with past versions of the code. Analyzing code once will create a <em>baseline;</em> future analyses can refer to this baseline with the <tt class="docutils literal">.OlderVersion()</tt> helper method. Here&#8217;s how we can identify mutability being introduced as part of a code&nbsp;change:</p>
 <a class="reference external image-reference" href="https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1108"><img alt="A CQLinq statement that reads: Avoid transforming an immutable type into a mutable one. warnif count &gt; 0 from t in Application.Types where t.CodeWasChanged() &amp;&amp; t.OlderVersion().IsImmutable &amp;&amp; !t.IsImmutable &amp;&amp; !t.IsStatic let culpritFields = t.InstanceFields.Where(f =&gt; !f.IsImmutable) select new { t, culpritFields, Debt = (10 + 10*culpritFields.Count()).ToMinutes().ToDebt(), Severity = Severity.High }" class="align-center" src="/img/ndepend/5-baseline-mutability-detection.png" style="width: 90%;" /></a>
 <small class="align-center" style="display:block;color:#888"><a href="https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1108">Rule <span class="caps">ND1108</span></a> – click to view the full rule description and code</small><p>There are a <a class="reference external" href="https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1105#!">bunch of prebuilt rules</a> that take advantage of this baseline-comparison feature. For example, we can define and identify breaking changes in a code change to a library, so we don&#8217;t accidentally break downstream users, and can better manage <abbr title="Semantic Versioning">semver</abbr>:</p>
 <a class="reference external image-reference" href="https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1500"><img alt="A CQLinq statement that fades out to white. warnif count &gt; 0 from m in codeBase.OlderVersion().Application.Methods where m.IsPubliclyVisible &amp;&amp; ((m.WasRemoved() &amp;&amp; !m.ParentType.WasRemoved() &amp;&amp; !m.IsObsolete) || (!m.WasRemoved() &amp;&amp; !m.NewerVersion().IsPubliclyVisible &amp;&amp; m.ParentType.NewerVersion().IsPubliclyVisible) || (!m.WasRemoved() &amp;&amp; m.ReturnType != null &amp;&amp; m.NewerVersion().ReturnType != null &amp;&amp; m.ReturnType.FullName != m.NewerVersion().ReturnType.FullName))" class="align-center" src="/img/ndepend/6-breaking-changes.png" style="width: 100%;" /></a>
 <small class="align-center" style="display:block;color:#888"><a href="https://www.ndepend.com/default-rules/NDepend-Rules-Explorer.html?ruleid=ND1500">Rule <span class="caps">ND1500</span></a> – click to view the full rule description and code</small></div>
 <div class="section" id="identifying-high-severity-issues-with-linq">
-<h2>Identifying high-severity issues with&nbsp;<span class="caps">LINQ</span></h2>
+<h2>Identifying high-severity issues with <span class="caps">LINQ</span></h2>
 <p>The CQLinq object model doesn&#8217;t just make our application source code queryable, it also makes static analysis rules and their violations queryable as well. This gets a bit meta; by using the <tt class="docutils literal">Issues</tt> object model we can query for violations of rules defined by other <span class="caps">LINQ</span>&nbsp;statements:</p>
 <img alt="from issue in Issues where issue.Severity &gt; Severity.Info orderby issue.Severity descending select new { issue, issue.Severity, issue.CodeElement }" class="align-center" src="/img/ndepend/7-issues-query.png" style="width: 90%;" />
 <p>This can be combined with the previous section on code evolution to find new issues, or get an idea of how issues are being introduced or resolved over time. We can use the <tt class="docutils literal">failif</tt> CQLinq keyword to set hard limits based on our issues and rules; these are known as <cite>Quality Gates</cite> and are useful for continuous integration scenarios. The syntax is the same as the <tt class="docutils literal">warnif</tt> keyword we saw in the earlier CQLinq&nbsp;rules.</p>
 </div>
 <div class="section" id="using-the-ui-for-parameterized-linq-queries">
 <h2>Using the <span class="caps">UI</span> for parameterized <span class="caps">LINQ</span>&nbsp;queries</h2>
-<p>So far we&#8217;ve been focused on the code editor, but there&#8217;s also a pretty slick <span class="caps">UI</span>; by setting up our <span class="caps">LINQ</span> statements to have parameters, we can explore ranges of these parameters in a live-updating, auto-generated&nbsp;<span class="caps">UI</span>:</p>
+<p>So far we&#8217;ve been focused on the code editor, but there&#8217;s also a pretty slick <span class="caps">UI</span>; by setting up our <span class="caps">LINQ</span> statements to have parameters, we can explore ranges of these parameters in a live-updating, auto-generated <span class="caps">UI</span>:</p>
 <img alt="A UI with several form elements, like input fields, dropdown lists, and sliders. Each form element corresponds to a highlighted placeholder in the LINQ query." class="align-center" src="/img/ndepend/8-coupling-queries.png" style="width: 90%;" />
 <p>The NDepend <span class="caps">UI</span> has a lot of prebuilt views for understanding, categorizing and prioritizing issues. In addition to the typical column views that we&#8217;ve seen in this post, they also have some more <a class="reference external" href="https://www.ndepend.com/docs/visual-studio-dependency-graph">advanced graphical dependency views</a> that are also powered by CQLinq. All the typical static analysis workflows can be done via the <span class="caps">UI</span> if you don&#8217;t want to get into the <span class="caps">LINQ</span> side of things&#8212;but where&#8217;s the fun in&nbsp;that?</p>
 <p>If the command line is your preferred form of <span class="caps">UI</span>, there&#8217;s also a command line runner for all these CQLinq statements, which is also useful for integrating with other&nbsp;software.</p>
@@ -87,15 +94,27 @@
 </div>
 
     <div class="tags">
-         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/analysis/" rel="tag">analysis</a>, <a href="/blog/tag/linq/" rel="tag">linq</a> and  <a href="/blog/tag/ndepend/" rel="tag">ndepend</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/csharp/">csharp</a>,            <a href="../../../../blog/tag/analysis/">analysis</a>,            <a href="../../../../blog/tag/linq/">linq</a> and             <a href="../../../../blog/tag/ndepend/">ndepend</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue=5"></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2021/05/tips-for-using-the-windows-command-line-effectively/" class="prev">
+        Tips for using the Windows Command...
+        &#x21DD;
+        </a>
+        <a href="../../../../blog/2021/09/enabling-command-line-completions-with-dotnet-suggest/" class="next">
+        &#x21DC;
+        Enabling Command Line Completions...
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -108,17 +127,7 @@
         return false;
     }
 </script>
-        <div class="pager">
-        
-            <a href="/blog/2021/05/tips-for-using-the-windows-command-line-effectively/" class="prev">
-            Tips for using the Windows Command Line ... &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2021/09/enabling-command-line-completions-with-dotnet-suggest/" class="next">
-            &#x21DC; Enabling Command Line Completions with ...
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

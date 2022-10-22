@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Blog - Will Fuqua</title>
+        <title>Blog - Will Fuqua - web tag</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,190 +21,71 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>Native Websockets with Blazor WebAssembly</h1>
-    <p>A couple of days ago, Blazor WebAssembly 3.2.0 Preview 1 was released (<a class="reference external" href="https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-preview-1-release-now-available/">announcement</a>). I'm personally excited about this release
-because it's the first Blazor release that contains native support for client-side websockets!</p>
-<p>Previously, if you wanted to use websockets, you either had to write your own wrapper, or use a larger library like
-SignalR that did the wrapping for you. However, if you just wanted to use the normal <tt class="docutils literal">System.Net.WebSockets.ClientWebSocket</tt> class that's built into .NET, you could not.</p>
-<p>The Mono/WASM project has actually supported <tt class="docutils literal">ClientWebSocket</tt> for about a year (<a class="reference external" href="https://github.com/mono/mono/pull/12615">PR 12615</a>). However, some recent changes in Blazor allowed the Blazor project to be able <span>&#8230;<a href="/blog/2020/02/native-websockets-with-blazor-webassembly/" class="continue">continue</a>.</span></p>
-    <div class="tags">
-         tagged as <a href="/blog/tag/dotnet/" rel="tag">dotnet</a>, <a href="/blog/tag/web/" rel="tag">web</a>, <a href="/blog/tag/blazor/" rel="tag">blazor</a>, <a href="/blog/tag/wasm/" rel="tag">wasm</a>, <a href="/blog/tag/csharp/" rel="tag">csharp</a> and  <a href="/blog/tag/websockets/" rel="tag">websockets</a>  
-    </div>
-    
-</article>
-<script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
 
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
-</script>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>A Caching HTTP Proxy using Titanium Web Proxy</h1>
-    <p>At my work at Jetabroad I do a lot of integration with third-party webservices (like everyone these days).
-The webservices, especially the test endpoints, are of variable stability and responsiveness.</p>
-<p>The responsiveness issue can be maddening when you're trying to iterate quickly. I prefer doing
-the bulk of my development via unit tests or integration tests to isolate myself as much as possible.
-However, I still ultimately find myself developing directly against these third-party services from
-time to time.</p>
-<p>I built <a class="reference external" href="https://github.com/waf/catchy">Catchy</a> to help solve this pain. When you start it, you provide a whitelist of domains to
-intercept. Catchy will examine your outbound REST or SOAP <span>&#8230;<a href="/blog/2019/01/a-caching-http-proxy-using-titanium-web-proxy/" class="continue">continue</a>.</span></p>
-    <div class="tags">
-         tagged as <a href="/blog/tag/dotnet/" rel="tag">dotnet</a>, <a href="/blog/tag/web/" rel="tag">web</a> and  <a href="/blog/tag/tools/" rel="tag">tools</a>  
-    </div>
-    
-</article>
-<script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
+<div class="util-links">
+    <a href="https://twitter.com/wafuqua" rel="me">twitter</a>
+    <a href="https://github.com/waf" rel="me">github</a>
+    <a href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate">blog feed</a>
+</div>
 
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
-</script>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>Pushing Database Changes to the Web with Datomic</h1>
-    <p>Lately I've been playing around with <a class="reference external" href="http://www.datomic.com">Datomic</a>, a database invented by Rich Hickey, the creator of Clojure.
-Datomic feels like a natural extension of Clojure's immutable, persistent datastructures. From Datomic's <a class="reference external" href="http://docs.datomic.com/architecture.html">architecture documentation</a>:</p>
-<blockquote>
-A Datomic database stores a collection of facts. The facts in a database are immutable; once stored, they do not change. However, old facts can be superseded by new facts over time. The state of the database is a value defined by the set of facts in effect at a given moment in time.</blockquote>
-<p>Daniel Higginbotham wrote a great tutorial on the basics of Datomic called <a class="reference external" href="http://www.flyingmachinestudios.com/programming/datomic-for-five-year-olds/">Datomic for Five Year Olds</a>, <span>&#8230;<a href="/blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" class="continue">continue</a>.</span></p>
-    <div class="tags">
-         tagged as <a href="/blog/tag/clojure/" rel="tag">clojure</a>, <a href="/blog/tag/datomic/" rel="tag">datomic</a>, <a href="/blog/tag/reagent/" rel="tag">reagent</a>, <a href="/blog/tag/sente/" rel="tag">sente</a>, <a href="/blog/tag/websockets/" rel="tag">websockets</a> and  <a href="/blog/tag/web/" rel="tag">web</a>  
-    </div>
-    
-</article>
-<script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
+<div id="entries-search">
+    <input class="search-box" type="search" placeholder="Filter&hellip;" />
+    <ul class="entry-list">
+        <li>
 
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
-</script>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>Native JavaScript Promises and Browser APIs</h1>
-    <p>One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of <a class="reference external" href="http://en.wikipedia.org/wiki/Promise_(programming)">Promises</a>. Promises simplify asynchronous code. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is everywhere.</p>
-<div class="section" id="the-problem-with-asynchronicity">
-<h1>The Problem with Asynchronicity</h1>
-<p>Asynchronous patterns are great for keeping UIs responsive and non-blocking, but they have a cost: asynchronous JavaScript code tends to be highly nested, which hurts readability. Additionally, because you can't catch errors that are thrown inside callbacks from outside those callbacks, error handling needs to be spread throughout every level of nesting.</p>
-<p>When we use Promises, our code structure is flattened, and our error handling <span>&#8230;<a href="/blog/2014/02/native-javascript-promises-and-browser-apis/" class="continue">continue</a>.</span></p></div>
-    <div class="tags">
-         tagged as <a href="/blog/tag/html5/" rel="tag">html5</a>, <a href="/blog/tag/javascript/" rel="tag">javascript</a>, <a href="/blog/tag/promise/" rel="tag">promise</a> and  <a href="/blog/tag/web/" rel="tag">web</a>  
-    </div>
-    
-</article>
-<script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
+	    <a class="title tags-filter" data-tags="dotnet web blazor wasm csharp c# websockets" href="../../../blog/2020/02/native-websockets-with-blazor-webassembly/" rel="bookmark">Native Websockets with Blazor&nbsp;WebAssembly</a>
 
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
-</script>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>REST APIs and Relational Databases in Clojure</h1>
-    <p>I've found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational databases.</p>
-<p>In this post we'll create a simple REST API for a todo list web application. We'll use <a class="reference external" href="https://github.com/weavejester/compojure">Compojure</a> to create a REST API, <a class="reference external" href="http://budu.github.io/lobos/">Lobos</a> to create and manage our database tables, and <a class="reference external" href="http://sqlkorma.com/">Korma</a> to query a PostgreSQL database.</p>
-<div class="section" id="generating-a-compojure-application">
-<h1>Generating a Compojure Application</h1>
-<p>The first thing we'll do is <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Getting-Started">set up a Compojure web application</a>. Use Leiningen to create and <span>&#8230;<a href="/blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="continue">continue</a>.</span></p></div>
-    <div class="tags">
-         tagged as <a href="/blog/tag/clojure/" rel="tag">clojure</a>, <a href="/blog/tag/web/" rel="tag">web</a>, <a href="/blog/tag/compojure/" rel="tag">compojure</a>, <a href="/blog/tag/ring/" rel="tag">ring</a>, <a href="/blog/tag/database/" rel="tag">database</a>, <a href="/blog/tag/sql/" rel="tag">sql</a>, <a href="/blog/tag/korma/" rel="tag">korma</a> and  <a href="/blog/tag/lobos/" rel="tag">lobos</a>  
-    </div>
-    
-</article>
-<script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
+            <span class="date">1 February 2020</span>
+        </li>
 
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
+        <li>
+
+	    <a class="title tags-filter" data-tags="dotnet web tools" href="../../../blog/2019/01/a-caching-http-proxy-using-titanium-web-proxy/" rel="bookmark">A Caching <span class="caps">HTTP</span> Proxy using Titanium Web&nbsp;Proxy</a>
+
+            <span class="date">19 January 2019</span>
+        </li>
+
+        <li>
+
+	    <a class="title tags-filter" data-tags="clojure datomic reagent sente websockets web" href="../../../blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" rel="bookmark">Pushing Database Changes to the Web with&nbsp;Datomic</a>
+
+            <span class="date">25 May 2014</span>
+        </li>
+
+        <li>
+
+	    <a class="title tags-filter" data-tags="html5 javascript promise web" href="../../../blog/2014/02/native-javascript-promises-and-browser-apis/" rel="bookmark">Native JavaScript Promises and Browser&nbsp;APIs</a>
+
+            <span class="date">22 February 2014</span>
+        </li>
+
+        <li>
+
+	    <a class="title tags-filter" data-tags="clojure web compojure ring database sql korma lobos" href="../../../blog/2013/12/rest-apis-and-relational-databases-in-clojure/" rel="bookmark"><span class="caps">REST</span> APIs and Relational Databases in&nbsp;Clojure</a>
+
+            <span class="date">4 December 2013</span>
+        </li>
+
+    </ul>
+</div>
+<script>
+    window.addEventListener("load", function() {
+        new List('entries-search', { 
+            valueNames: ['title', { name: 'tags-filter', attr: 'data-tags' } ],
+            searchClass: 'search-box',
+            listClass: 'entry-list'
+        });
+    }, false);
 </script>
-        
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

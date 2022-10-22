@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Increasing Code Quality with SonarQube</title>
+        <title>Increasing Code Quality with SonarQube - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,37 +21,58 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="I just posted an article about SonarQube, an open..." />
-    <meta name="keywords" content="csharp, analysis, sonarqube" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="csharp" />
+    <meta name="tags" content="analysis" />
+    <meta name="tags" content="sonarqube" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>Increasing Code Quality with SonarQube</h1>
+    <h1>Increasing Code Quality with&nbsp;SonarQube</h1>
     <p>I just posted an article about SonarQube, an open source static analysis tool, and how we set it up to scan every incoming GitHub pull request at&nbsp;work.</p>
 <p>You can <a class="reference external" href="http://techblog.jetabroad.com/2016/06/increasing-code-quality-with-sonarqube.html">read it at the Jetabroad Tech Blog</a>.</p>
 
     <div class="tags">
-         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/analysis/" rel="tag">analysis</a> and  <a href="/blog/tag/sonarqube/" rel="tag">sonarqube</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/csharp/">csharp</a>,            <a href="../../../../blog/tag/analysis/">analysis</a> and             <a href="../../../../blog/tag/sonarqube/">sonarqube</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue="></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2016/06/vim-presentation/" class="prev">
+        Vim&nbsp;Presentation
+        &#x21DD;
+        </a>
+        <a href="../../../../blog/2016/08/finding-dead-csharp-code-in-aspnet/" class="next">
+        &#x21DC;
+        Finding Dead C# Code in an <span...
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -67,17 +85,7 @@
         return false;
     }
 </script>
-        <div class="pager">
-        
-            <a href="/blog/2016/06/vim-presentation/" class="prev">
-            Vim Presentation &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2016/08/finding-dead-csharp-code-in-aspnet/" class="next">
-            &#x21DC; Finding Dead C# Code in an ASP.NET ...
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="util-links">
+    <a href="https://twitter.com/wafuqua" rel="me">twitter</a>
+    <a href="https://github.com/waf" rel="me">github</a>
+    <a href="{{ FEED_DOMAIN }}/{% if FEED_ALL_ATOM_URL %}{{ FEED_ALL_ATOM_URL }}{% else %}{{ FEED_ALL_ATOM }}{% endif %}" type="application/atom+xml" rel="alternate">blog feed</a>
+</div>
+
+<div id="entries-search">
+    <input class="search-box" type="search" placeholder="Filter&hellip;" />
+    <ul class="entry-list">
+{% for article in articles_page.object_list %}
+        <li>
+
+	    <a class="title tags-filter" data-tags="{{ article.tags | join(" ") | replace("csharp", "csharp c#")}}" href="{{ SITEURL }}/{{ article.url }}" rel="bookmark">{{ article.title }}</a>
+
+            <span class="date">{{ article.date.day }} {{ article.date.strftime("%B %Y") }}</span>
+        </li>
+
+{% endfor %}
+    </ul>
+</div>
+<script>
+    window.addEventListener("load", function() {
+        new List('entries-search', { 
+            valueNames: ['title', { name: 'tags-filter', attr: 'data-tags' } ],
+            searchClass: 'search-box',
+            listClass: 'entry-list'
+        });
+    }, false);
+</script>
+
+{% if articles_page.has_other_pages() %}
+    {% include 'pagination.html' %}
+{% endif %}
+{% endblock content %}

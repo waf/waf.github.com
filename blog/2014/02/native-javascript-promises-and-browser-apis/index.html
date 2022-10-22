@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Native JavaScript Promises and Browser APIs</title>
+        <title>Native JavaScript Promises and Browser APIs - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,24 +21,34 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="One of the interesting evolutions of mainstream Ja..." />
-    <meta name="keywords" content="html5, javascript, promise, web" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="html5" />
+    <meta name="tags" content="javascript" />
+    <meta name="tags" content="promise" />
+    <meta name="tags" content="web" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>Native JavaScript Promises and Browser APIs</h1>
+    <h1>Native JavaScript Promises and Browser&nbsp;APIs</h1>
     <p>One of the interesting evolutions of mainstream JavaScript development has been the widespread adoption of <a class="reference external" href="http://en.wikipedia.org/wiki/Promise_(programming)">Promises</a>. Promises simplify asynchronous code. Since JavaScript in the browser uses a single-threaded, callback-based programming model, asynchronicity is&nbsp;everywhere.</p>
 <div class="section" id="the-problem-with-asynchronicity">
 <h2>The Problem with&nbsp;Asynchronicity</h2>
@@ -49,7 +56,7 @@
 <p>When we use Promises, our code structure is flattened, and our error handling code can be consolidated into a single area. This makes our code easier to both understand and modify. As a result, Promises have taken the JavaScript ecosystem by&nbsp;storm.</p>
 </div>
 <div class="section" id="the-native-promise-api">
-<h2>The Native Promise&nbsp;<span class="caps">API</span></h2>
+<h2>The Native Promise <span class="caps">API</span></h2>
 <p>Historically, we&#8217;ve used libraries such as <a class="reference external" href="http://documentup.com/kriskowal/q/">q.js</a> to add Promises to our applications. However, with ECMAScript 6 <a class="reference external" href="https://github.com/domenic/promises-unwrapping">adding Promises to its specification</a> and recent versions of Chrome and Firefox shipping with support (since Chrome 33 and Firefox 29), we can start using native JavaScript Promises &#8211; no libraries&nbsp;required!</p>
 <p>It&#8217;s not all roses, though. Almost all of the existing browser APIs are callback-based, so they require a thin wrapper be able to use Promises. Let&#8217;s walk through wrapping a couple of browser APIs to add support for native JavaScript&nbsp;Promises.</p>
 <p>If you&#8217;ve used q.js Promises before, you&#8217;ll find the <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">native Promise <span class="caps">API</span></a> very familiar. At its heart, there&#8217;s a global <tt class="docutils literal">Promise</tt> interface. We instantiate a Promise object that represents an asynchronous operation. and use methods on the Promise object to chain together multiple Promises (and thus multiple asynchronous&nbsp;operations).</p>
@@ -61,76 +68,76 @@
 <p>In JavaScript Promise parlance, returning a value is known as <strong>resolving</strong> and encountering an error is known as <strong>rejecting</strong>. When we construct a promise, we specify when it resolves and when it&nbsp;rejects.</p>
 </div>
 <div class="section" id="promises-and-the-geolocation-api">
-<h2>Promises and the Geolocation&nbsp;<span class="caps">API</span></h2>
+<h2>Promises and the Geolocation <span class="caps">API</span></h2>
 <p>As an example, let&#8217;s add promise support to the Geolocation <span class="caps">API</span>. The Geolocation <span class="caps">API</span> exposes the <tt class="docutils literal">getCurrentPosition</tt> function, which makes a request for the user&#8217;s geographical position. The function takes an success callback and an error callback. If everything goes well, the success callback is called with the user&#8217;s coordinates as a parameter. If the user denies our request, or we can&#8217;t determine the user&#8217;s position, the error callback is called. A invocation of this function <cite>without</cite> Promises might look something&nbsp;like:</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">getUserPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="nx">getUserPosition</span><span class="p">(</span>
-    <span class="kd">function</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// we have the user&#39;s position!</span>
-    <span class="p">},</span>
-    <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// uhoh, something went wrong.</span>
-    <span class="p">}</span>
-<span class="p">);</span>
+<span class="nx">getUserPosition</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="kd">function</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// we have the user&#39;s position!</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// uhoh, something went wrong.</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">);</span><span class="w"></span>
 </pre></div>
 <p>The code is kind of inside-out; we have to wrap up the core of what we want to do (get the user&#8217;s position) in a function and pass it deep into the program. Let&#8217;s fix this by using&nbsp;Promises.</p>
 <p>Remember that a Promise can either <strong>resolve</strong> or <strong>reject</strong>. The mapping from resolve to the success callback and from reject to the error callback is pretty clear. It&#8217;s simple to wrap this browser <span class="caps">API</span> in a&nbsp;Promise:</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">);</span>
-    <span class="p">});</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">getUserPosition</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="w"> </span><span class="nx">reject</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="w"> </span><span class="nx">reject</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">});</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 <p>We can invoke the function to get our promise, and then specify success and failure callbacks using the <tt class="docutils literal">then()</tt> method on our Promise&nbsp;object:</p>
-<div class="highlight"><pre><span></span><span class="nx">getUserPosition</span><span class="p">()</span>
-    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// we have the user&#39;s position!</span>
-    <span class="p">})</span>
-    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// uhoh, something went wrong</span>
-    <span class="p">});</span>
+<div class="highlight"><pre><span></span><span class="nx">getUserPosition</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// we have the user&#39;s position!</span><span class="w"></span>
+<span class="w">    </span><span class="p">})</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// uhoh, something went wrong</span><span class="w"></span>
+<span class="w">    </span><span class="p">});</span><span class="w"></span>
 </pre></div>
 <p>At first blush, this might not seem much better. However, notice that when we call <tt class="docutils literal">getUserPosition</tt>, the function returns, and <cite>then</cite> we handle the position. In the callback-based version, we handled the position from <cite>inside</cite> the <tt class="docutils literal">getUserPosition</tt> function.</p>
 <p>While this is a significant change, there&#8217;s not much benefit with just one asynchronous operation. The benefits start compounding when we compose multiple asynchronous operations. To exercise this, let&#8217;s add another asynchronous operation: displaying the user&#8217;s position in an <span class="caps">HTML5</span>&nbsp;Notification.</p>
 </div>
 <div class="section" id="promises-and-the-html5-notification-api">
-<h2>Promises and the <span class="caps">HTML5</span> Notification&nbsp;<span class="caps">API</span></h2>
+<h2>Promises and the <span class="caps">HTML5</span> Notification <span class="caps">API</span></h2>
 <p>The <span class="caps">HTML5</span> Notification <span class="caps">API</span> is also callback-based, but in a different way than the Geolocation <span class="caps">API</span>: it uses a single <tt class="docutils literal">handleStatus</tt> callback, rather than separate callbacks for success and errors. The callback-based code might look like&nbsp;this:</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">(</span><span class="nx">handleStatus</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="nx">handleStatus</span><span class="p">);</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">getNotificationPermission</span><span class="p">(</span><span class="nx">handleStatus</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="nx">handleStatus</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="nx">getNotificationPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span><span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="s2">&quot;granted&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// we can show notifications!</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="c1">// error, permission denied :(</span>
-    <span class="p">}</span>
-<span class="p">});</span>
+<span class="nx">getNotificationPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;granted&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// we can show notifications!</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// error, permission denied :(</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">});</span><span class="w"></span>
 </pre></div>
 <p>For this conversion, we&#8217;ll manually call the <tt class="docutils literal">resolve</tt> and <tt class="docutils literal">reject</tt> handlers:</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="s2">&quot;granted&quot;</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">resolve</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="nx">reject</span><span class="p">(</span><span class="s2">&quot;Notification status &quot;</span> <span class="o">+</span> <span class="nx">status</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">});</span>
-    <span class="p">});</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">getNotificationPermission</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="w"> </span><span class="nx">reject</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;granted&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nx">resolve</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nx">reject</span><span class="p">(</span><span class="s2">&quot;Notification status &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">status</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="p">});</span><span class="w"></span>
+<span class="w">    </span><span class="p">});</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="nx">getNotificationPermission</span><span class="p">()</span>
-    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">permission</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// we can show notifications!</span>
-    <span class="p">})</span>
-    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// error, no permission</span>
-    <span class="p">});</span>
+<span class="nx">getNotificationPermission</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">permission</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// we can show notifications!</span><span class="w"></span>
+<span class="w">    </span><span class="p">})</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// error, no permission</span><span class="w"></span>
+<span class="w">    </span><span class="p">});</span><span class="w"></span>
 </pre></div>
 <p>Notice that the native browser APIs for Geolocation and Notification originally used two slightly different callback patterns, but in our Promise-based <span class="caps">API</span>, we have a single, unified execution pattern! Now we can easily compose these two operations and start to see the benefits of&nbsp;Promises.</p>
 </div>
@@ -144,38 +151,38 @@
 <li>Handle all of the failure points in the above&nbsp;steps.</li>
 </ol>
 <p>We can reuse our <tt class="docutils literal">getNotificationPermission</tt> and <tt class="docutils literal">getUserPosition</tt> functions we defined earlier. Here is the code, in its&nbsp;entirety:</p>
-<div class="highlight"><pre><span></span><span class="nx">getNotificationPermission</span><span class="p">()</span>
-    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">getUserPosition</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displayNotification</span><span class="p">)</span>
-    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// error, something went wrong.</span>
-    <span class="p">});</span>
+<div class="highlight"><pre><span></span><span class="nx">getNotificationPermission</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">getUserPosition</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displayNotification</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// error, something went wrong.</span><span class="w"></span>
+<span class="w">    </span><span class="p">});</span><span class="w"></span>
 
-<span class="c1">// we defined this function earlier</span>
-<span class="kd">function</span> <span class="nx">getNotificationPermission</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="s2">&quot;granted&quot;</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">resolve</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="nx">reject</span><span class="p">(</span><span class="s2">&quot;Notification status &quot;</span> <span class="o">+</span> <span class="nx">status</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">});</span>
-    <span class="p">});</span>
-<span class="p">}</span>
+<span class="c1">// we defined this function earlier</span><span class="w"></span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">getNotificationPermission</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="w"> </span><span class="nx">reject</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Notification</span><span class="p">.</span><span class="nx">requestPermission</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;granted&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nx">resolve</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nx">reject</span><span class="p">(</span><span class="s2">&quot;Notification status &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">status</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="p">});</span><span class="w"></span>
+<span class="w">    </span><span class="p">});</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="c1">// we defined this function earlier</span>
-<span class="kd">function</span> <span class="nx">getUserPosition</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">);</span>
-    <span class="p">});</span>
-<span class="p">}</span>
+<span class="c1">// we defined this function earlier</span><span class="w"></span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">getUserPosition</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="w"> </span><span class="nx">reject</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="w"> </span><span class="nx">reject</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">});</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="c1">// new function. displays lat/lng coordinates in a notification</span>
-<span class="kd">function</span> <span class="nx">displayNotification</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">new</span> <span class="nx">Notification</span><span class="p">(</span><span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span>
-                     <span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="c1">// new function. displays lat/lng coordinates in a notification</span><span class="w"></span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">displayNotification</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">Notification</span><span class="p">(</span><span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;,&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"></span>
+<span class="w">                     </span><span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 <p>Even though we&#8217;re dealing entirely with asynchronous operations, our code reads just like synchronous code. Additionally, the error-handling code resembles a try-catch block we might see in normal synchronous code! If an error is thrown in any of our functions, our <tt class="docutils literal">catch</tt> function will take over. In this error handler function we can check the error object to figure out exactly what went wrong and display the appropriate error message to the&nbsp;user.</p>
 </div>
@@ -183,20 +190,20 @@
 <h2>Altering the Program&nbsp;Flow</h2>
 <p>Right now we&#8217;re chaining all of our functions together, one after the other. This causes some inefficiency and a poor user experience: We request permission for notifications and wait to receive it, and then we request the user&#8217;s position and wait to receive it. Since these requests don&#8217;t depend on each other, ideally we would issue both of these requests at once, and then wait until both of the requests were&nbsp;successful.</p>
 <p>The Promise <span class="caps">API</span> has a solution. The static function <tt class="docutils literal">Promise.All()</tt> converts multiple promises into a single promise that resolves when all input promises resolve, or rejects when any input promise rejects. This is exactly what we need for our desired&nbsp;behavior:</p>
-<div class="highlight"><pre><span></span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
-    <span class="nx">requestNotificationPermission</span><span class="p">(),</span>
-    <span class="nx">getUserPosition</span><span class="p">()</span>
-<span class="p">])</span>
-<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displayPosition</span><span class="p">)</span>
-<span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// error, something went wrong.</span>
-<span class="p">});</span>
+<div class="highlight"><pre><span></span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span><span class="w"></span>
+<span class="w">    </span><span class="nx">requestNotificationPermission</span><span class="p">(),</span><span class="w"></span>
+<span class="w">    </span><span class="nx">getUserPosition</span><span class="p">()</span><span class="w"></span>
+<span class="p">])</span><span class="w"></span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displayPosition</span><span class="p">)</span><span class="w"></span>
+<span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// error, something went wrong.</span><span class="w"></span>
+<span class="p">});</span><span class="w"></span>
 
-<span class="kd">function</span> <span class="nx">displayPosition</span><span class="p">(</span><span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">position</span> <span class="o">=</span> <span class="nx">results</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-    <span class="k">new</span> <span class="nx">Notification</span><span class="p">(</span><span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span>
-                     <span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">displayPosition</span><span class="p">(</span><span class="nx">results</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">results</span><span class="p">[</span><span class="mf">1</span><span class="p">];</span><span class="w"></span>
+<span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">Notification</span><span class="p">(</span><span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;,&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"></span>
+<span class="w">                     </span><span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 <p>Now, we make both requests and wait until both promises resolve. The values the promises resolve to are passed in an array to the <tt class="docutils literal">displayPosition</tt> function. We only care about the return value of the <tt class="docutils literal">getUserPosition</tt> call, so we index into the results array and retrieve the&nbsp;position.</p>
 </div>
@@ -206,15 +213,27 @@
 </div>
 
     <div class="tags">
-         tagged as <a href="/blog/tag/html5/" rel="tag">html5</a>, <a href="/blog/tag/javascript/" rel="tag">javascript</a>, <a href="/blog/tag/promise/" rel="tag">promise</a> and  <a href="/blog/tag/web/" rel="tag">web</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/html5/">html5</a>,            <a href="../../../../blog/tag/javascript/">javascript</a>,            <a href="../../../../blog/tag/promise/">promise</a> and             <a href="../../../../blog/tag/web/">web</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue="></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="prev">
+        <span class="caps">REST</span> APIs...
+        &#x21DD;
+        </a>
+        <a href="../../../../blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="next">
+        &#x21DC;
+        Haskell&#8217;s Elegant Fibonacci...
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -227,17 +246,7 @@
         return false;
     }
 </script>
-        <div class="pager">
-        
-            <a href="/blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="prev">
-            REST APIs and Relational Databases in ... &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="next">
-            &#x21DC; Haskell's Elegant Fibonacci ...
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Blog - Will Fuqua</title>
+        <title>Blog - Will Fuqua - tools tag</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,155 +21,64 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+
+<div class="util-links">
+    <a href="https://twitter.com/wafuqua" rel="me">twitter</a>
+    <a href="https://github.com/waf" rel="me">github</a>
+    <a href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate">blog feed</a>
+</div>
+
+<div id="entries-search">
+    <input class="search-box" type="search" placeholder="Filter&hellip;" />
+    <ul class="entry-list">
+        <li>
+
+	    <a class="title tags-filter" data-tags="dotnet web tools" href="../../../blog/2019/01/a-caching-http-proxy-using-titanium-web-proxy/" rel="bookmark">A Caching <span class="caps">HTTP</span> Proxy using Titanium Web&nbsp;Proxy</a>
+
+            <span class="date">19 January 2019</span>
+        </li>
+
+        <li>
+
+	    <a class="title tags-filter" data-tags="javascript thai tools" href="../../../blog/2017/06/splitting-thai-words-with-browser-apis/" rel="bookmark">Splitting Thai words with Browser&nbsp;APIs</a>
+
+            <span class="date">3 June 2017</span>
+        </li>
+
+        <li>
+
+	    <a class="title tags-filter" data-tags="thai tools" href="../../../blog/2015/04/a-software-developer-learning-thai/" rel="bookmark">A Software Developer Learning&nbsp;Thai</a>
+
+            <span class="date">2 April 2015</span>
+        </li>
+
+        <li>
+
+	    <a class="title tags-filter" data-tags="csharp c# tools dates" href="../../../blog/2015/02/quick-tip-format-finder-for-net-date-strings/" rel="bookmark">Quick Tip: Format Finder for .<span class="caps">NET</span> date&nbsp;strings</a>
+
+            <span class="date">26 February 2015</span>
+        </li>
+
     </ul>
-</nav>
-<article>
-    <h1>A Caching HTTP Proxy using Titanium Web Proxy</h1>
-    <p>At my work at Jetabroad I do a lot of integration with third-party webservices (like everyone these days).
-The webservices, especially the test endpoints, are of variable stability and responsiveness.</p>
-<p>The responsiveness issue can be maddening when you're trying to iterate quickly. I prefer doing
-the bulk of my development via unit tests or integration tests to isolate myself as much as possible.
-However, I still ultimately find myself developing directly against these third-party services from
-time to time.</p>
-<p>I built <a class="reference external" href="https://github.com/waf/catchy">Catchy</a> to help solve this pain. When you start it, you provide a whitelist of domains to
-intercept. Catchy will examine your outbound REST or SOAP <span>&#8230;<a href="/blog/2019/01/a-caching-http-proxy-using-titanium-web-proxy/" class="continue">continue</a>.</span></p>
-    <div class="tags">
-         tagged as <a href="/blog/tag/dotnet/" rel="tag">dotnet</a>, <a href="/blog/tag/web/" rel="tag">web</a> and  <a href="/blog/tag/tools/" rel="tag">tools</a>  
-    </div>
-    
-</article>
+</div>
 <script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
-
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
+    window.addEventListener("load", function() {
+        new List('entries-search', { 
+            valueNames: ['title', { name: 'tags-filter', attr: 'data-tags' } ],
+            searchClass: 'search-box',
+            listClass: 'entry-list'
+        });
+    }, false);
 </script>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>Splitting Thai words with Browser APIs</h1>
-    <p>One of the difficulties for students learning the Thai language is the lack of spaces between words. For example, here is a simple sentence in Thai:</p>
-<p class="align-center">สวัสดีครับกินข้าวหรือยัง</p>
-<p>After some time, students start to recognize the shapes of the words and it becomes effortless to read. Before that time, however, it's quite a struggle!</p>
-<p>I found a neat trick yesterday for splitting Thai sentences into words with JavaScript in Chrome. There's no native API for understanding Thai text, but it's possible to piggyback on top of the browser's text selection APIs.</p>
-<p>When a word is double-clicked in the browser, the browser will select that word---and <span>&#8230;<a href="/blog/2017/06/splitting-thai-words-with-browser-apis/" class="continue">continue</a>.</span></p>
-    <div class="tags">
-         tagged as <a href="/blog/tag/javascript/" rel="tag">javascript</a>, <a href="/blog/tag/thai/" rel="tag">thai</a> and  <a href="/blog/tag/tools/" rel="tag">tools</a>  
-    </div>
-    
-</article>
-<script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
 
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
-</script>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>A Software Developer Learning Thai</h1>
-    <p>I recently uprooted from the USA and moved to Thailand! It's been an incredible experience so far. One of the more fascinating aspects of it has been learning the Thai language. I've created a couple of basic tools to help myself learn. Developing the tools helps me learn new technologies, and the resulting product helps me learn the language!</p>
-<ul class="simple">
-<li><a class="reference external" href="https://github.com/waf/thai-characters">Thai Characters</a> -- Simple flashcards to learn the characters and their low/middle/high class association.</li>
-<li><a class="reference external" href="https://github.com/waf/flash-cards">Thai Vocabulary Flashcards</a> -- Vocabulary flashcards. Interesting from a React/Material Design technical aspect.</li>
-<li><a class="reference external" href="https://github.com/waf/ThaiRecog">Thai OCR Android App</a> -- Quick POC android app for doing Thai language OCR using the camera. <span>&#8230;<a href="/blog/2015/04/a-software-developer-learning-thai/" class="continue">continue</a>.</span></li></ul>
-    <div class="tags">
-         tagged as <a href="/blog/tag/thai/" rel="tag">thai</a> and  <a href="/blog/tag/tools/" rel="tag">tools</a>  
-    </div>
-    
-</article>
-<script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
 
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
-</script>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>Quick Tip: Format Finder for .NET date strings</h1>
-    <p>If you've written C# for any length of time, chances are you've become very familiar with the MSDN documentation pages about <a class="reference external" href="https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx">Standard Date and Time Format Strings</a> and <a class="reference external" href="https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx">Custom Date and Time Format Strings</a>. Any time you need to format a <tt class="docutils literal">DateTime</tt>, those pages are invaluable.</p>
-<p>I don't find myself reading those pages often enough to warrant memorizing the strings, but I do read them often enough that it's worth automating the lookup. So I wrote a simple webapp to do it.</p>
-
-<p>I plan on skewing those curves by sharing this tool. So, here it is: <a class="reference external" href="https://fuqua.io/format-finder/">Format Finder</a>.</p>
-<p>Format Finder presents you with <span>&#8230;<a href="/blog/2015/02/quick-tip-format-finder-for-net-date-strings/" class="continue">continue</a>.</span></p>
-    <div class="tags">
-         tagged as <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/tools/" rel="tag">tools</a> and  <a href="/blog/tag/dates/" rel="tag">dates</a>  
-    </div>
-    
-</article>
-<script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
-
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
-</script>
-        
-<script src="/blog/script/list.min.js"></script>
-    </body>
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

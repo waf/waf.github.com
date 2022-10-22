@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block html_lang %}{{ article.lang }}{% endblock %}
+
+{% block title %}{{ article.title|striptags  }} - {{ SITENAME }}{% endblock %}
+
+{% block head %}
+  {{ super() }}
+
+  {% import 'translations.html' as translations with context %}
+  {% if translations.entry_hreflang(article) %}
+    {{ translations.entry_hreflang(article) }}
+  {% endif %}
+
+  {% if article.description %}
+    <meta name="description" content="{{article.description}}" />
+  {% endif %}
+
+  {% for tag in article.tags %}
+    <meta name="tags" content="{{tag}}" />
+  {% endfor %}
+
+{% endblock %}
+
+{% block content %}
+<nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="{{ ROOT_URL }}" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+
+
+<article>
+    <h1>{{ article.title }}</h1>
+    {{ article.content }}
+    <div class="tags">
+        tagged as
+        {% for tag in article.tags %}
+            <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
+            {%- if loop.revindex > 2 -%} , {%- elif loop.revindex == 2 %} and {% endif %}
+        {% endfor %}
+    </div>
+    <div id="comments"></div>
+    <script src="{{ '/' + THEME_STATIC_DIR }}/script/comments.js?issue={{article.commentid}}"></script>
+</article>
+
+<div class="pager">
+    {% if article.prev_article %}
+        <a href="{{ SITEURL }}/{{ article.prev_article.url}}" class="prev">
+        {{ article.prev_article.title | truncate(40) }}
+        &#x21DD;
+        </a>
+    {% endif %}
+    {% if article.next_article %}
+        <a href="{{ SITEURL }}/{{ article.next_article.url}}" class="next">
+        &#x21DC;
+        {{ article.next_article.title | truncate(40) }}
+        </a>
+    {% endif %}
+</div>
+
+
+<script>
+    function toggleDarkMode(e) {
+    e.preventDefault();
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
+{% endblock %}

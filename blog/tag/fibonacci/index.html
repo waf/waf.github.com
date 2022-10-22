@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Blog - Will Fuqua</title>
+        <title>Blog - Will Fuqua - fibonacci tag</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,50 +21,43 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
-        </header>
-        
-            <nav>
-    <ul>
-        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
-        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
-    </ul>
-</nav>
-<article>
-    <h1>Haskell's Elegant Fibonacci Implementation in C#</h1>
-    <p><a class="reference external" href="http://www.haskell.org/haskellwiki/Introduction">Haskell</a> is a high-level, functional, programming language. Its combination of higher-order functions and lazy evaluation can lead to beautifully elegant algorithm implementations. One such implementation is the <a class="reference external" href="http://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci series</a> algorithm:</p>
-<div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">fib</span> <span class="ow">=</span> <span class="mi">1</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="n">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fib</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fib</span><span class="p">)</span>
-</pre></div>
-<p>This creates a variable called <tt class="docutils literal">fib</tt> that contains an infinite sequence of Fibonacci numbers. We could print this variable, but our program would start trying to print an infinite number of elements. A better approach is to choose a finite number of elements from the sequence:</p>
-<div class="highlight"><pre><span></span><span class="nf">take</span> <span class="mi">10</span> <span class="n">fib</span>
-<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="mi">55</span><span class="p">]</span>
-</pre></div>
-<p>The above implementation of <tt class="docutils literal">fib</tt> fascinates me, so I decided to try my <span>&#8230;<a href="/blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="continue">continue</a>.</span></p>
-    <div class="tags">
-         tagged as <a href="/blog/tag/haskell/" rel="tag">haskell</a>, <a href="/blog/tag/csharp/" rel="tag">csharp</a>, <a href="/blog/tag/fibonacci/" rel="tag">fibonacci</a> and  <a href="/blog/tag/functional/" rel="tag">functional</a>  
-    </div>
-    
-</article>
-<script>
-    function toggleDarkMode() {
-        const classList = document.documentElement.classList;
-        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const manualDarkMode = classList.contains('dark');
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+</head>
 
-        if (classList.length == 0) {
-            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
-        } else {
-            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
-        }
-        return false;
-    }
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        </header>
+
+<div class="util-links">
+    <a href="https://twitter.com/wafuqua" rel="me">twitter</a>
+    <a href="https://github.com/waf" rel="me">github</a>
+    <a href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate">blog feed</a>
+</div>
+
+<div id="entries-search">
+    <input class="search-box" type="search" placeholder="Filter&hellip;" />
+    <ul class="entry-list">
+        <li>
+
+	    <a class="title tags-filter" data-tags="haskell csharp c# fibonacci functional" href="../../../blog/2014/03/haskells-elegant-fibonacci-in-csharp/" rel="bookmark">Haskell&#8217;s Elegant Fibonacci Implementation in&nbsp;C#</a>
+
+            <span class="date">11 March 2014</span>
+        </li>
+
+    </ul>
+</div>
+<script>
+    window.addEventListener("load", function() {
+        new List('entries-search', { 
+            valueNames: ['title', { name: 'tags-filter', attr: 'data-tags' } ],
+            searchClass: 'search-box',
+            listClass: 'entry-list'
+        });
+    }, false);
 </script>
-        
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

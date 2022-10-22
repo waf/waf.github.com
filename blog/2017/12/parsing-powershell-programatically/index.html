@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Parsing PowerShell Programatically</title>
+        <title>Parsing PowerShell Programatically - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,31 +21,39 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content="I&#39;ve recently been working with a lot of PowerShel..." />
-    <meta name="keywords" content="powershell, csharp" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="powershell" />
+    <meta name="tags" content="csharp" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>Parsing PowerShell Programatically</h1>
+    <h1>Parsing PowerShell&nbsp;Programatically</h1>
     <p>I&#8217;ve recently been working with a lot of PowerShell at work, and the experience has been, well, less than perfect. PowerShell is a dynamically-typed scripting language, and is most often used for administering Windows systems. The combination of making system changes and the runtime errors associated with dynamically-typed languages has been frustrating. It&#8217;s quite common to get the system into a weird or inconsistent state when developing PowerShell&nbsp;scripts.</p>
 <p>Ideally all your PowerShell is properly orchestrated with <tt class="docutils literal"><span class="pre">-WhatIf</span></tt> and <tt class="docutils literal">SupportsShouldProcess</tt> functionality, but in my experience it&#8217;s common for there to be large differences in behavior between <tt class="docutils literal"><span class="pre">-WhatIf</span></tt> execution and real&nbsp;execution.</p>
 <p>The end goal is to move away from large chunks of PowerShell, to something like <span class="caps">DSC</span> or Docker. However, while that process is underway, my team and I still have this day-to-day pain&nbsp;point.</p>
 <div class="section" id="the-value-of-a-build-step">
 <h2>The value of a build&nbsp;step</h2>
 <p>Other dynamically-typed languages also have this problem, most notably JavaScript. However, JavaScript has two mitigations. First, JavaScript is most often used in the context of a browser or servicing an <span class="caps">HTTP</span> request. In these scenarios there&#8217;s rarely persistent state across executions. Second, JavaScript has webpack / TypeScript, which serves as a build step that can catch dumb mistakes like typo-ing a function name or argument&nbsp;value.</p>
-<p>For PowerShell, the closest we have is <a class="reference external" href="https://github.com/PowerShell/PSScriptAnalyzer">PSScriptAnalyzer</a>, and it helps a lot &#8211; it&#8217;s a static analysis engine that warns about style and best practice violations. However, it isn&#8217;t the complete solution. I&#8217;m more interested in catching errors like &quot;you&#8217;re invoking a function that doesn&#8217;t&nbsp;exist.&quot;</p>
+<p>For PowerShell, the closest we have is <a class="reference external" href="https://github.com/PowerShell/PSScriptAnalyzer">PSScriptAnalyzer</a>, and it helps a lot &#8211; it&#8217;s a static analysis engine that warns about style and best practice violations. However, it isn&#8217;t the complete solution. I&#8217;m more interested in catching errors like &#8220;you&#8217;re invoking a function that doesn&#8217;t&nbsp;exist.&#8221;</p>
 </div>
 <div class="section" id="powershell-s-built-in-parser">
 <h2>PowerShell&#8217;s built-in&nbsp;parser</h2>
@@ -56,23 +61,23 @@
 <p>This functionality is available on any ScriptBlock in&nbsp;PowerShell:</p>
 <div class="highlight"><pre><span></span><span class="p">&gt;</span> <span class="p">{</span> <span class="n">1</span> <span class="p">+</span> <span class="n">2</span> <span class="p">}.</span><span class="n">Ast</span>
 
-<span class="n">Attributes</span>         <span class="err">:</span> <span class="p">{}</span>
-<span class="n">UsingStatements</span>    <span class="err">:</span> <span class="p">{}</span>
-<span class="n">ParamBlock</span>         <span class="err">:</span>
-<span class="n">BeginBlock</span>         <span class="err">:</span>
-<span class="n">ProcessBlock</span>       <span class="err">:</span>
-<span class="n">EndBlock</span>           <span class="err">:</span> <span class="n">1</span> <span class="p">+</span> <span class="n">2</span>
-<span class="n">DynamicParamBlock</span>  <span class="err">:</span>
-<span class="n">ScriptRequirements</span> <span class="err">:</span>
-<span class="n">Extent</span>             <span class="err">:</span> <span class="p">{</span> <span class="n">1</span> <span class="p">+</span> <span class="n">2</span> <span class="p">}</span>
-<span class="n">Parent</span>             <span class="err">:</span> <span class="p">{</span> <span class="n">1</span> <span class="p">+</span> <span class="n">2</span> <span class="p">}</span>
+<span class="n">Attributes</span>         <span class="p">:</span> <span class="p">{}</span>
+<span class="n">UsingStatements</span>    <span class="p">:</span> <span class="p">{}</span>
+<span class="n">ParamBlock</span>         <span class="p">:</span>
+<span class="n">BeginBlock</span>         <span class="p">:</span>
+<span class="n">ProcessBlock</span>       <span class="p">:</span>
+<span class="n">EndBlock</span>           <span class="p">:</span> <span class="n">1</span> <span class="p">+</span> <span class="n">2</span>
+<span class="n">DynamicParamBlock</span>  <span class="p">:</span>
+<span class="n">ScriptRequirements</span> <span class="p">:</span>
+<span class="n">Extent</span>             <span class="p">:</span> <span class="p">{</span> <span class="n">1</span> <span class="p">+</span> <span class="n">2</span> <span class="p">}</span>
+<span class="n">Parent</span>             <span class="p">:</span> <span class="p">{</span> <span class="n">1</span> <span class="p">+</span> <span class="n">2</span> <span class="p">}</span>
 </pre></div>
 <p>Additionally, because it&#8217;s all .<span class="caps">NET</span>, it&#8217;s simple to build your own analyzer / linter in C#. The namespace contains a parser to convert a file into an abstract syntax&nbsp;tree:</p>
-<div class="highlight"><pre><span></span><span class="n">ScriptBlockAst</span> <span class="n">ast</span> <span class="p">=</span> <span class="n">Parser</span><span class="p">.</span><span class="n">ParseFile</span><span class="p">(</span>
-    <span class="n">filename</span><span class="p">,</span>
-    <span class="k">out</span> <span class="n">Token</span><span class="p">[]</span> <span class="n">tokens</span><span class="p">,</span>
-    <span class="k">out</span> <span class="n">ParseError</span><span class="p">[]</span> <span class="n">errors</span>
-<span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="n">ScriptBlockAst</span><span class="w"> </span><span class="n">ast</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Parser</span><span class="p">.</span><span class="n">ParseFile</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="n">filename</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">out</span><span class="w"> </span><span class="n">Token</span><span class="p">[]</span><span class="w"> </span><span class="n">tokens</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">out</span><span class="w"> </span><span class="n">ParseError</span><span class="p">[]</span><span class="w"> </span><span class="n">errors</span><span class="w"></span>
+<span class="p">);</span><span class="w"></span>
 </pre></div>
 <p>As well as a visitor pattern implementation for traversing the abstract syntax&nbsp;tree:</p>
 <div class="highlight"><pre><span></span><span class="c1">/// &lt;summary&gt;</span>
@@ -81,28 +86,28 @@
 <span class="c1">/// the Ast; the engine traverses all nodes and calls the appropriate method</span>
 <span class="c1">/// on each node.</span>
 <span class="c1">/// &lt;/summary&gt;</span>
-<span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="nc">AstVisitor2</span>
-<span class="p">{</span>
-    <span class="k">public</span> <span class="k">virtual</span> <span class="n">AstVisitAction</span> <span class="nf">VisitScriptBlock</span><span class="p">(</span><span class="n">ScriptBlockAst</span> <span class="n">scriptBlockAst</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">virtual</span> <span class="n">AstVisitAction</span> <span class="nf">VisitFunctionDefinition</span><span class="p">(</span><span class="n">FunctionDefinitionAst</span> <span class="n">functionDefinitionAst</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">virtual</span> <span class="n">AstVisitAction</span> <span class="nf">VisitCommand</span><span class="p">(</span><span class="n">CommandAst</span> <span class="n">commandAst</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">virtual</span> <span class="n">AstVisitAction</span> <span class="nf">VisitStatementBlock</span><span class="p">(</span><span class="n">StatementBlockAst</span> <span class="n">statementBlockAst</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">virtual</span> <span class="n">AstVisitAction</span> <span class="nf">VisitIfStatement</span><span class="p">(</span><span class="n">IfStatementAst</span> <span class="n">ifStmtAst</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">virtual</span> <span class="n">AstVisitAction</span> <span class="nf">VisitSwitchStatement</span><span class="p">(</span><span class="n">SwitchStatementAst</span> <span class="n">switchStatementAst</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">public</span> <span class="k">virtual</span> <span class="n">AstVisitAction</span> <span class="nf">VisitForEachStatement</span><span class="p">(</span><span class="n">ForEachStatementAst</span> <span class="n">forEachStatementAst</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span> <span class="p">}</span>
-    <span class="c1">//...etc</span>
-<span class="p">}</span>
+<span class="k">public</span><span class="w"> </span><span class="k">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AstVisitor2</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="w"> </span><span class="nf">VisitScriptBlock</span><span class="p">(</span><span class="n">ScriptBlockAst</span><span class="w"> </span><span class="n">scriptBlockAst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="w"> </span><span class="nf">VisitFunctionDefinition</span><span class="p">(</span><span class="n">FunctionDefinitionAst</span><span class="w"> </span><span class="n">functionDefinitionAst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="w"> </span><span class="nf">VisitCommand</span><span class="p">(</span><span class="n">CommandAst</span><span class="w"> </span><span class="n">commandAst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="w"> </span><span class="nf">VisitStatementBlock</span><span class="p">(</span><span class="n">StatementBlockAst</span><span class="w"> </span><span class="n">statementBlockAst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="w"> </span><span class="nf">VisitIfStatement</span><span class="p">(</span><span class="n">IfStatementAst</span><span class="w"> </span><span class="n">ifStmtAst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="w"> </span><span class="nf">VisitSwitchStatement</span><span class="p">(</span><span class="n">SwitchStatementAst</span><span class="w"> </span><span class="n">switchStatementAst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="w"> </span><span class="nf">VisitForEachStatement</span><span class="p">(</span><span class="n">ForEachStatementAst</span><span class="w"> </span><span class="n">forEachStatementAst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="p">.</span><span class="n">Continue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="c1">//...etc</span>
+<span class="p">}</span><span class="w"></span>
 
 <span class="c1">/// &lt;summary&gt;</span>
 <span class="c1">/// Each Visit* method in AstVisitor2 returns one of these</span>
-<span class="c1">/// values to control how visiting nodes in the <span class="caps">AST</span> should proceed.</span>
+<span class="c1">/// values to control how visiting nodes in the AST should proceed.</span>
 <span class="c1">/// &lt;/summary&gt;</span>
-<span class="k">public</span> <span class="k">enum</span> <span class="n">AstVisitAction</span>
-<span class="p">{</span>
-    <span class="n">Continue</span><span class="p">,</span> <span class="c1">// Continue visiting all nodes the ast.</span>
-    <span class="n">SkipChildren</span><span class="p">,</span> <span class="c1">// Skip visiting child nodes of currently visited node</span>
-    <span class="n">StopVisit</span><span class="p">,</span> <span class="c1">// Stop visiting all nodes.</span>
-<span class="p">}</span>
+<span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">Continue</span><span class="p">,</span><span class="w"> </span><span class="c1">// Continue visiting all nodes the ast.</span>
+<span class="w">    </span><span class="n">SkipChildren</span><span class="p">,</span><span class="w"> </span><span class="c1">// Skip visiting child nodes of currently visited node</span>
+<span class="w">    </span><span class="n">StopVisit</span><span class="p">,</span><span class="w"> </span><span class="c1">// Stop visiting all nodes.</span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="section" id="finding-invalid-function-invocations">
@@ -130,60 +135,60 @@
 The base class will visit each node for us, and we can override methods if we want to perform an action.
 We&#8217;ll need to know about what functions are defined already (like <tt class="docutils literal"><span class="pre">Write-Output</span></tt>) so let&#8217;s take that
 as a constructor parameter <tt class="docutils literal">moduleCommands</tt>.</p>
-<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">AnalysisVisitor</span> <span class="p">:</span> <span class="n">AstVisitor2</span>
-<span class="p">{</span>
-    <span class="c1">// an initially empty collection that will accumulate the locally-defined functions</span>
-    <span class="k">public</span> <span class="n">IImmutableDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">FunctionDefinitionAst</span><span class="p">&gt;</span> <span class="n">LocalCommands</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AnalysisVisitor</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AstVisitor2</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// an initially empty collection that will accumulate the locally-defined functions</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IImmutableDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="n">FunctionDefinitionAst</span><span class="p">&gt;</span><span class="w"> </span><span class="n">LocalCommands</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 
-    <span class="c1">// an collection that has the list of already defined functions, like Write-Output</span>
-    <span class="k">public</span> <span class="n">IImmutableDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">CommandInfo</span><span class="p">&gt;</span> <span class="n">ModuleCommands</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="w">    </span><span class="c1">// an collection that has the list of already defined functions, like Write-Output</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IImmutableDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="n">CommandInfo</span><span class="p">&gt;</span><span class="w"> </span><span class="n">ModuleCommands</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 
-    <span class="c1">// The errors we&#39;ve found during our analysis</span>
-    <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">ValidationErrors</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+<span class="w">    </span><span class="c1">// The errors we&#39;ve found during our analysis</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span><span class="w"> </span><span class="n">ValidationErrors</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 
-    <span class="k">public</span> <span class="nf">AnalysisVisitor</span><span class="p">(</span>
-        <span class="n">IImmutableDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">FunctionDefinitionAst</span><span class="p">&gt;</span> <span class="n">localCommands</span>
-        <span class="n">IImmutableDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">CommandInfo</span><span class="p">&gt;</span> <span class="n">moduleCommands</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="n">LocalCommands</span> <span class="p">=</span> <span class="n">localCommands</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="n">ModuleCommands</span> <span class="p">=</span> <span class="n">moduleCommands</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="n">ValidationErrors</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;();</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">AnalysisVisitor</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">IImmutableDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="n">FunctionDefinitionAst</span><span class="p">&gt;</span><span class="w"> </span><span class="n">localCommands</span><span class="w"></span>
+<span class="w">        </span><span class="n">IImmutableDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="n">CommandInfo</span><span class="p">&gt;</span><span class="w"> </span><span class="n">moduleCommands</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="n">LocalCommands</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">localCommands</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="n">ModuleCommands</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">moduleCommands</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="n">ValidationErrors</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;();</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 <p>We can call our visitor like&nbsp;so:</p>
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">ast</span> <span class="p">=</span> <span class="n">Parser</span><span class="p">.</span><span class="n">ParseFile</span><span class="p">(</span>
-    <span class="s">&quot;./myFile.ps1&quot;</span><span class="p">,</span>
-    <span class="k">out</span> <span class="n">Token</span><span class="p">[]</span> <span class="n">tokens</span><span class="p">,</span>
-    <span class="k">out</span> <span class="n">ParseError</span><span class="p">[]</span> <span class="n">errors</span>
-<span class="p">);</span>
-<span class="kt">var</span> <span class="n">fileVisitor</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AnalysisVisitor</span><span class="p">(</span>
-    <span class="n">localFunctions</span><span class="p">:</span> <span class="n">ImmutableDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">FunctionDefinitionAst</span><span class="p">&gt;.</span><span class="n">Empty</span><span class="p">,</span>
-    <span class="n">moduleFunctions</span><span class="p">:</span> <span class="n">GetInScopeFunctions</span><span class="p">()</span>
-<span class="p">);</span>
-<span class="n">ast</span><span class="p">.</span><span class="n">Visit</span><span class="p">(</span><span class="n">fileVisitor</span><span class="p">);</span>
-<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Errors:&quot;</span><span class="p">);</span>
-<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Join</span><span class="p">(</span><span class="n">Environment</span><span class="p">.</span><span class="n">NewLine</span><span class="p">,</span> <span class="n">fileVisitor</span><span class="p">.</span><span class="n">ValidationErrors</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">ast</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Parser</span><span class="p">.</span><span class="n">ParseFile</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;./myFile.ps1&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">out</span><span class="w"> </span><span class="n">Token</span><span class="p">[]</span><span class="w"> </span><span class="n">tokens</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">out</span><span class="w"> </span><span class="n">ParseError</span><span class="p">[]</span><span class="w"> </span><span class="n">errors</span><span class="w"></span>
+<span class="p">);</span><span class="w"></span>
+<span class="kt">var</span><span class="w"> </span><span class="n">fileVisitor</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AnalysisVisitor</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="n">localFunctions</span><span class="p">:</span><span class="w"> </span><span class="n">ImmutableDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="n">FunctionDefinitionAst</span><span class="p">&gt;.</span><span class="n">Empty</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="n">moduleFunctions</span><span class="p">:</span><span class="w"> </span><span class="n">GetInScopeFunctions</span><span class="p">()</span><span class="w"></span>
+<span class="p">);</span><span class="w"></span>
+<span class="n">ast</span><span class="p">.</span><span class="n">Visit</span><span class="p">(</span><span class="n">fileVisitor</span><span class="p">);</span><span class="w"></span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Errors:&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Join</span><span class="p">(</span><span class="n">Environment</span><span class="p">.</span><span class="n">NewLine</span><span class="p">,</span><span class="w"> </span><span class="n">fileVisitor</span><span class="p">.</span><span class="n">ValidationErrors</span><span class="p">));</span><span class="w"></span>
 </pre></div>
 <p>The function <tt class="docutils literal">GetInScopeFunctions</tt> is outside the scope of this article, but if you&#8217;re curious you can <a class="reference external" href="https://github.com/waf/PSCommandLint/blob/d1d579e7d83c526640e8dd2287da005b2ebe025d/PSCommandLint/Analysis/CommandAnalyzer.cs#L75">see the definition here</a>.</p>
 </div>
 <div class="section" id="step-2-keeping-track-of-function-definitions">
 <h2>Step 2: Keeping track of function&nbsp;definitions</h2>
 <p>For Step 2, we add an override for <tt class="docutils literal">VisitFunctionDefinition</tt>. We&#8217;ll add each visited function definition to our <tt class="docutils literal">LocalCommands</tt> property:</p>
-<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">override</span> <span class="n">AstVisitAction</span> <span class="nf">VisitFunctionDefinition</span><span class="p">(</span><span class="n">FunctionDefinitionAst</span> <span class="n">functionDefinitionAst</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">string</span> <span class="n">functionName</span> <span class="p">=</span> <span class="n">functionDefinitionAst</span><span class="p">.</span><span class="n">Name</span><span class="p">;</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">LocalCommands</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">functionName</span><span class="p">))</span>
-    <span class="p">{</span>
-        <span class="n">ValidationErrors</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;Overwriting existing function &quot;</span> <span class="p">+</span> <span class="n">functionName</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="n">LocalCommands</span> <span class="p">=</span> <span class="n">LocalCommands</span><span class="p">.</span><span class="n">SetItem</span><span class="p">(</span><span class="n">functionName</span><span class="p">,</span> <span class="n">functionDefinitionAst</span><span class="p">);</span>
-    <span class="c1">// Track that we&#39;ve seen the function, but don&#39;t analyze the body.</span>
-    <span class="c1">// the body will be analyzed when the function is called.</span>
-    <span class="c1">// If we tried to analyze the body now, we may find invocations of</span>
-    <span class="c1">// functions that will be defined later.</span>
-    <span class="k">return</span> <span class="n">AstVisitAction</span><span class="p">.</span><span class="n">SkipChildren</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="w"> </span><span class="nf">VisitFunctionDefinition</span><span class="p">(</span><span class="n">FunctionDefinitionAst</span><span class="w"> </span><span class="n">functionDefinitionAst</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">functionName</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">functionDefinitionAst</span><span class="p">.</span><span class="n">Name</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">LocalCommands</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">functionName</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">ValidationErrors</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;Overwriting existing function &quot;</span><span class="w"> </span><span class="p">+</span><span class="w"> </span><span class="n">functionName</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="n">LocalCommands</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">LocalCommands</span><span class="p">.</span><span class="n">SetItem</span><span class="p">(</span><span class="n">functionName</span><span class="p">,</span><span class="w"> </span><span class="n">functionDefinitionAst</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// Track that we&#39;ve seen the function, but don&#39;t analyze the body.</span>
+<span class="w">    </span><span class="c1">// the body will be analyzed when the function is called.</span>
+<span class="w">    </span><span class="c1">// If we tried to analyze the body now, we may find invocations of</span>
+<span class="w">    </span><span class="c1">// functions that will be defined later.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="p">.</span><span class="n">SkipChildren</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="section" id="step-3-following-function-invocations">
@@ -194,29 +199,29 @@ as a constructor parameter <tt class="docutils literal">moduleCommands</tt>.</p>
 <li>If the invoked command is in our <tt class="docutils literal">LocalCommands</tt> variable, we&#8217;ll then recursively visit the function body and merge the result with our overall&nbsp;result.</li>
 <li>If we don&#8217;t know about the command, then we&#8217;ve identified the&nbsp;error!</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">override</span> <span class="n">AstVisitAction</span> <span class="nf">VisitCommand</span><span class="p">(</span><span class="n">CommandAst</span> <span class="n">commandAst</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">string</span> <span class="n">commandName</span> <span class="p">=</span> <span class="n">commandAst</span><span class="p">.</span><span class="n">GetCommandName</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="n">AstVisitAction</span><span class="w"> </span><span class="nf">VisitCommand</span><span class="p">(</span><span class="n">CommandAst</span><span class="w"> </span><span class="n">commandAst</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">commandName</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">commandAst</span><span class="p">.</span><span class="n">GetCommandName</span><span class="p">();</span><span class="w"></span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">ModuleCommands</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">commandName</span><span class="p">))</span>
-    <span class="p">{</span>
-        <span class="c1">// nothing to analyze, it&#39;s in another module (e.g. Write-Output)</span>
-        <span class="k">return</span> <span class="k">base</span><span class="p">.</span><span class="n">VisitCommand</span><span class="p">(</span><span class="n">commandAst</span><span class="p">);</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ModuleCommands</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">commandName</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// nothing to analyze, it&#39;s in another module (e.g. Write-Output)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">base</span><span class="p">.</span><span class="n">VisitCommand</span><span class="p">(</span><span class="n">commandAst</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">LocalCommands</span><span class="p">.</span><span class="n">TryGetValue</span><span class="p">(</span><span class="n">commandName</span><span class="p">,</span> <span class="k">out</span> <span class="kt">var</span> <span class="n">functionDefinition</span><span class="p">))</span>
-    <span class="p">{</span>
-        <span class="c1">// recursively visit the invoked function&#39;s body</span>
-        <span class="kt">var</span> <span class="n">functionVisitor</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AnalysisVisitor</span><span class="p">(</span><span class="n">LocalCommands</span><span class="p">,</span> <span class="n">ModuleCommands</span><span class="p">);</span>
-        <span class="n">functionDefinition</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Visit</span><span class="p">(</span><span class="n">functionVisitor</span><span class="p">);</span>
-        <span class="n">MergeResult</span><span class="p">(</span><span class="n">functionVisitor</span><span class="p">);</span>
-        <span class="k">return</span> <span class="k">base</span><span class="p">.</span><span class="n">VisitCommand</span><span class="p">(</span><span class="n">commandAst</span><span class="p">);</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">LocalCommands</span><span class="p">.</span><span class="n">TryGetValue</span><span class="p">(</span><span class="n">commandName</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">functionDefinition</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// recursively visit the invoked function&#39;s body</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">functionVisitor</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AnalysisVisitor</span><span class="p">(</span><span class="n">LocalCommands</span><span class="p">,</span><span class="w"> </span><span class="n">ModuleCommands</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">functionDefinition</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Visit</span><span class="p">(</span><span class="n">functionVisitor</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">MergeResult</span><span class="p">(</span><span class="n">functionVisitor</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">base</span><span class="p">.</span><span class="n">VisitCommand</span><span class="p">(</span><span class="n">commandAst</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-    <span class="n">ValidationErrors</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">commandName</span> <span class="p">+</span> <span class="s">&quot; is not defined&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ValidationErrors</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">commandName</span><span class="w"> </span><span class="p">+</span><span class="w"> </span><span class="s">&quot; is not defined&quot;</span><span class="p">);</span><span class="w"></span>
 
-    <span class="k">return</span> <span class="k">base</span><span class="p">.</span><span class="n">VisitCommand</span><span class="p">(</span><span class="n">commandAst</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">base</span><span class="p">.</span><span class="n">VisitCommand</span><span class="p">(</span><span class="n">commandAst</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 <p>All done! This very basic analyzer will detect our error. There&#8217;s all sorts of improvements we can do, such as
 support for dot-sourced files and descending into modules, but these features will follow the same pattern as our
@@ -225,15 +230,27 @@ simple&nbsp;analyzer.</p>
 </div>
 
     <div class="tags">
-         tagged as <a href="/blog/tag/powershell/" rel="tag">powershell</a> and  <a href="/blog/tag/csharp/" rel="tag">csharp</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/powershell/">powershell</a> and             <a href="../../../../blog/tag/csharp/">csharp</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue="></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2017/08/level-up-your-vsvim/" class="prev">
+        Level up your&nbsp;VsVim
+        &#x21DD;
+        </a>
+        <a href="../../../../blog/2018/07/rendering-an-aspnet-core-mvc-action-to-a-string/" class="next">
+        &#x21DC;
+        Rendering an <span...
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -246,17 +263,7 @@ simple&nbsp;analyzer.</p>
         return false;
     }
 </script>
-        <div class="pager">
-        
-            <a href="/blog/2017/08/level-up-your-vsvim/" class="prev">
-            Level up your VsVim &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2018/07/rendering-an-asp-net-core-mvc-action-to-a-string/" class="next">
-            &#x21DC; Rendering an ASP.NET Core MVC action to ...
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>

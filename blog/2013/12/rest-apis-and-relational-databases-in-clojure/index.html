@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
+<head>
+          <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>REST APIs and Relational Databases in Clojure</title>
+        <title>REST APIs and Relational Databases in Clojure - Blog - Will Fuqua</title>
         <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
         <link media="all" href="/blog/style/main.css" rel="stylesheet" />
         <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
-        <link href="/blog/atom/" type="application/atom+xml" rel="alternate" title="Atom Feed" />
-        <link href="/blog/rss/" type="application/rss+xml" rel="alternate" title="RSS Feed" />
         <script>
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-38553935-1']);
@@ -24,90 +21,101 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         </script>
-    <meta name="description" content=".. role:: clojure(code)
-   :language: clojure
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
 
-I&#39;v..." />
-    <meta name="keywords" content="clojure, web, compojure, ring, database, sql, korma, lobos" />
-    </head>
-    <body>
-        <header>
-            <a href="/blog/" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+
+
+
+    <meta name="tags" content="clojure" />
+    <meta name="tags" content="web" />
+    <meta name="tags" content="compojure" />
+    <meta name="tags" content="ring" />
+    <meta name="tags" content="database" />
+    <meta name="tags" content="sql" />
+    <meta name="tags" content="korma" />
+    <meta name="tags" content="lobos" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
         </header>
-        
-        <nav>
+<nav>
     <ul>
         <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
-        <li><a class="root" href="https://fuqua.io/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
-        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode()"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
         <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
     </ul>
 </nav>
+
+
 <article>
-    <h1>REST APIs and Relational Databases in Clojure</h1>
+    <h1><span class="caps">REST</span> APIs and Relational Databases in&nbsp;Clojure</h1>
     <p>I&#8217;ve found that most Clojure web application articles out there cover the Ring and Compojure APIs pretty well, but stop short of the data access layer, leaving that up to you. This article will attempt to remedy that, with a focus on relational&nbsp;databases.</p>
 <p>In this post we&#8217;ll create a simple <span class="caps">REST</span> <span class="caps">API</span> for a todo list web application. We&#8217;ll use <a class="reference external" href="https://github.com/weavejester/compojure">Compojure</a> to create a <span class="caps">REST</span> <span class="caps">API</span>, <a class="reference external" href="http://budu.github.io/lobos/">Lobos</a> to create and manage our database tables, and <a class="reference external" href="http://sqlkorma.com/">Korma</a> to query a PostgreSQL&nbsp;database.</p>
 <div class="section" id="generating-a-compojure-application">
 <h2>Generating a Compojure&nbsp;Application</h2>
 <p>The first thing we&#8217;ll do is <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Getting-Started">set up a Compojure web application</a>. Use Leiningen to create and spin up an empty web&nbsp;application:</p>
-<div class="highlight"><pre><span></span><span class="gp">&gt;</span> lein new compojure todoapp
-<span class="gp">&gt;</span> <span class="nb">cd</span> todoapp
-<span class="gp">&gt;</span> lein ring server
+<div class="highlight"><pre><span></span><span class="go">&gt; lein new compojure todoapp</span>
+<span class="go">&gt; cd todoapp</span>
+<span class="go">&gt; lein ring server</span>
 </pre></div>
-<p>After issuing the <tt class="docutils literal">lein ring server</tt> command, your browser should open up a &quot;Hello World&quot; page on <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Let&#8217;s make that a little bit more interesting! Keeping the server running, open the generated <tt class="docutils literal">src/todoapp/handler.clj</tt> file in your favorite editor and examine the&nbsp;contents:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.handler</span>
-  <span class="p">(</span><span class="ss">:use</span> <span class="nv">compojure.core</span><span class="p">)</span>
-  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">compojure.handler</span> <span class="ss">:as</span> <span class="nv">handler</span><span class="p">]</span>
-            <span class="p">[</span><span class="nv">compojure.route</span> <span class="ss">:as</span> <span class="nv">route</span><span class="p">]))</span>
+<p>After issuing the <tt class="docutils literal">lein ring server</tt> command, your browser should open up a &#8220;Hello World&#8221; page on <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Let&#8217;s make that a little bit more interesting! Keeping the server running, open the generated <tt class="docutils literal">src/todoapp/handler.clj</tt> file in your favorite editor and examine the&nbsp;contents:</p>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.handler</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="ss">:use</span><span class="w"> </span><span class="nv">compojure.core</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="ss">:require</span><span class="w"> </span><span class="p">[</span><span class="nv">compojure.handler</span><span class="w"> </span><span class="ss">:as</span><span class="w"> </span><span class="nv">handler</span><span class="p">]</span><span class="w"></span>
+<span class="w">            </span><span class="p">[</span><span class="nv">compojure.route</span><span class="w"> </span><span class="ss">:as</span><span class="w"> </span><span class="nv">route</span><span class="p">]))</span><span class="w"></span>
 
-<span class="p">(</span><span class="nf">defroutes</span> <span class="nv">app-routes</span>
-  <span class="p">(</span><span class="nf"><span class="caps">GET</span></span> <span class="s">&quot;/&quot;</span> <span class="p">[]</span> <span class="s">&quot;Hello World&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">route/resources</span> <span class="s">&quot;/&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">route/not-found</span> <span class="s">&quot;Not Found&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">defroutes</span><span class="w"> </span><span class="nv">app-routes</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">GET</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="s">&quot;Hello World&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">route/resources</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">route/not-found</span><span class="w"> </span><span class="s">&quot;Not Found&quot;</span><span class="p">))</span><span class="w"></span>
 
-<span class="p">(</span><span class="k">def </span><span class="nv">app</span>
-  <span class="p">(</span><span class="nf">handler/site</span> <span class="nv">app-routes</span><span class="p">))</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">app</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">handler/site</span><span class="w"> </span><span class="nv">app-routes</span><span class="p">))</span><span class="w"></span>
 </pre></div>
-<p>The <tt class="docutils literal">defroutes</tt> line is setting up our <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Routes-In-Detail"><span class="caps">HTTP</span> request handlers</a>. An <span class="caps">HTTP</span> request handler defines our application&#8217;s response for a given <span class="caps">HTTP</span> request. Currently, we&#8217;re defining a &quot;Hello World&quot; response for <span class="caps">HTTP</span> <span class="caps">GET</span> requests to the root <span class="caps">URL</span>. If the incoming request is for some other resource, say <tt class="docutils literal">/foo.txt</tt>, the server attempts to find a static resource by that name (in the directory <tt class="docutils literal">resources/public</tt>, by default). If that fails, we&#8217;ll return a 404 &quot;Not Found&quot;&nbsp;message.</p>
-<p>The <tt class="docutils literal">def app</tt> line takes the <tt class="docutils literal"><span class="pre">app-routes</span></tt> that we defined, and wraps them with the <tt class="docutils literal">handler/site</tt> function. This Compojure function adds useful functionality (called &quot;middleware&quot;) for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the <a class="reference external" href="http://weavejester.github.io/compojure/compojure.handler.html">Compojure documentation</a>.</p>
+<p>The <tt class="docutils literal">defroutes</tt> line is setting up our <a class="reference external" href="https://github.com/weavejester/compojure/wiki/Routes-In-Detail"><span class="caps">HTTP</span> request handlers</a>. An <span class="caps">HTTP</span> request handler defines our application&#8217;s response for a given <span class="caps">HTTP</span> request. Currently, we&#8217;re defining a &#8220;Hello World&#8221; response for <span class="caps">HTTP</span> <span class="caps">GET</span> requests to the root <span class="caps">URL</span>. If the incoming request is for some other resource, say <tt class="docutils literal">/foo.txt</tt>, the server attempts to find a static resource by that name (in the directory <tt class="docutils literal">resources/public</tt>, by default). If that fails, we&#8217;ll return a 404 &#8220;Not Found&#8221;&nbsp;message.</p>
+<p>The <tt class="docutils literal">def app</tt> line takes the <tt class="docutils literal"><span class="pre">app-routes</span></tt> that we defined, and wraps them with the <tt class="docutils literal">handler/site</tt> function. This Compojure function adds useful functionality (called &#8220;middleware&#8221;) for websites, like user session tracking, cookie handling, etc. For a full list of added functionality see the <a class="reference external" href="http://weavejester.github.io/compojure/compojure.handler.html">Compojure documentation</a>.</p>
 </div>
 <div class="section" id="setting-up-a-json-rest-api">
-<h2>Setting up a <span class="caps">JSON</span> <span class="caps">REST</span>&nbsp;<span class="caps">API</span></h2>
-<p>Let&#8217;s modify the middleware stack (the <tt class="docutils literal">def app</tt> statement) to be more suitable for a <span class="caps">REST</span> <span class="caps">API</span>. The default <tt class="docutils literal">handler/site</tt> middleware assumes you&#8217;re building a website; since we&#8217;re building a <span class="caps">JSON</span> <span class="caps">API</span>, we&#8217;ll swap out <tt class="docutils literal">handler/site</tt> for the more barebones <tt class="docutils literal">handler/api</tt>, and add some middleware for parsing and returning&nbsp;<span class="caps">JSON</span>.</p>
+<h2>Setting up a <span class="caps">JSON</span> <span class="caps">REST</span> <span class="caps">API</span></h2>
+<p>Let&#8217;s modify the middleware stack (the <tt class="docutils literal">def app</tt> statement) to be more suitable for a <span class="caps">REST</span> <span class="caps">API</span>. The default <tt class="docutils literal">handler/site</tt> middleware assumes you&#8217;re building a website; since we&#8217;re building a <span class="caps">JSON</span> <span class="caps">API</span>, we&#8217;ll swap out <tt class="docutils literal">handler/site</tt> for the more barebones <tt class="docutils literal">handler/api</tt>, and add some middleware for parsing and returning <span class="caps">JSON</span>.</p>
 <p>In our <tt class="docutils literal">project.clj</tt> file, we&#8217;ll add a dependency on the <a class="reference external" href="https://github.com/ring-clojure/ring-json">ring-json</a>&nbsp;library:</p>
-<div class="highlight"><pre><span></span><span class="ss">:dependencies</span> <span class="p">[[</span><span class="nv">org.clojure/clojure</span> <span class="s">&quot;1.5.1&quot;</span><span class="p">]</span>
-               <span class="p">[</span><span class="nv">compojure</span> <span class="s">&quot;1.1.6&quot;</span><span class="p">]</span>
-               <span class="p">[</span><span class="nv">ring/ring-json</span> <span class="s">&quot;0.2.0&quot;</span><span class="p">]]</span>
+<div class="highlight"><pre><span></span><span class="ss">:dependencies</span><span class="w"> </span><span class="p">[[</span><span class="nv">org.clojure/clojure</span><span class="w"> </span><span class="s">&quot;1.5.1&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">               </span><span class="p">[</span><span class="nv">compojure</span><span class="w"> </span><span class="s">&quot;1.1.6&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">               </span><span class="p">[</span><span class="nv">ring/ring-json</span><span class="w"> </span><span class="s">&quot;0.2.0&quot;</span><span class="p">]]</span><span class="w"></span>
 </pre></div>
 <p>Now we&#8217;ll add a reference to ring-json in <tt class="docutils literal">handler.clj</tt>:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">compojure.handler</span> <span class="ss">:as</span> <span class="nv">handler</span><span class="p">]</span>
-          <span class="p">[</span><span class="nv">compojure.route</span> <span class="ss">:as</span> <span class="nv">route</span><span class="p">]</span>
-          <span class="p">[</span><span class="nv">ring.middleware.json</span> <span class="ss">:as</span> <span class="nv">json</span><span class="p">]))</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="ss">:require</span><span class="w"> </span><span class="p">[</span><span class="nv">compojure.handler</span><span class="w"> </span><span class="ss">:as</span><span class="w"> </span><span class="nv">handler</span><span class="p">]</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="nv">compojure.route</span><span class="w"> </span><span class="ss">:as</span><span class="w"> </span><span class="nv">route</span><span class="p">]</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="nv">ring.middleware.json</span><span class="w"> </span><span class="ss">:as</span><span class="w"> </span><span class="nv">json</span><span class="p">]))</span><span class="w"></span>
 </pre></div>
 <p>And add the middleware to our application, as well as swapping out <tt class="docutils literal">handler/site</tt> for the aforementioned <tt class="docutils literal">handler/api</tt>:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="k">def </span><span class="nv">app</span>
-  <span class="p">(</span><span class="nb">-&gt; </span><span class="p">(</span><span class="nf">handler/api</span> <span class="nv">app-routes</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">json/wrap-json-params</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">json/wrap-json-response</span><span class="p">)))</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="k">def </span><span class="nv">app</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nb">-&gt; </span><span class="p">(</span><span class="nf">handler/api</span><span class="w"> </span><span class="nv">app-routes</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">(</span><span class="nf">json/wrap-json-params</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">(</span><span class="nf">json/wrap-json-response</span><span class="p">)))</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="section" id="stubbing-out-our-application">
 <h2>Stubbing out our&nbsp;application</h2>
-<p>Next, let&#8217;s stub out our <span class="caps">API</span>. We&#8217;ll need our typical <span class="caps">CRUD</span> operations, so let&#8217;s remove the &quot;Hello World&quot; route and add the <span class="caps">API</span>&nbsp;stubs:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="nf">defroutes</span> <span class="nv">app-routes</span>
-  <span class="p">(</span><span class="nf"><span class="caps">GET</span></span> <span class="s">&quot;/api/todos&quot;</span> <span class="p">[]</span> <span class="s">&quot;<span class="caps">TODO</span>: return all list items&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf"><span class="caps">GET</span></span> <span class="s">&quot;/api/todos/:id&quot;</span> <span class="p">[</span><span class="nv">id</span><span class="p">]</span> <span class="s">&quot;<span class="caps">TODO</span>: return a single list item&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf"><span class="caps">POST</span></span> <span class="s">&quot;/api/todos&quot;</span> <span class="p">[]</span> <span class="s">&quot;<span class="caps">TODO</span>: create a list item&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf"><span class="caps">PUT</span></span> <span class="s">&quot;/api/todos/:id&quot;</span> <span class="p">[</span><span class="nv">id</span><span class="p">]</span> <span class="s">&quot;<span class="caps">TODO</span>: update a list item&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf"><span class="caps">DELETE</span></span> <span class="s">&quot;/api/todos/:id&quot;</span> <span class="p">[</span><span class="nv">id</span><span class="p">]</span> <span class="s">&quot;<span class="caps">TODO</span>: delete a list item&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">route/resources</span> <span class="s">&quot;/&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">route/not-found</span> <span class="s">&quot;Not Found&quot;</span><span class="p">))</span>
+<p>Next, let&#8217;s stub out our <span class="caps">API</span>. We&#8217;ll need our typical <span class="caps">CRUD</span> operations, so let&#8217;s remove the &#8220;Hello World&#8221; route and add the <span class="caps">API</span>&nbsp;stubs:</p>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="nf">defroutes</span><span class="w"> </span><span class="nv">app-routes</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">GET</span><span class="w"> </span><span class="s">&quot;/api/todos&quot;</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="s">&quot;TODO: return all list items&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">GET</span><span class="w"> </span><span class="s">&quot;/api/todos/:id&quot;</span><span class="w"> </span><span class="p">[</span><span class="nv">id</span><span class="p">]</span><span class="w"> </span><span class="s">&quot;TODO: return a single list item&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">POST</span><span class="w"> </span><span class="s">&quot;/api/todos&quot;</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="s">&quot;TODO: create a list item&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">PUT</span><span class="w"> </span><span class="s">&quot;/api/todos/:id&quot;</span><span class="w"> </span><span class="p">[</span><span class="nv">id</span><span class="p">]</span><span class="w"> </span><span class="s">&quot;TODO: update a list item&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">DELETE</span><span class="w"> </span><span class="s">&quot;/api/todos/:id&quot;</span><span class="w"> </span><span class="p">[</span><span class="nv">id</span><span class="p">]</span><span class="w"> </span><span class="s">&quot;TODO: delete a list item&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">route/resources</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">route/not-found</span><span class="w"> </span><span class="s">&quot;Not Found&quot;</span><span class="p">))</span><span class="w"></span>
 </pre></div>
-<p>When we visit <a class="reference external" href="http://localhost:3000/api/todos">http://localhost:3000/api/todos</a> we should get our stub message &quot;<span class="caps">TODO</span>: return all list items&quot; back. However, since we deleted the &quot;Hello World&quot; route that responded to the root <span class="caps">URL</span>, we&#8217;ll get a 404 &quot;Not Found&quot; error when we visit <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Since we specified a static resource route, we can fix the 404 error by adding an &quot;index.html&quot; placeholder resource in the <tt class="docutils literal">resources/public/</tt> directory:</p>
-<div class="highlight"><pre><span></span><span class="cp">&lt;!<span class="caps">DOCTYPE</span> html&gt;</span>
+<p>When we visit <a class="reference external" href="http://localhost:3000/api/todos">http://localhost:3000/api/todos</a> we should get our stub message &#8220;<span class="caps">TODO</span>: return all list items&#8221; back. However, since we deleted the &#8220;Hello World&#8221; route that responded to the root <span class="caps">URL</span>, we&#8217;ll get a 404 &#8220;Not Found&#8221; error when we visit <a class="reference external" href="http://localhost:3000/">http://localhost:3000/</a>. Since we specified a static resource route, we can fix the 404 error by adding an &#8220;index.html&#8221; placeholder resource in the <tt class="docutils literal">resources/public/</tt> directory:</p>
+<div class="highlight"><pre><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&quot;en&quot;</span><span class="p">&gt;</span>
 <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
-    <span class="caps">TODO</span>: Make a front-end :)
+    TODO: Make a front-end :)
 <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </pre></div>
@@ -117,62 +125,62 @@ I&#39;v..." />
 <p>Now that we have the <span class="caps">REST</span> interface stubbed out, let&#8217;s move on to the Postgres database layer. We&#8217;ll be using the <a class="reference external" href="http://sqlkorma.com/">Korma</a> library to query our database and <a class="reference external" href="http://budu.github.io/lobos/">Lobos</a> to manage&nbsp;migrations.</p>
 <p>Rather than create our tables manually via <tt class="docutils literal"><span class="caps">CREATE</span> <span class="caps">TABLE</span></tt> statements, let&#8217;s use Lobos migrations. First we&#8217;ll need to set up the database connection string, which we can use for both Korma and&nbsp;Lobos.</p>
 <p>In our <tt class="docutils literal">project.clj</tt>, add a reference to Korma, Lobos, and the PostgreSQL&nbsp;driver:</p>
-<div class="highlight"><pre><span></span><span class="p">[</span><span class="nv">korma</span> <span class="s">&quot;0.3.0-<span class="caps">RC5</span>&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="nv">lobos</span> <span class="s">&quot;1.0.0-beta1&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="nv">org.postgresql/postgresql</span> <span class="s">&quot;9.2-1002-jdbc4&quot;</span><span class="p">]]</span>
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="nv">korma</span><span class="w"> </span><span class="s">&quot;0.3.0-RC5&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="p">[</span><span class="nv">lobos</span><span class="w"> </span><span class="s">&quot;1.0.0-beta1&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="p">[</span><span class="nv">org.postgresql/postgresql</span><span class="w"> </span><span class="s">&quot;9.2-1002-jdbc4&quot;</span><span class="p">]]</span><span class="w"></span>
 </pre></div>
-<p>In a new file, <tt class="docutils literal">src/todoapp/database.clj</tt>, specify the database connection information. We&#8217;re using an empty database called &quot;todo&quot; with the user &quot;db-user&quot; and the password&nbsp;&quot;SuperSecretPassword&quot;:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.database</span>
-  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">korma.db</span> <span class="ss">:as</span> <span class="nv">korma</span><span class="p">]</span>
-            <span class="p">[</span><span class="nv">lobos.connectivity</span> <span class="ss">:as</span> <span class="nv">lobos</span><span class="p">]))</span>
+<p>In a new file, <tt class="docutils literal">src/todoapp/database.clj</tt>, specify the database connection information. We&#8217;re using an empty database called &#8220;todo&#8221; with the user &#8220;db-user&#8221; and the password&nbsp;&#8220;SuperSecretPassword&#8221;:</p>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.database</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="ss">:require</span><span class="w"> </span><span class="p">[</span><span class="nv">korma.db</span><span class="w"> </span><span class="ss">:as</span><span class="w"> </span><span class="nv">korma</span><span class="p">]</span><span class="w"></span>
+<span class="w">            </span><span class="p">[</span><span class="nv">lobos.connectivity</span><span class="w"> </span><span class="ss">:as</span><span class="w"> </span><span class="nv">lobos</span><span class="p">]))</span><span class="w"></span>
 
-<span class="p">(</span><span class="k">def </span><span class="nv">db-connection-info</span>
-  <span class="p">{</span><span class="ss">:classname</span> <span class="s">&quot;org.postgresql.Driver&quot;</span>
-   <span class="ss">:subprotocol</span> <span class="s">&quot;postgresql&quot;</span>
-   <span class="ss">:user</span> <span class="s">&quot;db-user&quot;</span>
-   <span class="ss">:password</span> <span class="s">&quot;SuperSecretPassword&quot;</span>
-   <span class="ss">:subname</span> <span class="s">&quot;//localhost:5432/todo&quot;</span><span class="p">})</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">db-connection-info</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="ss">:classname</span><span class="w"> </span><span class="s">&quot;org.postgresql.Driver&quot;</span><span class="w"></span>
+<span class="w">   </span><span class="ss">:subprotocol</span><span class="w"> </span><span class="s">&quot;postgresql&quot;</span><span class="w"></span>
+<span class="w">   </span><span class="ss">:user</span><span class="w"> </span><span class="s">&quot;db-user&quot;</span><span class="w"></span>
+<span class="w">   </span><span class="ss">:password</span><span class="w"> </span><span class="s">&quot;SuperSecretPassword&quot;</span><span class="w"></span>
+<span class="w">   </span><span class="ss">:subname</span><span class="w"> </span><span class="s">&quot;//localhost:5432/todo&quot;</span><span class="p">})</span><span class="w"></span>
 
-<span class="c1">; set up korma</span>
-<span class="p">(</span><span class="nf">korma/defdb</span> <span class="nv">db</span> <span class="nv">db-connection-info</span><span class="p">)</span>
-<span class="c1">; set up lobos</span>
-<span class="p">(</span><span class="nf">lobos/open-global</span> <span class="nv">db-connection-info</span><span class="p">)</span>
+<span class="c1">; set up korma</span><span class="w"></span>
+<span class="p">(</span><span class="nf">korma/defdb</span><span class="w"> </span><span class="nv">db</span><span class="w"> </span><span class="nv">db-connection-info</span><span class="p">)</span><span class="w"></span>
+<span class="c1">; set up lobos</span><span class="w"></span>
+<span class="p">(</span><span class="nf">lobos/open-global</span><span class="w"> </span><span class="nv">db-connection-info</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 <p>That&#8217;s it! Now Lobos and Korma know how to connect to our&nbsp;database.</p>
 </div>
 <div class="section" id="creating-database-tables-with-lobos">
 <h2>Creating Database Tables with&nbsp;Lobos</h2>
-<p>Now, let&#8217;s use Lobos to create a simple table named &quot;items&quot; with an integer primary key and varchar title. Make a new file called <tt class="docutils literal">src/todoapp/migrations.clj</tt>, and add the&nbsp;following:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.migrations</span>
-  <span class="p">(</span><span class="ss">:refer-clojure</span> <span class="ss">:exclude</span>
-        <span class="p">[</span><span class="nb">alter drop </span><span class="nv">bigint</span> <span class="nb">boolean char double float time </span><span class="nv">complement</span><span class="p">])</span>
-  <span class="p">(</span><span class="ss">:use</span> <span class="p">[</span><span class="nv">todoapp.database</span><span class="p">]</span>
-        <span class="p">[</span><span class="nv">lobos</span> <span class="nv">migration</span> <span class="nv">core</span> <span class="nv">schema</span><span class="p">]))</span>
+<p>Now, let&#8217;s use Lobos to create a simple table named &#8220;items&#8221; with an integer primary key and varchar title. Make a new file called <tt class="docutils literal">src/todoapp/migrations.clj</tt>, and add the&nbsp;following:</p>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.migrations</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="ss">:refer-clojure</span><span class="w"> </span><span class="ss">:exclude</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="nb">alter drop </span><span class="nv">bigint</span><span class="w"> </span><span class="nb">boolean char double float time </span><span class="nv">complement</span><span class="p">])</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="ss">:use</span><span class="w"> </span><span class="p">[</span><span class="nv">todoapp.database</span><span class="p">]</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="nv">lobos</span><span class="w"> </span><span class="nv">migration</span><span class="w"> </span><span class="nv">core</span><span class="w"> </span><span class="nv">schema</span><span class="p">]))</span><span class="w"></span>
 
-<span class="p">(</span><span class="nf">defmigration</span> <span class="nv">add-todo-table</span>
-  <span class="p">(</span><span class="nb">up </span><span class="p">[]</span> <span class="p">(</span><span class="nf">create</span> <span class="p">(</span><span class="nf">table</span> <span class="ss">:items</span>
-                        <span class="p">(</span><span class="nf">integer</span> <span class="ss">:id</span> <span class="ss">:primary-key</span> <span class="ss">:auto-inc</span><span class="p">)</span>
-                        <span class="p">(</span><span class="nf">varchar</span> <span class="ss">:title</span> <span class="mi">512</span><span class="p">))))</span>
-  <span class="p">(</span><span class="nb">down </span><span class="p">[]</span> <span class="p">(</span><span class="nb">drop </span><span class="p">(</span><span class="nf">table</span> <span class="ss">:items</span><span class="p">))))</span>
+<span class="p">(</span><span class="nf">defmigration</span><span class="w"> </span><span class="nv">add-todo-table</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nb">up </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nf">create</span><span class="w"> </span><span class="p">(</span><span class="nf">table</span><span class="w"> </span><span class="ss">:items</span><span class="w"></span>
+<span class="w">                        </span><span class="p">(</span><span class="nf">integer</span><span class="w"> </span><span class="ss">:id</span><span class="w"> </span><span class="ss">:primary-key</span><span class="w"> </span><span class="ss">:auto-inc</span><span class="p">)</span><span class="w"></span>
+<span class="w">                        </span><span class="p">(</span><span class="nf">varchar</span><span class="w"> </span><span class="ss">:title</span><span class="w"> </span><span class="mi">512</span><span class="p">))))</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nb">down </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nb">drop </span><span class="p">(</span><span class="nf">table</span><span class="w"> </span><span class="ss">:items</span><span class="p">))))</span><span class="w"></span>
 </pre></div>
 <p>Unfortunately, one aspect of Lobos&#8217;s design is rather unidiomatic: it provides a <tt class="docutils literal">(migrate)</tt> function that, by default, only runs migrations in the <tt class="docutils literal">lobos.migrations</tt> namespace. My personal preference is to keep my migrations for an application in that application&#8217;s namespace. We can configure Lobos to run the migrations in our desired namespace by rebinding the <tt class="docutils literal"><span class="pre">lobos.migration/*migrations-namespace*</span></tt> var, and running the <tt class="docutils literal">(migrate)</tt> function in that&nbsp;context:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">run-migrations</span> <span class="p">[]</span>
-  <span class="p">(</span><span class="nb">binding </span><span class="p">[</span><span class="nv">lobos.migration/*migrations-namespace*</span> <span class="ss">&#39;todoapp.migrations</span><span class="p">]</span>
-    <span class="p">(</span><span class="nf">migrate</span><span class="p">)))</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">run-migrations</span><span class="w"> </span><span class="p">[]</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nb">binding </span><span class="p">[</span><span class="nv">lobos.migration/*migrations-namespace*</span><span class="w"> </span><span class="ss">&#39;todoapp.migrations</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">(</span><span class="nf">migrate</span><span class="p">)))</span><span class="w"></span>
 </pre></div>
-<p>We can run our migrations to generate our table by calling <tt class="docutils literal"><span class="pre">(run-migrations)</span></tt> in our&nbsp;<span class="caps">REPL</span>:</p>
-<div class="highlight"><pre><span></span><span class="gp">&gt;</span> lein repl
-<span class="gp">&gt;</span> <span class="nv">user</span><span class="o">=</span>&gt; <span class="o">(</span>use <span class="err">&#39;</span>todoapp.migrations<span class="o">)</span>
-<span class="gp">&gt;</span> <span class="nv">user</span><span class="o">=</span>&gt; <span class="o">(</span>run-migrations<span class="o">)</span>
+<p>We can run our migrations to generate our table by calling <tt class="docutils literal"><span class="pre">(run-migrations)</span></tt> in our <span class="caps">REPL</span>:</p>
+<div class="highlight"><pre><span></span><span class="go">&gt; lein repl</span>
+<span class="go">&gt; user=&gt; (use &#39;todoapp.migrations)</span>
+<span class="go">&gt; user=&gt; (run-migrations)</span>
 <span class="go">add-todo-table</span>
 <span class="go">nil</span>
 </pre></div>
 <p>Now, if you check out the database, you&#8217;ll see we have a <tt class="docutils literal">items</tt> table, ready for use! Just for kicks, let&#8217;s add another migration that will add an <tt class="docutils literal">is_complete</tt> column to our <tt class="docutils literal">items</tt> table:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">is-complete</span> <span class="p">(</span><span class="nf">table</span> <span class="ss">:items</span>
-                    <span class="p">(</span><span class="nb">boolean </span><span class="ss">:is_complete</span> <span class="p">(</span><span class="nf">default</span> <span class="nv">false</span><span class="p">)))]</span>
-  <span class="p">(</span><span class="nf">defmigration</span> <span class="nv">add-is-complete-column</span>
-    <span class="p">(</span><span class="nb">up </span><span class="p">[]</span> <span class="p">(</span><span class="nb">alter </span><span class="ss">:add</span> <span class="nv">is-complete</span><span class="p">))</span>
-    <span class="p">(</span><span class="nb">down </span><span class="p">[]</span> <span class="p">(</span><span class="nb">alter </span><span class="ss">:drop</span> <span class="nv">is-complete</span><span class="p">))))</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">is-complete</span><span class="w"> </span><span class="p">(</span><span class="nf">table</span><span class="w"> </span><span class="ss">:items</span><span class="w"></span>
+<span class="w">                    </span><span class="p">(</span><span class="nb">boolean </span><span class="ss">:is_complete</span><span class="w"> </span><span class="p">(</span><span class="nf">default</span><span class="w"> </span><span class="nv">false</span><span class="p">)))]</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">defmigration</span><span class="w"> </span><span class="nv">add-is-complete-column</span><span class="w"></span>
+<span class="w">    </span><span class="p">(</span><span class="nb">up </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nb">alter </span><span class="ss">:add</span><span class="w"> </span><span class="nv">is-complete</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="p">(</span><span class="nb">down </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nb">alter </span><span class="ss">:drop</span><span class="w"> </span><span class="nv">is-complete</span><span class="p">))))</span><span class="w"></span>
 </pre></div>
 <p>If we call <tt class="docutils literal"><span class="pre">(run-migrations)</span></tt> again, Lobos will intelligently alter our tables; it will only run the <tt class="docutils literal"><span class="pre">add-is-complete-column</span></tt> migration, since it knows it already ran the <tt class="docutils literal"><span class="pre">add-todo-table</span></tt> migration. Lobos has an <a class="reference external" href="http://budu.github.io/lobos/doc/uberdoc.frontend.html">extensive <span class="caps">API</span></a> that provides many powerful table creation and migration&nbsp;options.</p>
 </div>
@@ -180,72 +188,84 @@ I&#39;v..." />
 <h2>Querying and Inserting Data with&nbsp;Korma</h2>
 <p>Now that we have our database all ready to go, let&#8217;s finish off our application! We&#8217;ll be replacing our <span class="caps">REST</span> <span class="caps">API</span> stubs we built earlier with calls to our database, using the Korma&nbsp;library.</p>
 <p>We&#8217;ll be creating a <tt class="docutils literal">src/todoapp/query.clj</tt> file that contains our Korma statements. First up, we let Korma know about our <tt class="docutils literal">items</tt> table using a <tt class="docutils literal">defentity</tt> statement. Korma does not need any knowledge of our table&#8217;s schema; it just needs to know that the table&nbsp;exists:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.query</span>
-  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">todoapp.database</span><span class="p">]</span>
-            <span class="p">[</span><span class="nv">korma.core</span> <span class="ss">:refer</span> <span class="ss">:all</span><span class="p">]))</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">todoapp.query</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="ss">:require</span><span class="w"> </span><span class="p">[</span><span class="nv">todoapp.database</span><span class="p">]</span><span class="w"></span>
+<span class="w">            </span><span class="p">[</span><span class="nv">korma.core</span><span class="w"> </span><span class="ss">:refer</span><span class="w"> </span><span class="ss">:all</span><span class="p">]))</span><span class="w"></span>
 
-<span class="p">(</span><span class="nf">defentity</span> <span class="nv">items</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">defentity</span><span class="w"> </span><span class="nv">items</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 <p>Korma provides a <a class="reference external" href="http://sqlkorma.com/docs#select">nice, composable <span class="caps">DSL</span></a> for querying our database. Let&#8217;s define a couple of functions that interact with the <tt class="docutils literal">items</tt> table:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">get-todos</span> <span class="p">[]</span>
-  <span class="p">(</span><span class="nb">select </span><span class="nv">items</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">get-todos</span><span class="w"> </span><span class="p">[]</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nb">select </span><span class="nv">items</span><span class="p">))</span><span class="w"></span>
 
-<span class="p">(</span><span class="kd">defn </span><span class="nv">add-todo</span> <span class="p">[</span><span class="nv">title</span><span class="p">]</span>
-  <span class="p">(</span><span class="nf">insert</span> <span class="nv">items</span>
-          <span class="p">(</span><span class="nf">values</span> <span class="p">{</span><span class="ss">:title</span> <span class="nv">title</span><span class="p">})))</span>
+<span class="p">(</span><span class="kd">defn </span><span class="nv">add-todo</span><span class="w"> </span><span class="p">[</span><span class="nv">title</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">insert</span><span class="w"> </span><span class="nv">items</span><span class="w"></span>
+<span class="w">          </span><span class="p">(</span><span class="nf">values</span><span class="w"> </span><span class="p">{</span><span class="ss">:title</span><span class="w"> </span><span class="nv">title</span><span class="p">})))</span><span class="w"></span>
 
-<span class="p">(</span><span class="kd">defn </span><span class="nv">delete-todo</span> <span class="p">[</span><span class="nv">id</span><span class="p">]</span>
-  <span class="p">(</span><span class="nf">delete</span> <span class="nv">items</span>
-          <span class="p">(</span><span class="nf">where</span> <span class="p">{</span><span class="ss">:id</span> <span class="p">[</span><span class="nb">= </span><span class="nv">id</span><span class="p">]})))</span>
+<span class="p">(</span><span class="kd">defn </span><span class="nv">delete-todo</span><span class="w"> </span><span class="p">[</span><span class="nv">id</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">delete</span><span class="w"> </span><span class="nv">items</span><span class="w"></span>
+<span class="w">          </span><span class="p">(</span><span class="nf">where</span><span class="w"> </span><span class="p">{</span><span class="ss">:id</span><span class="w"> </span><span class="p">[</span><span class="nb">= </span><span class="nv">id</span><span class="p">]})))</span><span class="w"></span>
 
-<span class="p">(</span><span class="kd">defn </span><span class="nv">update-todo</span> <span class="p">[</span><span class="nv">id</span> <span class="nv">title</span> <span class="nv">is-complete</span><span class="p">]</span>
-  <span class="p">(</span><span class="nf">update</span> <span class="nv">items</span>
-          <span class="p">(</span><span class="nf">set-fields</span> <span class="p">{</span><span class="ss">:title</span> <span class="nv">title</span>
-                       <span class="ss">:is_complete</span> <span class="nv">is-complete</span><span class="p">})</span>
-          <span class="p">(</span><span class="nf">where</span> <span class="p">{</span><span class="ss">:id</span> <span class="p">[</span><span class="nb">= </span><span class="nv">id</span><span class="p">]})))</span>
+<span class="p">(</span><span class="kd">defn </span><span class="nv">update-todo</span><span class="w"> </span><span class="p">[</span><span class="nv">id</span><span class="w"> </span><span class="nv">title</span><span class="w"> </span><span class="nv">is-complete</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">update</span><span class="w"> </span><span class="nv">items</span><span class="w"></span>
+<span class="w">          </span><span class="p">(</span><span class="nf">set-fields</span><span class="w"> </span><span class="p">{</span><span class="ss">:title</span><span class="w"> </span><span class="nv">title</span><span class="w"></span>
+<span class="w">                       </span><span class="ss">:is_complete</span><span class="w"> </span><span class="nv">is-complete</span><span class="p">})</span><span class="w"></span>
+<span class="w">          </span><span class="p">(</span><span class="nf">where</span><span class="w"> </span><span class="p">{</span><span class="ss">:id</span><span class="w"> </span><span class="p">[</span><span class="nb">= </span><span class="nv">id</span><span class="p">]})))</span><span class="w"></span>
 
-<span class="p">(</span><span class="kd">defn </span><span class="nv">get-todo</span> <span class="p">[</span><span class="nv">id</span><span class="p">]</span>
-  <span class="p">(</span><span class="nf">first</span>
-    <span class="p">(</span><span class="nb">select </span><span class="nv">items</span>
-          <span class="p">(</span><span class="nf">where</span> <span class="p">{</span><span class="ss">:id</span> <span class="p">[</span><span class="nb">= </span><span class="nv">id</span><span class="p">]}))))</span>
+<span class="p">(</span><span class="kd">defn </span><span class="nv">get-todo</span><span class="w"> </span><span class="p">[</span><span class="nv">id</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">first</span><span class="w"></span>
+<span class="w">    </span><span class="p">(</span><span class="nb">select </span><span class="nv">items</span><span class="w"></span>
+<span class="w">          </span><span class="p">(</span><span class="nf">where</span><span class="w"> </span><span class="p">{</span><span class="ss">:id</span><span class="w"> </span><span class="p">[</span><span class="nb">= </span><span class="nv">id</span><span class="p">]}))))</span><span class="w"></span>
 </pre></div>
 <p>There shouldn&#8217;t be anything too shocking in these functions, except maybe how readable the Korma code is. The <tt class="docutils literal"><span class="pre">get-todo</span></tt> function uses the fact that <tt class="docutils literal">(first [])</tt> is <tt class="docutils literal">nil</tt>, so <tt class="docutils literal"><span class="pre">get-todo</span></tt> will return a single todo item, or <tt class="docutils literal">nil</tt> if a todo item with the given id does not&nbsp;exist.</p>
 <p>These functions provide everything we need for our simple <span class="caps">CRUD</span> interface, so let&#8217;s hook up these queries to our Compojure route&nbsp;handlers:</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="nf">defroutes</span> <span class="nv">app-routes</span>
-  <span class="p">(</span><span class="nf"><span class="caps">GET</span></span> <span class="s">&quot;/api/todos&quot;</span> <span class="p">[]</span>
-       <span class="p">(</span><span class="nf">response</span> <span class="p">(</span><span class="nf">get-todos</span><span class="p">)))</span>
-  <span class="p">(</span><span class="nf"><span class="caps">GET</span></span> <span class="s">&quot;/api/todos/:id&quot;</span> <span class="p">[</span><span class="nv">id</span><span class="p">]</span>
-       <span class="p">(</span><span class="nf">response</span> <span class="p">(</span><span class="nf">get-todo</span> <span class="p">(</span><span class="nf">Integer/parseInt</span> <span class="nv">id</span><span class="p">))))</span>
-  <span class="p">(</span><span class="nf"><span class="caps">POST</span></span> <span class="s">&quot;/api/todos&quot;</span> <span class="p">[</span><span class="nv">title</span><span class="p">]</span>
-       <span class="p">(</span><span class="nf">response</span> <span class="p">(</span><span class="nf">add-todo</span> <span class="nv">title</span><span class="p">)))</span>
-  <span class="p">(</span><span class="nf"><span class="caps">PUT</span></span> <span class="s">&quot;/api/todos/:id&quot;</span> <span class="p">[</span><span class="nv">id</span> <span class="nv">title</span> <span class="nv">is_complete</span><span class="p">]</span>
-       <span class="p">(</span><span class="nf">response</span> <span class="p">(</span><span class="nf">update-todo</span> <span class="p">(</span><span class="nf">Integer/parseInt</span> <span class="nv">id</span><span class="p">)</span> <span class="nv">title</span> <span class="nv">is_complete</span><span class="p">)))</span>
-  <span class="p">(</span><span class="nf"><span class="caps">DELETE</span></span> <span class="s">&quot;/api/todos/:id&quot;</span> <span class="p">[</span><span class="nv">id</span><span class="p">]</span>
-        <span class="p">(</span><span class="nf">response</span> <span class="p">(</span><span class="nf">delete-todo</span> <span class="p">(</span><span class="nf">Integer/parseInt</span> <span class="nv">id</span><span class="p">))))</span>
-  <span class="p">(</span><span class="nf">route/resources</span> <span class="s">&quot;/&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">route/not-found</span> <span class="s">&quot;Not Found&quot;</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="nf">defroutes</span><span class="w"> </span><span class="nv">app-routes</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">GET</span><span class="w"> </span><span class="s">&quot;/api/todos&quot;</span><span class="w"> </span><span class="p">[]</span><span class="w"></span>
+<span class="w">       </span><span class="p">(</span><span class="nf">response</span><span class="w"> </span><span class="p">(</span><span class="nf">get-todos</span><span class="p">)))</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">GET</span><span class="w"> </span><span class="s">&quot;/api/todos/:id&quot;</span><span class="w"> </span><span class="p">[</span><span class="nv">id</span><span class="p">]</span><span class="w"></span>
+<span class="w">       </span><span class="p">(</span><span class="nf">response</span><span class="w"> </span><span class="p">(</span><span class="nf">get-todo</span><span class="w"> </span><span class="p">(</span><span class="nf">Integer/parseInt</span><span class="w"> </span><span class="nv">id</span><span class="p">))))</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">POST</span><span class="w"> </span><span class="s">&quot;/api/todos&quot;</span><span class="w"> </span><span class="p">[</span><span class="nv">title</span><span class="p">]</span><span class="w"></span>
+<span class="w">       </span><span class="p">(</span><span class="nf">response</span><span class="w"> </span><span class="p">(</span><span class="nf">add-todo</span><span class="w"> </span><span class="nv">title</span><span class="p">)))</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">PUT</span><span class="w"> </span><span class="s">&quot;/api/todos/:id&quot;</span><span class="w"> </span><span class="p">[</span><span class="nv">id</span><span class="w"> </span><span class="nv">title</span><span class="w"> </span><span class="nv">is_complete</span><span class="p">]</span><span class="w"></span>
+<span class="w">       </span><span class="p">(</span><span class="nf">response</span><span class="w"> </span><span class="p">(</span><span class="nf">update-todo</span><span class="w"> </span><span class="p">(</span><span class="nf">Integer/parseInt</span><span class="w"> </span><span class="nv">id</span><span class="p">)</span><span class="w"> </span><span class="nv">title</span><span class="w"> </span><span class="nv">is_complete</span><span class="p">)))</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">DELETE</span><span class="w"> </span><span class="s">&quot;/api/todos/:id&quot;</span><span class="w"> </span><span class="p">[</span><span class="nv">id</span><span class="p">]</span><span class="w"></span>
+<span class="w">        </span><span class="p">(</span><span class="nf">response</span><span class="w"> </span><span class="p">(</span><span class="nf">delete-todo</span><span class="w"> </span><span class="p">(</span><span class="nf">Integer/parseInt</span><span class="w"> </span><span class="nv">id</span><span class="p">))))</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">route/resources</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">(</span><span class="nf">route/not-found</span><span class="w"> </span><span class="s">&quot;Not Found&quot;</span><span class="p">))</span><span class="w"></span>
 </pre></div>
 <p>We need to parse our <tt class="docutils literal">id</tt> parameters from strings to integers, since they&#8217;re being passed in via the <span class="caps">URL</span>, so type info is lost. The ring-json library we added earlier allows us to specify our desired <span class="caps">JSON</span> fields (like <tt class="docutils literal">title</tt> and <tt class="docutils literal">is_complete</tt>) as route parameters. We can also pass our native Clojure datastructures to the Ring response function, and <span class="caps">JSON</span> serialization is done&nbsp;automatically.</p>
-<p>We can use the command line tool <tt class="docutils literal">curl</tt> to test out our&nbsp;<span class="caps">API</span>:</p>
-<div class="highlight"><pre><span></span><span class="gp">&gt;</span> curl -X <span class="caps">POST</span> -d <span class="s1">&#39;{&quot;title&quot;:&quot;remember the milk&quot;}&#39;</span> -H <span class="s2">&quot;Content-Type: application/json&quot;</span> http://localhost:3000/api/todos
+<p>We can use the command line tool <tt class="docutils literal">curl</tt> to test out our <span class="caps">API</span>:</p>
+<div class="highlight"><pre><span></span><span class="go">&gt; curl -X POST -d &#39;{&quot;title&quot;:&quot;remember the milk&quot;}&#39; -H &quot;Content-Type: application/json&quot; http://localhost:3000/api/todos</span>
 <span class="go">{&quot;is_complete&quot;:false,&quot;title&quot;:&quot;remember the milk&quot;,&quot;id&quot;:1}</span>
-<span class="gp">&gt;</span> curl -X <span class="caps">PUT</span> -d <span class="s1">&#39;{&quot;title&quot;:&quot;don&#39;</span>t forget the milk!<span class="s2">&quot;, &quot;</span>is_complete<span class="s2">&quot;:false}&#39; -H &quot;</span>Content-Type: application/json<span class="s2">&quot; http://localhost:3000/api/todos/1</span>
+<span class="go">&gt; curl -X PUT -d &#39;{&quot;title&quot;:&quot;don&#39;t forget the milk!&quot;, &quot;is_complete&quot;:false}&#39; -H &quot;Content-Type: application/json&quot; http://localhost:3000/api/todos/1</span>
 <span class="go">{&quot;is_complete&quot;:false,&quot;title&quot;:&quot;don&#39;t forget the milk!&quot;,&quot;id&quot;:1}</span>
-<span class="gp">&gt;</span> curl -X <span class="caps">DELETE</span> http://localhost:3000/api/todos/1
+<span class="go">&gt; curl -X DELETE http://localhost:3000/api/todos/1</span>
 </pre></div>
 <p>We now have a simple <span class="caps">JSON</span> <span class="caps">REST</span> <span class="caps">API</span> over a relational database. We can manage our database schema using Lobos migrations, and query our database using elegant, idiomatic Clojure via&nbsp;Korma.</p>
 </div>
 
     <div class="tags">
-         tagged as <a href="/blog/tag/clojure/" rel="tag">clojure</a>, <a href="/blog/tag/web/" rel="tag">web</a>, <a href="/blog/tag/compojure/" rel="tag">compojure</a>, <a href="/blog/tag/ring/" rel="tag">ring</a>, <a href="/blog/tag/database/" rel="tag">database</a>, <a href="/blog/tag/sql/" rel="tag">sql</a>, <a href="/blog/tag/korma/" rel="tag">korma</a> and  <a href="/blog/tag/lobos/" rel="tag">lobos</a>  
-    </div>
-    
+        tagged as
+            <a href="../../../../blog/tag/clojure/">clojure</a>,            <a href="../../../../blog/tag/web/">web</a>,            <a href="../../../../blog/tag/compojure/">compojure</a>,            <a href="../../../../blog/tag/ring/">ring</a>,            <a href="../../../../blog/tag/database/">database</a>,            <a href="../../../../blog/tag/sql/">sql</a>,            <a href="../../../../blog/tag/korma/">korma</a> and             <a href="../../../../blog/tag/lobos/">lobos</a>    </div>
     <div id="comments"></div>
     <script src="/blog/script/comments.js?issue="></script>
-    
 </article>
+
+<div class="pager">
+        <a href="../../../../blog/2013/09/acrylamid-with-virtualenv-and-pip/" class="prev">
+        Acrylamid with virtualenv and&nbsp;pip
+        &#x21DD;
+        </a>
+        <a href="../../../../blog/2014/02/native-javascript-promises-and-browser-apis/" class="next">
+        &#x21DC;
+        Native JavaScript Promises and...
+        </a>
+</div>
+
+
 <script>
-    function toggleDarkMode() {
+    function toggleDarkMode(e) {
+    e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
@@ -258,17 +278,7 @@ I&#39;v..." />
         return false;
     }
 </script>
-        <div class="pager">
-        
-            <a href="/blog/2013/09/acrylamid-with-virtualenv-and-pip/" class="prev">
-            Acrylamid with virtualenv and pip &#x21DD;
-            </a>
-        
-        
-            <a href="/blog/2014/02/native-javascript-promises-and-browser-apis/" class="next">
-            &#x21DC; Native JavaScript Promises and Browser ...
-            </a>
-        </div>
-<script src="/blog/script/list.min.js"></script>
-    </body>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
 </html>
