@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+          <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>New major release of CSharpRepl 0.4.0 - Blog - Will Fuqua</title>
+        <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
+        <link media="all" href="/blog/style/main.css" rel="stylesheet" />
+        <link href="/favicon.ico" rel="shortcut icon" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-38553935-1']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="csharp" />
+    <meta name="tags" content="dotnet" />
+    <meta name="tags" content="cli" />
+    <meta name="tags" content="csharprepl" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        </header>
+<nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+
+
+<article>
+    <h1>New major release of CSharpRepl&nbsp;0.4.0</h1>
+    <p>I&#8217;m happy to announce a new major release of <a class="reference external" href="https://github.com/waf/CSharpRepl">CSharpRepl</a>, an open-source command-line <span class="caps">REPL</span> for C#. This release is special because it almost entirely consists of contributions from the open-source community! In this post we&#8217;ll walk through a few of the new&nbsp;features.</p>
+<p>If you haven&#8217;t heard of CSharpRepl before and want to try it out, install it as a dotnet tool by running <tt class="docutils literal">dotnet tool install <span class="pre">-g</span> csharprepl</tt>, then running <tt class="docutils literal">csharprepl</tt> once the installation completes. If you&#8217;ve had it installed for a while already, update to the latest version by running <tt class="docutils literal">dotnet tool update <span class="pre">-g</span> csharprepl</tt>.</p>
+<p>Special recognition and thanks goes to contributor <a class="reference external" href="https://github.com/waf/CSharpRepl/pulls?q=is%3Apr+author%3Akindermannhubert">&#64;kindermannhubert</a>, who added the vast majority of these new features, as well as contributed countless bug fixes, performance improvements and usability&nbsp;enhancements.</p>
+<div class="section" id="visual-studio-dark-theme-by-default">
+<h2>Visual Studio Dark Theme by&nbsp;Default</h2>
+<p>The default theme for CSharpRepl has changed from the terminal&#8217;s default colors to the Visual Studio Dark&nbsp;Theme!</p>
+<div class="figure">
+<a class="reference external image-reference" href="/img/csharprepl/csharprepl-darkmode.png"><img alt="csharprepl dark mode" src="/img/csharprepl/csharprepl-darkmode.png" style="width: 100%;" /></a>
+<p class="caption">In the background, Visual Studio in dark mode. In the foreground, CSharpRepl with a matching&nbsp;theme.</p>
+</div>
+<p>This should provide a better out-of-the-box experience for most users, and more advanced users can either use the <tt class="docutils literal"><span class="pre">--useTerminalColorPalette</span></tt> flag to restore the previous behavior, or provide their own theme using a <a class="reference external" href="https://github.com/waf/CSharpRepl/blob/main/CSharpRepl/themes/dracula.json">theme.json</a>&nbsp;file.</p>
+</div>
+<div class="section" id="new-autocompletion-menu">
+<h2>New Autocompletion&nbsp;Menu</h2>
+<p>CSharpRepl now features a more ergonomic autocompletion menu, with behavior closer to Visual Studio and Visual Studio Code. It also supports in-menu syntax-highlighting and navigating through method overloads with per-parameter context-sensitive&nbsp;help.</p>
+<video controls style="width:100%; border-radius: 4px;">
+    <source src="/img/csharprepl/csharprepl-autocompletion.mp4" type="video/mp4">
+    Sorry, the current browser doesn&#8217;t support embedded <span class="caps">MP4</span> videos.
+</video><p>In addition, if you provide the new <tt class="docutils literal"><span class="pre">--useUnicode</span></tt> parameter, the menu will use unicode glyphs to distinguish between properties, methods, events and other syntax&nbsp;types:</p>
+<div class="figure">
+<a class="reference external image-reference" href="/img/csharprepl/csharprepl-decorations.png"><img alt="csharprepl unicode glyphs in menu" src="/img/csharprepl/csharprepl-decorations.png" style="width: 100%;" /></a>
+</div>
+</div>
+<div class="section" id="automatic-formatting-and-indentation-of-input">
+<h2>Automatic formatting and indentation of&nbsp;input</h2>
+<p>CSharpRepl has long supported typing multiple lines into the prompt, but it&#8217;s been an imperfect experience due to the lack of auto-indentation and formatting. Now, the editing experience is much improved: the indentation kicks in based on the nesting level of braces, and the automatic formatting kicks in whenever a brace or semicolon is&nbsp;typed:</p>
+<video controls style="width:100%; border-radius: 4px;">
+    <source src="/img/csharprepl/csharprepl-formatting.mp4" type="video/mp4">
+    Sorry, the current browser doesn&#8217;t support embedded <span class="caps">MP4</span> videos.
+</video></div>
+<div class="section" id="referencing-a-solution-now-references-all-projects">
+<h2>Referencing a solution now references all&nbsp;projects</h2>
+<p>Previously when loading a solution into CSharpRepl, only the final project and its dependencies were referenced. Now loading a solution will load every project into the <span class="caps">REPL</span>. This should especially help with solutions that have multiple projects that serve as entry points. Thanks <a class="reference external" href="https://github.com/Luiz-Ossinho">&#64;Luiz-Ossinho</a> for this&nbsp;feature!</p>
+</div>
+<div class="section" id="new-configuration-file">
+<h2>New configuration&nbsp;file</h2>
+<p>CSharpRepl starts quickly and minimizes time-to-interactivity. However, that&#8217;s not worth much if you need to spend time typing a bunch of command line configuration options every time you launch the <span class="caps">REPL</span>! While the default configuration should work for most people, bespoke <span class="caps">REPL</span> setups aren&#8217;t&nbsp;uncommon.</p>
+<p>Towards that end, CSharpRepl now supports a configuration file that is simply a list of command-line options, one per line, with optional comments. This file format (<span class="caps">RSP</span>) is common to both msbuild.exe and csi.exe. Run csharprepl &#8211;configure to launch an editor opened to the configuration file on your&nbsp;system.</p>
+<p>Additionally, the new configuration file supports many more options in this release, including configurable&nbsp;keybindings.</p>
+</div>
+<div class="section" id="learning-more">
+<h2>Learning&nbsp;More</h2>
+<p>This is one of the larger releases CSharpRepl has ever had, and I&#8217;m excited for it. To learn more, <a class="reference external" href="https://github.com/waf/CSharpRepl">visit CSharpRepl on GitHub</a>!</p>
+</div>
+
+    <div class="tags">
+        tagged as
+            <a href="../../../../blog/tag/csharp/">csharp</a>,            <a href="../../../../blog/tag/dotnet/">dotnet</a>,            <a href="../../../../blog/tag/cli/">cli</a> and             <a href="../../../../blog/tag/csharprepl/">csharprepl</a>    </div>
+    <div id="comments"></div>
+    <script src="/blog/script/comments.js?issue="></script>
+</article>
+
+<div class="pager">
+        <a href="../../../../blog/2021/09/enabling-command-line-completions-with-dotnet-suggest/" class="prev">
+        Enabling Command Line Completions...
+        &#x21DD;
+        </a>
+</div>
+
+
+<script>
+    function toggleDarkMode(e) {
+    e.preventDefault();
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+        return false;
+    }
+</script>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
+</html>
