@@ -74,29 +74,24 @@ similar content by watching Mads Torgersen&#8217;s talk (<a class="reference ext
 
 <div class="pager">
         <a href="../../../../blog/2019/03/troubleshooting-assembly-binding-issues-in-net/" class="prev">
-        Troubleshooting Assembly Binding...
-        &#x21DD;
+        Troubleshooting Assembly Binding... &#x21DD;
         </a>
         <a href="../../../../blog/2020/02/native-websockets-with-blazor-webassembly/" class="next">
-        &#x21DC;
-        Native Websockets with...
+        &#x21DC; Native Websockets with...
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

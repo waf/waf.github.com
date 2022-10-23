@@ -64,29 +64,24 @@
 
 <div class="pager">
         <a href="../../../../blog/2014/05/pushing-database-changes-to-the-web-with-datomic/" class="prev">
-        Pushing Database Changes to the Web...
-        &#x21DD;
+        Pushing Database Changes to the Web... &#x21DD;
         </a>
         <a href="../../../../blog/2015/04/a-software-developer-learning-thai/" class="next">
-        &#x21DC;
-        A Software Developer Learning&nbsp;Thai
+        &#x21DC; A Software Developer Learning&nbsp;Thai
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

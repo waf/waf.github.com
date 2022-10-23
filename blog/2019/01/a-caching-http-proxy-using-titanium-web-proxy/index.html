@@ -96,29 +96,24 @@ concept behind an easy to understand <span class="caps">API</span>. Well done to
 
 <div class="pager">
         <a href="../../../../blog/2018/11/net-conf-thailand-2018/" class="prev">
-        .<span class="caps">NET</span> Conf...
-        &#x21DD;
+        .<span class="caps">NET</span> Conf... &#x21DD;
         </a>
         <a href="../../../../blog/2019/03/troubleshooting-assembly-binding-issues-in-net/" class="next">
-        &#x21DC;
-        Troubleshooting Assembly Binding...
+        &#x21DC; Troubleshooting Assembly Binding...
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

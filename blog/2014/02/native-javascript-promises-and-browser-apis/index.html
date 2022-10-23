@@ -221,29 +221,24 @@
 
 <div class="pager">
         <a href="../../../../blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="prev">
-        <span class="caps">REST</span> APIs...
-        &#x21DD;
+        <span class="caps">REST</span> APIs... &#x21DD;
         </a>
         <a href="../../../../blog/2014/03/haskells-elegant-fibonacci-in-csharp/" class="next">
-        &#x21DC;
-        Haskell&#8217;s Elegant Fibonacci...
+        &#x21DC; Haskell&#8217;s Elegant Fibonacci...
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

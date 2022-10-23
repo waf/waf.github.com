@@ -124,29 +124,24 @@ An object initializer after the equals sign is a nested object initializer, i.e.
 
 <div class="pager">
         <a href="../../../../blog/2020/05/microsoft-build-2020-highlights-for-net-developers/" class="prev">
-        Microsoft Build 2020 – Highlights...
-        &#x21DD;
+        Microsoft Build 2020 – Highlights... &#x21DD;
         </a>
         <a href="../../../../blog/2021/05/tips-for-using-the-windows-command-line-effectively/" class="next">
-        &#x21DC;
-        Tips for using the Windows Command...
+        &#x21DC; Tips for using the Windows Command...
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

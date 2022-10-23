@@ -63,29 +63,24 @@
 
 <div class="pager">
         <a href="../../../../blog/2015/02/quick-tip-format-finder-for-net-date-strings/" class="prev">
-        Quick Tip: Format Finder for .<span...
-        &#x21DD;
+        Quick Tip: Format Finder for .<span... &#x21DD;
         </a>
         <a href="../../../../blog/2016/06/vim-presentation/" class="next">
-        &#x21DC;
-        Vim&nbsp;Presentation
+        &#x21DC; Vim&nbsp;Presentation
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

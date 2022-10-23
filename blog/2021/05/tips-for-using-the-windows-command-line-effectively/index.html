@@ -118,29 +118,24 @@
 
 <div class="pager">
         <a href="../../../../blog/2020/12/a-lesser-known-csharp-feature-nested-object-initializers/" class="prev">
-        A Lesser-Known C# Feature: Nested...
-        &#x21DD;
+        A Lesser-Known C# Feature: Nested... &#x21DD;
         </a>
         <a href="../../../../blog/2021/08/analyzing-code-quality-with-linq-and-ndepend/" class="next">
-        &#x21DC;
-        Analyzing Code Quality with <span...
+        &#x21DC; Analyzing Code Quality with <span...
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

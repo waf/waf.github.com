@@ -230,29 +230,24 @@ Water drinker lives in 1 and zebra owner lives in 5</blockquote>
 
 <div class="pager">
         <a href="../../../../blog/2016/08/finding-dead-csharp-code-in-aspnet/" class="prev">
-        Finding Dead C# Code in an <span...
-        &#x21DD;
+        Finding Dead C# Code in an <span... &#x21DD;
         </a>
         <a href="../../../../blog/2017/06/splitting-thai-words-with-browser-apis/" class="next">
-        &#x21DC;
-        Splitting Thai words with Browser&nbsp;APIs
+        &#x21DC; Splitting Thai words with Browser&nbsp;APIs
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

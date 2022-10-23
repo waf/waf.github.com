@@ -120,29 +120,24 @@ The ClientWebSocket implementation is ultimately just <a class="reference extern
 
 <div class="pager">
         <a href="../../../../blog/2019/11/net-conf-thailand-2019/" class="prev">
-        .<span class="caps">NET</span> Conf...
-        &#x21DD;
+        .<span class="caps">NET</span> Conf... &#x21DD;
         </a>
         <a href="../../../../blog/2020/05/microsoft-build-2020-highlights-for-net-developers/" class="next">
-        &#x21DC;
-        Microsoft Build 2020 – Highlights...
+        &#x21DC; Microsoft Build 2020 – Highlights...
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

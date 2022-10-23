@@ -49,32 +49,27 @@
 <div class="pager">
     {% if article.prev_article %}
         <a href="{{ SITEURL }}/{{ article.prev_article.url}}" class="prev">
-        {{ article.prev_article.title | truncate(40) }}
-        &#x21DD;
+        {{ article.prev_article.title | truncate(40) }} &#x21DD;
         </a>
     {% endif %}
     {% if article.next_article %}
         <a href="{{ SITEURL }}/{{ article.next_article.url}}" class="next">
-        &#x21DC;
-        {{ article.next_article.title | truncate(40) }}
+        &#x21DC; {{ article.next_article.title | truncate(40) }}
         </a>
     {% endif %}
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 {% endblock %}

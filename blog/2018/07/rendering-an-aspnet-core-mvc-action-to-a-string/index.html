@@ -94,29 +94,24 @@ the <a class="reference external" href="https://github.com/waf/RazorToStringExam
 
 <div class="pager">
         <a href="../../../../blog/2017/12/parsing-powershell-programatically/" class="prev">
-        Parsing PowerShell&nbsp;Programatically
-        &#x21DD;
+        Parsing PowerShell&nbsp;Programatically &#x21DD;
         </a>
         <a href="../../../../blog/2018/10/cross-platform-ci-with-corert-and-appveyor/" class="next">
-        &#x21DC;
-        Cross Platform <span...
+        &#x21DC; Cross Platform <span...
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

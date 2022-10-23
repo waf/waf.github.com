@@ -135,29 +135,24 @@
 
 <div class="pager">
         <a href="../../../../blog/2017/01/solving-the-zebra-puzzle-with-linq-and-csharp-7/" class="prev">
-        Solving the Zebra Puzzle with <span...
-        &#x21DD;
+        Solving the Zebra Puzzle with <span... &#x21DD;
         </a>
         <a href="../../../../blog/2017/07/the-implementation-of-csharp-local-functions/" class="next">
-        &#x21DC;
-        The Implementation of C# Local&nbsp;Functions
+        &#x21DC; The Implementation of C# Local&nbsp;Functions
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

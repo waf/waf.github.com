@@ -134,25 +134,21 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 
 <div class="pager">
         <a href="../../../../blog/2013/12/rest-apis-and-relational-databases-in-clojure/" class="next">
-        &#x21DC;
-        <span class="caps">REST</span> APIs...
+        &#x21DC; <span class="caps">REST</span> APIs...
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

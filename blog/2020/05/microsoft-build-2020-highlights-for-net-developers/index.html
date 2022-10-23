@@ -134,29 +134,24 @@ summaries. The announcements are grouped into four categories: <span class="caps
 
 <div class="pager">
         <a href="../../../../blog/2020/02/native-websockets-with-blazor-webassembly/" class="prev">
-        Native Websockets with...
-        &#x21DD;
+        Native Websockets with... &#x21DD;
         </a>
         <a href="../../../../blog/2020/12/a-lesser-known-csharp-feature-nested-object-initializers/" class="next">
-        &#x21DC;
-        A Lesser-Known C# Feature: Nested...
+        &#x21DC; A Lesser-Known C# Feature: Nested...
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 

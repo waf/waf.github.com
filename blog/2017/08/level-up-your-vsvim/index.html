@@ -113,29 +113,24 @@ nnoremap cia :vsc Refactor.ReorderParameters&lt;cr&gt;
 
 <div class="pager">
         <a href="../../../../blog/2017/07/the-implementation-of-csharp-local-functions/" class="prev">
-        The Implementation of C# Local&nbsp;Functions
-        &#x21DD;
+        The Implementation of C# Local&nbsp;Functions &#x21DD;
         </a>
         <a href="../../../../blog/2017/12/parsing-powershell-programatically/" class="next">
-        &#x21DC;
-        Parsing PowerShell&nbsp;Programatically
+        &#x21DC; Parsing PowerShell&nbsp;Programatically
         </a>
 </div>
 
-
 <script>
     function toggleDarkMode(e) {
-    e.preventDefault();
+        e.preventDefault();
         const classList = document.documentElement.classList;
         const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const manualDarkMode = classList.contains('dark');
-
         if (classList.length == 0) {
             classList.add(userPreferenceDarkMode ? 'light' : 'dark');
         } else {
             classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
         }
-        return false;
     }
 </script>
 
