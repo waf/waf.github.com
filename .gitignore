@@ -1,2 +1,8 @@
-# Created by venv; see https://docs.python.org/3/library/venv.html
-*
+# Python virtualenv (created in repo root)
+/bin/
+/include/
+/lib/
+/lib64/
+/pyvenv.cfg
+__pycache__/
+*.py[cod]

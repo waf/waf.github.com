@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+          <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>Injecting a C# REPL into a running .NET process - Blog - Will Fuqua</title>
+        <link media="all" href="/blog/style/pygments-nuvola.css" rel="stylesheet" />
+        <link media="all" href="/blog/style/main.css" rel="stylesheet" />
+        <link href="/favicon.ico" rel="shortcut icon" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Reenie+Beanie&amp;text=WilFqua" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans" />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-38553935-1']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+        <link href="https://fuqua.io/blog/feed.atom.xml" type="application/atom+xml" rel="alternate" title="Blog - Will Fuqua Full Atom Feed" />
+
+
+
+
+    <meta name="tags" content="csharp" />
+    <meta name="tags" content="dotnet" />
+    <meta name="tags" content="cli" />
+    <meta name="tags" content="csharprepl" />
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+            <a href="/blog" rel="contents home start" class="blogtitle"><span class="first-name">Will</span><span class="last-name">Fuqua</span></a>
+        </header>
+<nav>
+    <ul>
+        <li><a class="top" href="#" title="Top of page"><i class="icon-chevron-up"></i></a><span class="label">Top&nbsp;of&nbsp;page</span></li>
+        <li><a class="root" href="/blog" title="Home"><i class="icon-home"></i></a><span class="label">Home</span></li>
+        <li><a class="dark-mode" href="#" title="Switch Light/Dark Mode" onclick="toggleDarkMode(event)"><i class="icon-adjust"></i></a><span class="label">Light/Dark</span></li>
+        <li><a class="bottom" href="#comments" title="Comments"><i class="icon-chevron-down"></i></a><span class="label">Comments</span></li>
+    </ul>
+</nav>
+
+
+<article>
+    <h1>Injecting a C# <span class="caps">REPL</span> into a running .<span class="caps">NET</span>&nbsp;process</h1>
+    <p>I&#8217;ve been building <a class="reference external" href="https://github.com/waf/CSharpRepl">CSharpRepl</a> on and off for about five years. It&#8217;s a command-line <a class="reference external" href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop"><span class="caps">REPL</span></a> for C# with syntax highlighting, intellisense, and NuGet package&nbsp;support.</p>
+<p>A recent addition lets it connect to <em>another</em> already-running .<span class="caps">NET</span> process and evaluate C# inside it. Unlike a debugger, which pauses the process and does expression evaluation, CSharpRepl injects a C# script engine into the target and runs unconstrained C# against the application&#8217;s live state, without pausing the application. You can read and write statics, resolve services from the application&#8217;s <span class="caps">DI</span> container, and replace or wrap methods without restarting the&nbsp;process.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Connecting to a process and injecting the <span class="caps">REPL</span> is equivalent to running arbitrary code inside it, with its privileges. This is a development and diagnostics tool meant to run on your own computer. Never enable it on a production&nbsp;process.</p>
+</div>
+<p>To demonstrate, let&#8217;s build a small app with a bug in it, then connect to it with CSharpRepl and check things&nbsp;out.</p>
+<div class="section" id="a-weather-api-with-a-bug">
+<h2>A weather <span class="caps">API</span> with a&nbsp;bug</h2>
+<p>We&#8217;ll start from the default <span class="caps">ASP</span>.<span class="caps">NET</span> Core Web <span class="caps">API</span>&nbsp;template:</p>
+<div class="highlight"><pre><span></span><span class="go">dotnet new webapi -o WeatherApi</span>
+</pre></div>
+<p>The default template is a weather <span class="caps">API</span> with some static weather data. Let&#8217;s make it a little more interesting (and a little broken). We&#8217;ll generate the weather randomly, cache today&#8217;s forecast in an <tt class="docutils literal">IMemoryCache</tt>, and add a subtle bug. Replace the contents of <tt class="docutils literal">Program.cs</tt> with&nbsp;this:</p>
+<div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.Extensions.Caching.Memory</span><span class="p">;</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WebApplication</span><span class="p">.</span><span class="n">CreateBuilder</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddMemoryCache</span><span class="p">();</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddSingleton</span><span class="o">&lt;</span><span class="n">WeatherService</span><span class="o">&gt;</span><span class="p">();</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+<span class="n">app</span><span class="p">.</span><span class="n">MapGet</span><span class="p">(</span><span class="s">&quot;/weather&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">WeatherService</span><span class="w"> </span><span class="n">weather</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">weather</span><span class="p">.</span><span class="n">Today</span><span class="p">());</span>
+<span class="n">app</span><span class="p">.</span><span class="n">Run</span><span class="p">();</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nf">WeatherService</span><span class="p">(</span><span class="n">IMemoryCache</span><span class="w"> </span><span class="n">cache</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">summaries</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="na">[&quot;Freezing&quot;, &quot;Bracing&quot;, &quot;Chilly&quot;, &quot;Mild&quot;, &quot;Warm&quot;, &quot;Balmy&quot;, &quot;Hot&quot;, &quot;Scorching&quot;]</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="nf">Today</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">cache</span><span class="p">.</span><span class="n">GetOrCreate</span><span class="p">(</span><span class="s">&quot;today&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">entry</span><span class="p">.</span><span class="n">AbsoluteExpirationRelativeToNow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Random</span><span class="p">.</span><span class="n">Shared</span><span class="p">.</span><span class="n">Next</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">56</span><span class="p">);</span><span class="w"> </span><span class="c1">// -20°C to 55°C</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateOnly</span><span class="p">.</span><span class="n">FromDateTime</span><span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">),</span>
+<span class="w">            </span><span class="n">Celsius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Fahrenheit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">9</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PickWeatherSummary</span><span class="p">(</span><span class="n">summaries</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">),</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">})</span><span class="o">!</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Pick a summary from coldest to hottest, scaled from the -20..55°C range.</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">PickWeatherSummary</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">summaries</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="n">summaries</span><span class="p">[(</span><span class="kt">int</span><span class="p">)((</span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">75.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">summaries</span><span class="p">.</span><span class="n">Length</span><span class="p">)];</span>
+<span class="p">}</span>
+</pre></div>
+<p>The interesting part is <tt class="docutils literal">PickWeatherSummary</tt>. It normalizes the temperature to 0..1 and multiplies it by <tt class="docutils literal">summaries.Length</tt> to pick a weather summary, sorted coldest to&nbsp;hottest.</p>
+<p>The bug is in the multiplier; at the top of temperature range the normalized value becomes <tt class="docutils literal">1.0</tt>, so after multiplying by the length, the index is 1 past the end of the array. If the temperature is 55°C, it throws an <tt class="docutils literal">IndexOutOfRangeException</tt>. Though at this scorching temperature, a sporadic exception might be the least of your&nbsp;worries.</p>
+<p>Since the temperature is random and the result is cached for thirty seconds, the endpoint mostly works, then <span class="caps">HTTP</span> 500s for half a minute whenever a forecast happens to hit 55°C. While ideally our unit tests should have caught this, it would be annoying to reproduce locally, so it&#8217;s a good excuse to demo CSharpRepl&#8217;s <tt class="docutils literal">connect</tt> functionality.</p>
+</div>
+<div class="section" id="letting-csharprepl-in">
+<h2>Letting CSharpRepl&nbsp;in</h2>
+<p>The target application&#8217;s source doesn&#8217;t need to change, but the process does have to opt-in by launching with two environment variables set. CSharpRepl can print the right ones for your&nbsp;shell:</p>
+<div class="highlight"><pre><span></span>$<span class="w"> </span>csharprepl<span class="w"> </span>connect<span class="w"> </span>init<span class="w">        </span><span class="c1"># autodetects your shell, or pass e.g. --shell pwsh</span>
+<span class="c1"># Run in the shell that launches your app, then start it and note its process id:</span>
+<span class="c1"># Do NOT set them as system-wide or user-wide environment variables; only set them in the shell.</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DOTNET_STARTUP_HOOKS</span><span class="o">=</span><span class="s2">&quot;.../tools/csharprepl/.../connector/CSharpRepl.InjectedHook.dll&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ASPNETCORE_HOSTINGSTARTUPASSEMBLIES</span><span class="o">=</span><span class="s2">&quot;CSharpRepl.InjectedHook&quot;</span>
+</pre></div>
+<p>Set those variables in your current shell, then run the application via <tt class="docutils literal">dotnet run</tt> in that <em>same shell</em> so the application inherits them (don&#8217;t set them permanently; you only want them where you&#8217;re about to start the target&nbsp;application).</p>
+<p>In another terminal, hit the endpoint. Most of the time you get a forecast&nbsp;back:</p>
+<div class="highlight"><pre><span></span><span class="gp">$ </span>curl<span class="w"> </span>-s<span class="w"> </span>localhost:5000/weather
+<span class="go">{&quot;date&quot;:&quot;2026-06-28&quot;,&quot;celsius&quot;:17,&quot;fahrenheit&quot;:62,&quot;summary&quot;:&quot;Mild&quot;}</span>
+</pre></div>
+<p>Rarely, though, a generated forecast hits 55°C and the request&nbsp;fails:</p>
+<div class="highlight"><pre><span></span><span class="gp">$ </span>curl<span class="w"> </span>-s<span class="w"> </span>-i<span class="w"> </span>localhost:5000/weather<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1
+<span class="go">HTTP/1.1 500 Internal Server Error</span>
+</pre></div>
+<p>with a matching entry in the application&#8217;s&nbsp;log:</p>
+<div class="highlight"><pre><span></span>System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at WeatherService.PickWeatherSummary(String[] summaries, Int32 c) in Program.cs:line 31
+   at WeatherService.&lt;Today&gt;b__3_0(ICacheEntry entry) in Program.cs:line 20
+   at Microsoft.Extensions.Caching.Memory.CacheExtensions.GetOrCreate[TItem](...)
+   at WeatherService.Today() in Program.cs:line 16
+</pre></div>
+<p>Now let&#8217;s connect to the process with CSharpRepl and find out&nbsp;why.</p>
+</div>
+<div class="section" id="connecting-to-the-process">
+<h2>Connecting to the&nbsp;process</h2>
+<p>Running <tt class="docutils literal">connect list</tt> shows the opted-in processes, along with the process&nbsp;IDs:</p>
+<div class="highlight"><pre><span></span><span class="gp">$ </span>csharprepl<span class="w"> </span>connect<span class="w"> </span>list
+<span class="go">  PID  │ Process</span>
+<span class="go"> ─────┼──────────────</span>
+<span class="go">  6579 │ dotnet</span>
+<span class="go">  6580 │ WeatherApi</span>
+
+<span class="go">Connect with csharprepl connect &lt;PID&gt;.</span>
+<span class="go">Hint: you most likely want to connect to the &#39;WeatherApi&#39; process (PID 6580).</span>
+</pre></div>
+<p>We can see two processes: the dotnet host and our own application. The output hints that we most likely want to connect to our own application. Connect to the process by <span class="caps">ID</span> and we&#8217;ll be in a <span class="caps">REPL</span> inside that&nbsp;process:</p>
+<div class="highlight"><pre><span></span><span class="gp">$ </span>csharprepl<span class="w"> </span>connect<span class="w"> </span><span class="m">6580</span>
+<span class="go">Connecting to the connector in process 6580...</span>
+<span class="go">Connected to WeatherApi (pid 6580)</span>
+<span class="go">  Runtime:   .NET 10.0.7</span>
+<span class="go">  Connector: v1.0.0.0 (protocol v2)</span>
+<span class="go">  DI provider captured: yes, services and Get&lt;T&gt;() are available.</span>
+
+<span class="go">6580&gt;</span>
+</pre></div>
+<p>It looks like a normal CSharpRepl prompt (except the input prompt shows the target&#8217;s process <span class="caps">ID</span>). It supports intellisense, highlighting, and pretty-printing, and the code we run is executed <em>inside the web app</em>, compiled against its types and with access to its live&nbsp;objects.</p>
+</div>
+<div class="section" id="reading-and-writing-live-application-state">
+<h2>Reading and writing live application&nbsp;state</h2>
+<p>The intermittent failures seem related to caching, so let&#8217;s look at what the running app currently has cached. <tt class="docutils literal">IMemoryCache</tt> is a service registered in the app&#8217;s <span class="caps">DI</span> container, and CSharpRepl captures the application&#8217;s service provider, so we can call <tt class="docutils literal"><span class="pre">services.GetRequiredService&lt;T&gt;()</span></tt> or the <tt class="docutils literal"><span class="pre">Get&lt;T&gt;()</span></tt> shorthand:</p>
+<div class="highlight"><pre><span></span><span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.Extensions.Caching.Memory</span><span class="p">;</span>
+<span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Get</span><span class="o">&lt;</span><span class="n">IMemoryCache</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cache</span><span class="p">.</span><span class="n">TryGetValue</span><span class="p">(</span><span class="s">&quot;today&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">forecast</span><span class="p">);</span><span class="w"> </span><span class="n">forecast</span>
+<span class="p">{</span><span class="w"> </span><span class="n">Date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">6</span><span class="o">/</span><span class="mi">28</span><span class="o">/</span><span class="mi">2026</span><span class="p">],</span><span class="w"> </span><span class="n">Celsius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span><span class="p">,</span><span class="w"> </span><span class="n">Fahrenheit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">62</span><span class="p">,</span><span class="w"> </span><span class="n">Summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Mild</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+<p>This is the actual object being served to clients right now. We can write to that state too; for example, evicting the cached entry will force the next request to&nbsp;regenerate:</p>
+<div class="highlight"><pre><span></span><span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cache</span><span class="p">.</span><span class="n">Remove</span><span class="p">(</span><span class="s">&quot;today&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="reproducing-the-bug-on-demand">
+<h2>Reproducing the bug on&nbsp;demand</h2>
+<p>From outside the process, a random failure like this is hard to reproduce. Inside it, we can call the method directly with the input we&nbsp;suspect:</p>
+<div class="highlight"><pre><span></span><span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">summaries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;Freezing&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bracing&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Chilly&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Mild&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Warm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Balmy&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Hot&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Scorching&quot;</span><span class="p">];</span>
+<span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="n">WeatherService</span><span class="p">.</span><span class="n">PickWeatherSummary</span><span class="p">(</span><span class="n">summaries</span><span class="p">,</span><span class="w"> </span><span class="mi">55</span><span class="p">)</span>
+<span class="n">System</span><span class="p">.</span><span class="n">IndexOutOfRangeException</span><span class="p">:</span><span class="w"> </span><span class="n">Index</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">outside</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">bounds</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">array</span><span class="p">.</span>
+</pre></div>
+<p>We can reproduce the exact failure now, inside the running process. At 55°C the scaled number is exactly <tt class="docutils literal">1.0</tt>, so the index becomes <tt class="docutils literal">8</tt>, which is one past the last entry in the&nbsp;array.</p>
+</div>
+<div class="section" id="replacing-the-method-live">
+<h2>Replacing the method&nbsp;live</h2>
+<p>We can validate our fix by building up a working method in the <span class="caps">REPL</span>, and then replacing the live method with our corrected version, all without rebuilding or losing the application&#8217;s&nbsp;state.</p>
+<p>First, define a replacement with a signature that matches the target method&#8217;s parameters. When replacing an instance method, provide the instance as an extra first parameter. But in this case <tt class="docutils literal">PickWeatherSummary</tt> is static function, so it&#8217;s not&nbsp;needed:</p>
+<div class="highlight"><pre><span></span><span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">FixedSummary</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">summaries</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">          </span><span class="n">summaries</span><span class="p">[(</span><span class="kt">int</span><span class="p">)((</span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">75.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">summaries</span><span class="p">.</span><span class="n">Length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">))];</span>
+</pre></div>
+<p>Then swap it in for the original method using <tt class="docutils literal">#replace</tt>:</p>
+<div class="highlight"><pre><span></span><span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="err">#</span><span class="n">replace</span><span class="w"> </span><span class="n">WeatherService</span><span class="p">.</span><span class="n">PickWeatherSummary</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">FixedSummary</span>
+</pre></div>
+<p>The patch takes effect immediately. We can confirm the crash is fixed by calling the method that we replaced, seeing our new code running, and then evicting the cached forecast (writing to live state&nbsp;again):</p>
+<div class="highlight"><pre><span></span><span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="n">WeatherService</span><span class="p">.</span><span class="n">PickWeatherSummary</span><span class="p">(</span><span class="n">summaries</span><span class="p">,</span><span class="w"> </span><span class="mi">55</span><span class="p">)</span>
+<span class="s">&quot;Scorching&quot;</span>
+<span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Get</span><span class="o">&lt;</span><span class="n">IMemoryCache</span><span class="o">&gt;</span><span class="p">().</span><span class="n">Remove</span><span class="p">(</span><span class="s">&quot;today&quot;</span><span class="p">)</span>
+</pre></div>
+<p>Now <tt class="docutils literal">curl localhost:5000/weather</tt> works even when the randomly generated temperature is 55°C. The patch only lives in this process and disappears when the process exits, so the real fix still needs to be added to the&nbsp;source.</p>
+</div>
+<div class="section" id="wrapping-a-method-to-watch-it">
+<h2>Wrapping a method to watch&nbsp;it</h2>
+<p>In addition to replacing a method outright, we can also leave the original method intact and just observe it. We can do that with the <tt class="docutils literal">#wrap</tt> command. The wrapper is a function that mirrors the function you want to wrap, but takes an <tt class="docutils literal">orig</tt> delegate as its first parameter. Invoking that <tt class="docutils literal">orig</tt> delegate then invokes the original&nbsp;method:</p>
+<div class="highlight"><pre><span></span><span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">logged</span><span class="p">(</span><span class="n">Func</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">orig</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">summaries</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">          </span><span class="kt">var</span><span class="w"> </span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">orig</span><span class="p">(</span><span class="n">summaries</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="w">          </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;PickWeatherSummary({c}) = {summary}&quot;</span><span class="p">);</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="n">summary</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="mi">6580</span><span class="o">&gt;</span><span class="w"> </span><span class="err">#</span><span class="n">wrap</span><span class="w"> </span><span class="n">WeatherService</span><span class="p">.</span><span class="n">PickWeatherSummary</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">logged</span>
+</pre></div>
+<p>Every call now logs its argument and result to the application&#8217;s own console, which is a quick way to add&nbsp;instrumentation.</p>
+</div>
+<div class="section" id="cleaning-up">
+<h2>Cleaning&nbsp;up</h2>
+<p>Patches persist in the target until you revert them or the process exits. They will survive if you close the <span class="caps">REPL</span> and reconnect later. There are a few commands for managing&nbsp;patches:</p>
+<ul class="simple">
+<li><tt class="docutils literal">#patches</tt> lists what&#8217;s active and gives assigns a unique number per&nbsp;patch</li>
+<li><tt class="docutils literal">#revert</tt> will undo the patch &#8211; either provide the patch&#8217;s number or the word <tt class="docutils literal">all</tt> to undo them&nbsp;all.</li>
+</ul>
+</div>
+<div class="section" id="a-few-limitations">
+<h2>A few&nbsp;limitations</h2>
+<p>I&#8217;ve tested this with a range of complex applications and it&#8217;s been working well, though I&#8217;m sure there are cases where it doesn&#8217;t work. If you find one, feel free to open a bug report in the CSharpRepl GitHub repository. The known limitations right now&nbsp;are:</p>
+<ul class="simple">
+<li>I&#8217;ve only tested this on <tt class="docutils literal">net10.0</tt> targets, and I&#8217;m unlikely to support older .<span class="caps">NET</span>&nbsp;versions.</li>
+<li>Method replacement can&#8217;t (yet?) touch generic methods, pointer parameters, or call sites the <span class="caps">JIT</span> has already&nbsp;inlined.</li>
+<li>Single-file published apps have limited support; you can still connect to them, but you need to use reflection for everything. This is because the bundled assemblies don&#8217;t have on-disk&nbsp;metadata.</li>
+</ul>
+</div>
+<div class="section" id="learning-more">
+<h2>Learning&nbsp;more</h2>
+<p>If you want to try this out, install CSharpRepl as a dotnet tool&nbsp;via:</p>
+<div class="highlight"><pre><span></span><span class="go">dotnet tool install -g csharprepl</span>
+</pre></div>
+<p>Or update an existing install with <tt class="docutils literal">dotnet tool update <span class="pre">-g</span> csharprepl</tt>.</p>
+<p>There&#8217;s a documentation on how the injection works under-the-hood (the startup hook, isolated assembly-load contexts, and the wire protocol) in the <a class="reference external" href="https://github.com/waf/CSharpRepl/blob/main/InjectedHook/InjectedHookReadme.md">Injected Hook documentation</a>, and the rest of the project lives <a class="reference external" href="https://github.com/waf/CSharpRepl">on GitHub</a>.</p>
+</div>
+
+    <div class="tags">
+        tagged as
+            <a href="../../../../blog/tag/csharp/">csharp</a>,            <a href="../../../../blog/tag/dotnet/">dotnet</a>,            <a href="../../../../blog/tag/cli/">cli</a> and             <a href="../../../../blog/tag/csharprepl/">csharprepl</a>    </div>
+    <div id="comments"></div>
+    <script src="/blog/script/comments.js?issue=8"></script>
+</article>
+
+<div class="pager">
+        <a href="../../../../blog/2022/10/new-major-release-of-csharprepl-040/" class="prev">
+        New major release of CSharpRepl&nbsp;0.4.0 &#x21DD;
+        </a>
+</div>
+
+<script>
+    function toggleDarkMode(e) {
+        e.preventDefault();
+        const classList = document.documentElement.classList;
+        const userPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const manualDarkMode = classList.contains('dark');
+        if (classList.length == 0) {
+            classList.add(userPreferenceDarkMode ? 'light' : 'dark');
+        } else {
+            classList.replace(manualDarkMode ? 'dark' : 'light', manualDarkMode ? 'light' : 'dark');
+        }
+    }
+</script>
+
+        <script src="/blog/script/list.min.js"></script>
+</body>
+</html>
