@@ -105,7 +105,7 @@ With Acrylamid you can write your weblog entries with your editor of choice in M
 <p>Next, type some code into a blog post and designate it as a code-block. Pygments will parse our code-blocks and add <span class="caps">CSS</span> classes to individual tokens. To designate a code-block in reStructuredText, use the&nbsp;syntax:</p>
 <div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">code-block</span><span class="p">::</span> <span class="k">python</span>
 
-    <span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">():</span>
         <span class="k">return</span> <span class="s2">&quot;foo&quot;</span>
 </pre></div>
 <p>We&#8217;ll want to grab a Pygments theme, which is just a <span class="caps">CSS</span> file. Phil Tysoe has a good <a class="reference external" href="http://igniteflow.com/pygments/themes/">list of themes</a> on his blog, though we need to rename the wrapper class from <tt class="docutils literal">codehilite</tt> to the class that Acrylamid uses, <tt class="docutils literal">highlight</tt>. Include the <span class="caps">CSS</span> file in your Acrylamid&nbsp;theme.</p>

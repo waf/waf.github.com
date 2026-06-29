@@ -221,6 +221,26 @@ samp {
     background-color: var(--code-background-color);
 }
 
+.admonition {
+    padding: 10px 15px;
+    margin: 20px 0;
+    border-left: 5px solid var(--accent-color);
+    background-color: var(--background-variation-color);
+}
+
+.admonition .admonition-title {
+    margin: 0 0 5px 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85em;
+    color: var(--accent-color);
+}
+
+.admonition p.last {
+    margin-bottom: 0;
+}
+
 .tags {
     margin-top: 40px;
     text-align: center;
@@ -345,6 +365,7 @@ nav .label {
     padding-left: 10px;
     width: 0;
     overflow: hidden;
+    white-space: nowrap;
     background-color: var(--background-color);
     color: #888;
     transition: none;
