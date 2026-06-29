@@ -82,7 +82,6 @@
 &lt;p&gt;Running &lt;tt class="docutils literal"&gt;connect list&lt;/tt&gt; shows the opted-in processes, along with the process&amp;nbsp;IDs:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;csharprepl&lt;span class="w"&gt; &lt;/span&gt;connect&lt;span class="w"&gt; &lt;/span&gt;list
 &lt;span class="go"&gt;  PID  │ Process&lt;/span&gt;
-&lt;span class="go"&gt; ─────┼──────────────&lt;/span&gt;
 &lt;span class="go"&gt;  6579 │ dotnet&lt;/span&gt;
 &lt;span class="go"&gt;  6580 │ WeatherApi&lt;/span&gt;
 

@@ -117,7 +117,6 @@ Running ``connect list`` shows the opted-in processes, along with the process ID
 
     $ csharprepl connect list
       PID  │ Process
-     ─────┼──────────────
       6579 │ dotnet
       6580 │ WeatherApi
 

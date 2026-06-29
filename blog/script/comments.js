@@ -15,6 +15,7 @@ const leaveCommentHTML = `
     <div class="comment comment-ongithub"><a href="${githubWebURL}">Want to leave a comment? Post it on GitHub and it will appear here!</a></div>
 `;
 
+function loadComments() {
 fetch(githubApiURL, {
     headers: {
         'Accept': 'application/vnd.github.squirrel-girl-preview', // for reactions
@@ -23,8 +24,16 @@ fetch(githubApiURL, {
 })
 .then(response => response.json())
 .then(comments => {
-    if(comments.message === "Not Found") {
-        console.log("Could not find comments at " + githubWebURL);
+    if(!Array.isArray(comments)) {
+        // GitHub returned an error object instead of a list of comments.
+        // Most commonly a 403 from the unauthenticated rate limit (60/hr per IP),
+        // or a 404 ("Not Found") when the issue doesn't exist yet.
+        console.log("Could not load comments from " + githubApiURL +
+            (comments && comments.message ? ": " + comments.message : ""));
+        var fallbackContainer = document.getElementById("comments");
+        if (fallbackContainer) {
+            fallbackContainer.innerHTML = leaveCommentHTML;
+        }
         return;
     }
     var commentContainer = document.getElementById("comments");
@@ -44,3 +53,30 @@ fetch(githubApiURL, {
     });
     commentContainer.innerHTML = commentContent.join("") + leaveCommentHTML;
 });
+}
+
+// Only hit the GitHub API once the comments section actually scrolls into view,
+// so a plain page load/refresh doesn't spend the (rate-limited) unauthenticated quota.
+function observeComments() {
+    var commentContainer = document.getElementById("comments");
+    if (!commentContainer) {
+        return;
+    }
+    if (!("IntersectionObserver" in window)) {
+        loadComments(); // older browsers: just load eagerly
+        return;
+    }
+    var observer = new IntersectionObserver(function(entries) {
+        if (entries.some(entry => entry.isIntersecting)) {
+            observer.disconnect();
+            loadComments();
+        }
+    }, { rootMargin: "200px" }); // start loading a little before it's fully visible
+    observer.observe(commentContainer);
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", observeComments);
+} else {
+    observeComments();
+}
